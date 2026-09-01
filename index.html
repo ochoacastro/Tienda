@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Tienda Online</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1C1F26;
+    --ink-soft:#4B5563;
+    --paper:#FAF9F7;
+    --paper-alt:#F1EEE8;
+    --accent:#E8590C;
+    --accent-dark:#C64708;
+    --line:#E4E0D8;
+    --ok:#16A34A;
+    --white:#ffffff;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Inter',sans-serif;color:var(--ink);background:var(--paper);}
+  h1,h2,h3,.display{font-family:'Sora',sans-serif;}
+  img{max-width:100%;display:block;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;}
+  .container{max-width:1180px;margin:0 auto;padding:0 24px;}
+
+  /* Topbar */
+  .topbar{background:var(--ink);color:#fff;font-size:13px;padding:8px 0;}
+  .topbar .container{display:flex;justify-content:center;gap:32px;flex-wrap:wrap;}
+  .topbar span{opacity:.85;}
+  .topbar strong{color:#FFD8B8;font-weight:600;}
+
+  /* Header */
+  header.site{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40;}
+  .header-row{display:flex;align-items:center;gap:24px;padding:16px 0;}
+  .brand{display:flex;align-items:center;gap:12px;flex:0 0 auto;}
+  .brand img{height:44px;width:44px;object-fit:cover;border-radius:8px;}
+  .brand .name{font-family:'Sora',sans-serif;font-weight:800;font-size:22px;letter-spacing:-.01em;}
+  .search-wrap{flex:1;max-width:460px;}
+  .search-wrap input{width:100%;padding:10px 14px;border:1px solid var(--line);border-radius:24px;font-size:14px;background:var(--paper-alt);}
+  .header-actions{display:flex;align-items:center;gap:18px;margin-left:auto;font-size:14px;}
+  .header-actions a{display:flex;align-items:center;gap:6px;color:var(--ink-soft);font-weight:600;}
+  .cart-btn{background:var(--ink);color:#fff;padding:9px 16px;border-radius:24px;font-weight:600;font-size:14px;}
+  nav.categories{border-top:1px solid var(--line);}
+  nav.categories .container{display:flex;gap:26px;overflow-x:auto;padding:12px 24px;}
+  nav.categories a{font-size:13.5px;font-weight:600;color:var(--ink-soft);white-space:nowrap;}
+  nav.categories a:hover{color:var(--accent);}
+
+  /* Hero */
+  .hero{position:relative;background:var(--ink);color:#fff;overflow:hidden;}
+  .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.42;}
+  .hero-content{position:relative;padding:90px 24px 100px;max-width:640px;margin:0 auto;text-align:center;}
+  .hero h1{font-size:clamp(30px,4.5vw,48px);line-height:1.08;margin:0 0 16px;font-weight:800;}
+  .hero p{font-size:16px;color:#E9E6E0;margin:0 0 28px;line-height:1.55;}
+  .hero .cta{display:inline-block;background:var(--accent);color:#fff;padding:14px 30px;border-radius:8px;font-weight:700;font-size:15px;}
+  .hero .cta:hover{background:var(--accent-dark);}
+
+  /* Sections */
+  section{padding:64px 0;}
+  .section-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:28px;gap:16px;flex-wrap:wrap;}
+  .section-head h2{font-size:26px;margin:0;font-weight:700;}
+  .section-head .sub{color:var(--ink-soft);font-size:14.5px;margin-top:4px;}
+  .see-all{font-weight:600;font-size:14px;color:var(--accent);white-space:nowrap;}
+
+  /* Category tiles */
+  .cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px;}
+  .cat-tile{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:1/1;background:var(--paper-alt);}
+  .cat-tile img{width:100%;height:100%;object-fit:cover;}
+  .cat-tile .label{position:absolute;left:0;right:0;bottom:0;padding:14px 12px;background:linear-gradient(0deg,rgba(0,0,0,.65),transparent);color:#fff;font-weight:700;font-size:14.5px;}
+
+  /* Product grid */
+  .prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;}
+  .prod-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;}
+  .prod-card .img-wrap{aspect-ratio:1/1;background:var(--paper-alt);overflow:hidden;}
+  .prod-card .img-wrap img{width:100%;height:100%;object-fit:cover;}
+  .prod-card .body{padding:14px 14px 16px;display:flex;flex-direction:column;gap:6px;flex:1;}
+  .prod-card .cat-label{font-size:12px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.03em;}
+  .prod-card .pname{font-weight:700;font-size:15px;line-height:1.3;min-height:39px;}
+  .prod-card .price{font-weight:800;font-size:17px;color:var(--ink);margin-top:auto;}
+  .prod-card .stock{font-size:12.5px;color:var(--ok);font-weight:600;}
+  .prod-card .add-btn{margin-top:8px;background:var(--ink);color:#fff;border:none;border-radius:7px;padding:10px;font-weight:700;font-size:13.5px;}
+  .prod-card .add-btn:hover{background:var(--accent);}
+  .empty-note{color:var(--ink-soft);font-size:14px;padding:24px;text-align:center;border:1px dashed var(--line);border-radius:var(--radius);}
+
+  /* Features */
+  .features{background:var(--paper-alt);}
+  .feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:28px;}
+  .feat-grid .f h3{font-size:16px;margin:0 0 6px;}
+  .feat-grid .f p{font-size:14px;color:var(--ink-soft);margin:0;line-height:1.5;}
+  .feat-grid .f .icon{font-size:26px;margin-bottom:10px;}
+
+  /* Footer */
+  footer{background:var(--ink);color:#D9D6D0;padding:48px 0 24px;}
+  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:32px;margin-bottom:32px;}
+  .foot-grid h4{color:#fff;font-size:14px;margin:0 0 14px;}
+  .foot-grid p, .foot-grid a{font-size:13.5px;color:#B9B5AD;line-height:1.9;}
+  .foot-grid a:hover{color:#fff;}
+  .foot-bottom{border-top:1px solid #33363E;padding-top:20px;font-size:12.5px;color:#8A877F;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+  .admin-link{color:#8A877F;font-size:12px;}
+
+  /* Admin */
+  #admin-view{display:none;min-height:100vh;background:var(--paper-alt);}
+  #admin-view.active{display:block;}
+  #store-view.hidden{display:none;}
+  .admin-bar{background:var(--ink);color:#fff;padding:14px 0;}
+  .admin-bar .container{display:flex;justify-content:space-between;align-items:center;}
+  .admin-bar .title{font-family:'Sora',sans-serif;font-weight:700;}
+  .admin-bar button{background:transparent;border:1px solid #555;color:#fff;padding:8px 14px;border-radius:6px;font-size:13px;}
+  .admin-bar button:hover{border-color:var(--accent);color:var(--accent);}
+  .login-box{max-width:360px;margin:90px auto;background:#fff;padding:36px;border-radius:var(--radius);border:1px solid var(--line);}
+  .login-box h2{margin-top:0;font-size:20px;}
+  .login-box .hint{font-size:12.5px;color:var(--ink-soft);margin-top:-8px;margin-bottom:18px;}
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;}
+  .field input, .field textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:7px;font-size:14px;font-family:inherit;}
+  .field textarea{resize:vertical;min-height:70px;}
+  .btn-primary{background:var(--ink);color:#fff;border:none;padding:11px 20px;border-radius:7px;font-weight:700;font-size:14px;width:100%;}
+  .btn-primary:hover{background:var(--accent);}
+  .error-msg{color:#C0392B;font-size:13px;margin:-8px 0 14px;}
+  .admin-content{max-width:1000px;margin:0 auto;padding:32px 24px 80px;}
+  .admin-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:24px;}
+  .admin-card h3{margin-top:0;font-size:16px;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .admin-card .btn-primary{width:auto;padding:10px 22px;}
+  .prod-admin-list{display:flex;flex-direction:column;gap:12px;}
+  .prod-admin-row{display:flex;gap:14px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:10px;}
+  .prod-admin-row img{width:52px;height:52px;object-fit:cover;border-radius:6px;flex:0 0 auto;background:var(--paper-alt);}
+  .prod-admin-row .info{flex:1;min-width:0;}
+  .prod-admin-row .info .n{font-weight:700;font-size:14px;}
+  .prod-admin-row .info .p{font-size:13px;color:var(--ink-soft);}
+  .prod-admin-row .acts{display:flex;gap:8px;}
+  .prod-admin-row .acts button{border:1px solid var(--line);background:#fff;border-radius:6px;padding:7px 12px;font-size:12.5px;font-weight:600;}
+  .prod-admin-row .acts button.danger{color:#C0392B;border-color:#F1C6BF;}
+  .prod-admin-row .acts button:hover{background:var(--paper-alt);}
+  .small-note{font-size:12.5px;color:var(--ink-soft);margin-top:6px;}
+  .save-toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:#fff;padding:12px 20px;border-radius:8px;font-size:13.5px;font-weight:600;opacity:0;transform:translateY(10px);transition:.25s;pointer-events:none;z-index:100;}
+  .save-toast.show{opacity:1;transform:translateY(0);}
+  @media(max-width:760px){
+    .header-row{flex-wrap:wrap;}
+    .search-wrap{order:3;max-width:none;width:100%;}
+    .foot-grid{grid-template-columns:1fr;}
+    .row2{grid-template-columns:1fr;}
+    .hero-content{padding:64px 20px 72px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ======================= TIENDA (PÚBLICO) ======================= -->
+<div id="store-view">
+
+  <div class="topbar">
+    <div class="container">
+      <span>Envíos a todo el país</span>
+      <span id="tb-promo"><strong>¡Envío gratis!</strong> por compras superiores a $150.000</span>
+    </div>
+  </div>
+
+  <header class="site">
+    <div class="container header-row">
+      <div class="brand">
+        <img id="logo-img" src="https://placehold.co/88x88/1C1F26/FFFFFF?text=LOGO" alt="Logo">
+        <span class="name" id="brand-name">Mi Tienda Online</span>
+      </div>
+      <div class="search-wrap">
+        <input type="text" placeholder="Buscar productos...">
+      </div>
+      <div class="header-actions">
+        <a href="#" onclick="openAdmin(event)">👤 Admin</a>
+        <a href="#" class="cart-btn">🛒 Carrito (0)</a>
+      </div>
+    </div>
+    <nav class="categories">
+      <div class="container" id="cat-nav"></div>
+    </nav>
+  </header>
+
+  <section class="hero" style="padding:0;">
+    <img id="hero-img" src="https://placehold.co/1600x600/1C1F26/2A2E38?text=Imagen+de+portada">
+    <div class="hero-content">
+      <h1 id="hero-title">Todo lo que necesitas, en un solo lugar</h1>
+      <p id="hero-sub">Cambia este texto, la imagen y el nombre del negocio desde el panel de administrador para adaptar la tienda a lo que vendas.</p>
+      <a href="#catalogo" class="cta">Ver catálogo</a>
+    </div>
+  </section>
+
+  <section id="categorias">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Explorar por categoría</h2>
+          <div class="sub">Las categorías se generan a partir de tus productos</div>
+        </div>
+      </div>
+      <div class="cat-grid" id="cat-tiles"></div>
+    </div>
+  </section>
+
+  <section id="catalogo" style="background:var(--paper-alt);">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Catálogo</h2>
+          <div class="sub" id="prod-count-sub"></div>
+        </div>
+      </div>
+      <div class="prod-grid" id="product-grid"></div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="container feat-grid">
+      <div class="f"><div class="icon">🚚</div><h3>Envíos rápidos</h3><p>Despacho ágil y seguimiento de tu pedido de principio a fin.</p></div>
+      <div class="f"><div class="icon">✅</div><h3>Calidad verificada</h3><p>Cada producto se revisa antes de salir de bodega.</p></div>
+      <div class="f"><div class="icon">💳</div><h3>Varias formas de pago</h3><p>Tarjetas, transferencia, contraentrega y más.</p></div>
+      <div class="f"><div class="icon">💬</div><h3>Atención directa</h3><p>Resolvemos tus dudas antes y después de la compra.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="foot-grid">
+        <div>
+          <h4 id="foot-brand-name">Mi Tienda Online</h4>
+          <p>Carrera 00 # 00 - 00, Tu Ciudad</p>
+          <p id="foot-email">contacto@mitienda.com</p>
+          <p id="foot-phone">+00 000 000 0000</p>
+        </div>
+        <div>
+          <h4>Categorías</h4>
+          <div id="foot-cats"></div>
+        </div>
+        <div>
+          <h4>Ayuda</h4>
+          <a href="#">Contacto</a><br>
+          <a href="#">Preguntas frecuentes</a><br>
+          <a href="#">Políticas de envío</a><br>
+          <a href="#" onclick="openAdmin(event)">Acceso administrador</a>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <span id="foot-copy">© 2026 Mi Tienda Online. Todos los derechos reservados.</span>
+        <span class="admin-link">Plantilla editable</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ======================= PANEL DE ADMINISTRADOR ======================= -->
+<div id="admin-view">
+
+  <div id="login-screen">
+    <div class="login-box">
+      <h2>Acceso administrador</h2>
+      <div class="hint">Usuario y contraseña por defecto: <strong>admin</strong> / <strong>admin123</strong></div>
+      <div id="login-error" class="error-msg" style="display:none;">Usuario o contraseña incorrectos.</div>
+      <div class="field">
+        <label>Usuario</label>
+        <input type="text" id="login-user" autocomplete="username">
+      </div>
+      <div class="field">
+        <label>Contraseña</label>
+        <input type="password" id="login-pass" autocomplete="current-password">
+      </div>
+      <button class="btn-primary" onclick="doLogin()">Iniciar sesión</button>
+      <p style="text-align:center;margin-top:16px;"><a href="#" onclick="closeAdmin(event)" style="font-size:13px;color:var(--ink-soft);">← Volver a la tienda</a></p>
+    </div>
+  </div>
+
+  <div id="admin-panel" style="display:none;">
+    <div class="admin-bar">
+      <div class="container">
+        <div class="title">Panel de administrador</div>
+        <div style="display:flex;gap:10px;">
+          <button onclick="closeAdmin(event)">Ver tienda</button>
+          <button onclick="doLogout()">Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-content">
+
+      <div class="admin-card">
+        <h3>Datos del negocio</h3>
+        <div class="row2">
+          <div class="field">
+            <label>Nombre del negocio</label>
+            <input type="text" id="set-brand-name">
+          </div>
+          <div class="field">
+            <label>URL del logo (imagen)</label>
+            <input type="text" id="set-logo-url" placeholder="https://...">
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>Correo de contacto</label>
+            <input type="text" id="set-email">
+          </div>
+          <div class="field">
+            <label>Teléfono de contacto</label>
+            <input type="text" id="set-phone">
+          </div>
+        </div>
+        <div class="field">
+          <label>Mensaje de la franja superior (envíos/promoción)</label>
+          <input type="text" id="set-promo">
+        </div>
+        <button class="btn-primary" onclick="saveBrand()">Guardar datos del negocio</button>
+      </div>
+
+      <div class="admin-card">
+        <h3>Portada (hero)</h3>
+        <div class="field">
+          <label>URL de la imagen de portada</label>
+          <input type="text" id="set-hero-img" placeholder="https://...">
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>Título principal</label>
+            <input type="text" id="set-hero-title">
+          </div>
+          <div class="field">
+            <label>Subtítulo</label>
+            <input type="text" id="set-hero-sub">
+          </div>
+        </div>
+        <button class="btn-primary" onclick="saveHero()">Guardar portada</button>
+      </div>
+
+      <div class="admin-card">
+        <h3>Cambiar contraseña de administrador</h3>
+        <div class="row2">
+          <div class="field">
+            <label>Usuario</label>
+            <input type="text" id="set-admin-user">
+          </div>
+          <div class="field">
+            <label>Nueva contraseña</label>
+            <input type="password" id="set-admin-pass" placeholder="Dejar en blanco para no cambiar">
+          </div>
+        </div>
+        <button class="btn-primary" onclick="saveCredentials()">Guardar credenciales</button>
+        <div class="small-note">Esta protección es solo para uso básico en el navegador; no reemplaza un sistema de login real con servidor.</div>
+      </div>
+
+      <div class="admin-card">
+        <h3 id="form-title">Agregar producto</h3>
+        <input type="hidden" id="edit-id">
+        <div class="row2">
+          <div class="field">
+            <label>Nombre del producto</label>
+            <input type="text" id="p-name">
+          </div>
+          <div class="field">
+            <label>Categoría</label>
+            <input type="text" id="p-cat" placeholder="Ej: Accesorios">
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>Precio (COP)</label>
+            <input type="text" id="p-price" placeholder="Ej: 59000">
+          </div>
+          <div class="field">
+            <label>URL de la imagen</label>
+            <input type="text" id="p-img" placeholder="https://...">
+          </div>
+        </div>
+        <div class="field">
+          <label>Descripción corta (opcional)</label>
+          <textarea id="p-desc"></textarea>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn-primary" onclick="saveProduct()" id="save-prod-btn">Agregar producto</button>
+          <button class="btn-primary" style="background:#B9B5AD;" onclick="resetProdForm()" id="cancel-edit-btn" type="button">Cancelar edición</button>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <h3>Productos (<span id="admin-prod-count">0</span>)</h3>
+        <div class="prod-admin-list" id="admin-prod-list"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="save-toast" id="toast">Guardado</div>
+
+<script>
+/* ============ ESTADO Y ALMACENAMIENTO ============
+   Todo se guarda en localStorage del navegador, así que los cambios
+   quedan en el dispositivo/navegador donde los hagas. Al subir este
+   archivo a un hosting normal, cada visitante ve la tienda pública
+   con los datos que tú guardaste como admin desde ese mismo navegador
+   (para que TODOS los visitantes vean los mismos cambios sin
+   depender de tu navegador, este archivo tendría que conectarse a
+   una base de datos real: lo comento al final de la respuesta). */
+
+const STORAGE_KEY = 'tienda_data_v1';
+const AUTH_KEY = 'tienda_admin_auth';
+
+const defaultData = {
+  brand: {
+    name: 'Mi Tienda Online',
+    logo: 'https://placehold.co/88x88/1C1F26/FFFFFF?text=LOGO',
+    email: 'contacto@mitienda.com',
+    phone: '+00 000 000 0000',
+    promo: '¡Envío gratis! por compras superiores a $150.000',
+    copy: '© 2026 Mi Tienda Online. Todos los derechos reservados.'
+  },
+  hero: {
+    img: 'https://placehold.co/1600x600/1C1F26/2A2E38?text=Imagen+de+portada',
+    title: 'Todo lo que necesitas, en un solo lugar',
+    sub: 'Cambia este texto, la imagen y el nombre del negocio desde el panel de administrador para adaptar la tienda a lo que vendas.'
+  },
+  admin: { user: 'admin', pass: 'admin123' },
+  products: [
+    {id:'1', name:'Producto de ejemplo 1', cat:'General', price:39900, img:'https://placehold.co/400x400/F1EEE8/1C1F26?text=Producto+1', desc:'Descripción breve del producto.'},
+    {id:'2', name:'Producto de ejemplo 2', cat:'General', price:59900, img:'https://placehold.co/400x400/F1EEE8/1C1F26?text=Producto+2', desc:'Descripción breve del producto.'},
+    {id:'3', name:'Producto de ejemplo 3', cat:'Ofertas', price:24900, img:'https://placehold.co/400x400/F1EEE8/1C1F26?text=Producto+3', desc:'Descripción breve del producto.'},
+    {id:'4', name:'Producto de ejemplo 4', cat:'Ofertas', price:89900, img:'https://placehold.co/400x400/F1EEE8/1C1F26?text=Producto+4', desc:'Descripción breve del producto.'}
+  ]
+};
+
+function loadData(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return JSON.parse(JSON.stringify(defaultData));
+}
+function saveData(data){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+let data = loadData();
+
+function fmtPrice(n){
+  n = Number(n)||0;
+  return '$' + n.toLocaleString('es-CO');
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg || 'Guardado';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+
+/* ============ RENDER TIENDA PÚBLICA ============ */
+function renderStore(){
+  document.getElementById('brand-name').textContent = data.brand.name;
+  document.getElementById('foot-brand-name').textContent = data.brand.name;
+  document.getElementById('logo-img').src = data.brand.logo;
+  document.getElementById('foot-email').textContent = data.brand.email;
+  document.getElementById('foot-phone').textContent = data.brand.phone;
+  document.getElementById('tb-promo').innerHTML = data.brand.promo;
+  document.getElementById('foot-copy').textContent = data.brand.copy;
+  document.title = data.brand.name;
+
+  document.getElementById('hero-img').src = data.hero.img;
+  document.getElementById('hero-title').textContent = data.hero.title;
+  document.getElementById('hero-sub').textContent = data.hero.sub;
+
+  const cats = [...new Set(data.products.map(p=>p.cat).filter(Boolean))];
+
+  const catNav = document.getElementById('cat-nav');
+  catNav.innerHTML = cats.map(c=>`<a href="#catalogo">${c}</a>`).join('') || '<a href="#catalogo">Catálogo</a>';
+
+  const footCats = document.getElementById('foot-cats');
+  footCats.innerHTML = cats.map(c=>`<a href="#catalogo">${c}</a><br>`).join('') || '<a href="#catalogo">Catálogo</a>';
+
+  const catTiles = document.getElementById('cat-tiles');
+  if(cats.length){
+    catTiles.innerHTML = cats.map(c=>{
+      const rep = data.products.find(p=>p.cat===c);
+      return `<a class="cat-tile" href="#catalogo">
+        <img src="${rep ? rep.img : 'https://placehold.co/300x300/F1EEE8/1C1F26?text=' + encodeURIComponent(c)}" alt="${c}">
+        <div class="label">${c}</div>
+      </a>`;
+    }).join('');
+  } else {
+    catTiles.innerHTML = '<div class="empty-note">Agrega productos con categoría desde el panel de administrador para verlas aquí.</div>';
+  }
+
+  const grid = document.getElementById('product-grid');
+  document.getElementById('prod-count-sub').textContent = data.products.length + ' producto(s) disponibles';
+  if(data.products.length){
+    grid.innerHTML = data.products.map(p=>`
+      <div class="prod-card">
+        <div class="img-wrap"><img src="${p.img}" alt="${p.name}"></div>
+        <div class="body">
+          <div class="cat-label">${p.cat || 'General'}</div>
+          <div class="pname">${p.name}</div>
+          <div class="stock">En stock</div>
+          <div class="price">${fmtPrice(p.price)}</div>
+          <button class="add-btn">Añadir al carrito</button>
+        </div>
+      </div>
+    `).join('');
+  } else {
+    grid.innerHTML = '<div class="empty-note">Todavía no hay productos. Entra al panel de administrador para agregar el primero.</div>';
+  }
+}
+
+/* ============ NAVEGACIÓN TIENDA / ADMIN ============ */
+function openAdmin(e){
+  if(e) e.preventDefault();
+  document.getElementById('store-view').classList.add('hidden');
+  document.getElementById('admin-view').classList.add('active');
+  if(sessionStorage.getItem(AUTH_KEY) === '1'){
+    showAdminPanel();
+  } else {
+    showLoginScreen();
+  }
+}
+function closeAdmin(e){
+  if(e) e.preventDefault();
+  document.getElementById('admin-view').classList.remove('active');
+  document.getElementById('store-view').classList.remove('hidden');
+  renderStore();
+}
+
+/* ============ LOGIN ============ */
+function showLoginScreen(){
+  document.getElementById('login-screen').style.display = 'block';
+  document.getElementById('admin-panel').style.display = 'none';
+  document.getElementById('login-error').style.display = 'none';
+  document.getElementById('login-user').value = '';
+  document.getElementById('login-pass').value = '';
+}
+function doLogin(){
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  if(u === data.admin.user && p === data.admin.pass){
+    sessionStorage.setItem(AUTH_KEY, '1');
+    showAdminPanel();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+function doLogout(){
+  sessionStorage.removeItem(AUTH_KEY);
+  showLoginScreen();
+  document.getElementById('login-screen').style.display = 'block';
+  document.getElementById('admin-panel').style.display = 'none';
+}
+
+/* ============ PANEL ADMIN ============ */
+function showAdminPanel(){
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('admin-panel').style.display = 'block';
+  fillAdminForms();
+  renderAdminProducts();
+}
+function fillAdminForms(){
+  document.getElementById('set-brand-name').value = data.brand.name;
+  document.getElementById('set-logo-url').value = data.brand.logo;
+  document.getElementById('set-email').value = data.brand.email;
+  document.getElementById('set-phone').value = data.brand.phone;
+  document.getElementById('set-promo').value = data.brand.promo;
+
+  document.getElementById('set-hero-img').value = data.hero.img;
+  document.getElementById('set-hero-title').value = data.hero.title;
+  document.getElementById('set-hero-sub').value = data.hero.sub;
+
+  document.getElementById('set-admin-user').value = data.admin.user;
+  document.getElementById('set-admin-pass').value = '';
+}
+function saveBrand(){
+  data.brand.name = document.getElementById('set-brand-name').value.trim() || 'Mi Tienda Online';
+  data.brand.logo = document.getElementById('set-logo-url').value.trim() || defaultData.brand.logo;
+  data.brand.email = document.getElementById('set-email').value.trim();
+  data.brand.phone = document.getElementById('set-phone').value.trim();
+  data.brand.promo = document.getElementById('set-promo').value.trim();
+  data.brand.copy = '© ' + new Date().getFullYear() + ' ' + data.brand.name + '. Todos los derechos reservados.';
+  saveData(data);
+  showToast('Datos del negocio guardados');
+}
+function saveHero(){
+  data.hero.img = document.getElementById('set-hero-img').value.trim() || defaultData.hero.img;
+  data.hero.title = document.getElementById('set-hero-title').value.trim();
+  data.hero.sub = document.getElementById('set-hero-sub').value.trim();
+  saveData(data);
+  showToast('Portada guardada');
+}
+function saveCredentials(){
+  const u = document.getElementById('set-admin-user').value.trim();
+  const p = document.getElementById('set-admin-pass').value;
+  if(u) data.admin.user = u;
+  if(p) data.admin.pass = p;
+  saveData(data);
+  showToast('Credenciales actualizadas');
+}
+
+function renderAdminProducts(){
+  const list = document.getElementById('admin-prod-list');
+  document.getElementById('admin-prod-count').textContent = data.products.length;
+  if(!data.products.length){
+    list.innerHTML = '<div class="empty-note">No hay productos todavía.</div>';
+    return;
+  }
+  list.innerHTML = data.products.map(p=>`
+    <div class="prod-admin-row">
+      <img src="${p.img}" alt="${p.name}">
+      <div class="info">
+        <div class="n">${p.name}</div>
+        <div class="p">${p.cat || 'General'} · ${fmtPrice(p.price)}</div>
+      </div>
+      <div class="acts">
+        <button onclick="editProduct('${p.id}')">Editar</button>
+        <button class="danger" onclick="deleteProduct('${p.id}')">Eliminar</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function resetProdForm(){
+  document.getElementById('edit-id').value = '';
+  document.getElementById('p-name').value = '';
+  document.getElementById('p-cat').value = '';
+  document.getElementById('p-price').value = '';
+  document.getElementById('p-img').value = '';
+  document.getElementById('p-desc').value = '';
+  document.getElementById('form-title').textContent = 'Agregar producto';
+  document.getElementById('save-prod-btn').textContent = 'Agregar producto';
+}
+
+function editProduct(id){
+  const p = data.products.find(x=>x.id===id);
+  if(!p) return;
+  document.getElementById('edit-id').value = p.id;
+  document.getElementById('p-name').value = p.name;
+  document.getElementById('p-cat').value = p.cat || '';
+  document.getElementById('p-price').value = p.price;
+  document.getElementById('p-img').value = p.img;
+  document.getElementById('p-desc').value = p.desc || '';
+  document.getElementById('form-title').textContent = 'Editar producto';
+  document.getElementById('save-prod-btn').textContent = 'Guardar cambios';
+  document.getElementById('form-title').scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+function deleteProduct(id){
+  if(!confirm('¿Eliminar este producto?')) return;
+  data.products = data.products.filter(x=>x.id!==id);
+  saveData(data);
+  renderAdminProducts();
+  showToast('Producto eliminado');
+}
+
+function saveProduct(){
+  const name = document.getElementById('p-name').value.trim();
+  const cat = document.getElementById('p-cat').value.trim();
+  const price = document.getElementById('p-price').value.trim();
+  const img = document.getElementById('p-img').value.trim() || 'https://placehold.co/400x400/F1EEE8/1C1F26?text=' + encodeURIComponent(name || 'Producto');
+  const desc = document.getElementById('p-desc').value.trim();
+  if(!name || !price){
+    alert('Por favor completa al menos el nombre y el precio.');
+    return;
+  }
+  const editId = document.getElementById('edit-id').value;
+  if(editId){
+    const p = data.products.find(x=>x.id===editId);
+    Object.assign(p, {name, cat, price:Number(price)||0, img, desc});
+  } else {
+    data.products.push({id:String(Date.now()), name, cat, price:Number(price)||0, img, desc});
+  }
+  saveData(data);
+  renderAdminProducts();
+  resetProdForm();
+  showToast('Producto guardado');
+}
+
+/* ============ INICIO ============ */
+renderStore();
+</script>
+
+</body>
+</html>
