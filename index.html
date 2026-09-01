@@ -73,7 +73,7 @@
   .section-head .sub{color:var(--ink-soft);font-size:14.5px;margin-top:4px;}
   .see-all{font-weight:600;font-size:14px;color:var(--accent);white-space:nowrap;background:none;border:none;}
   .active-filter{display:inline-flex;align-items:center;gap:8px;background:var(--paper-alt);border:1px solid var(--line);border-radius:20px;padding:6px 8px 6px 14px;font-size:13px;font-weight:600;margin-bottom:18px;}
-  .active-filter button{background:var(--ink);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:12px;line-height:1;}
+  .active-filter button{background:var(--ink);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;}
 
   /* Category tiles */
   .cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px;}
@@ -200,7 +200,7 @@
   .side-menu{position:fixed;top:0;left:0;bottom:0;width:min(320px,86vw);background:#fff;z-index:71;transform:translateX(-100%);transition:transform .25s;display:flex;flex-direction:column;}
   .side-menu.show{transform:translateX(0);}
   .side-menu-head{background:var(--paper-alt);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;font-weight:700;letter-spacing:.04em;font-size:13px;text-transform:uppercase;flex:0 0 auto;}
-  .side-menu-head button{background:var(--ink);color:#fff;border:none;width:28px;height:28px;border-radius:50%;font-size:14px;}
+  .side-menu-head button{background:var(--ink);color:#fff;border:none;width:28px;height:28px;border-radius:50%;font-size:14px;display:flex;align-items:center;justify-content:center;}
   .side-menu-body{overflow-y:auto;flex:1;}
   .sm-item{border-bottom:1px solid var(--line);}
   .sm-item>button{width:100%;background:none;border:none;display:flex;justify-content:space-between;align-items:center;padding:14px 20px;font-size:14.5px;font-weight:600;text-align:left;color:var(--ink);}
@@ -276,16 +276,27 @@
 
   <header class="site">
     <div class="container header-row">
-      <button class="hamburger-btn" onclick="openSideMenu()" aria-label="Menú">☰</button>
+      <button class="hamburger-btn" onclick="openSideMenu()" aria-label="Menú">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
       <div class="brand">
         <img id="logo-img" src="https://placehold.co/88x88/1C1F26/FFFFFF?text=LOGO" alt="Logo">
         <span class="name" id="brand-name">Mi Tienda Online</span>
       </div>
       <div class="header-actions">
-        <button onclick="toggleSearch()" aria-label="Buscar">🔍</button>
-        <a href="#" onclick="openAdmin(event)">👤</a>
-        <div class="icon-badge-wrap"><a href="#" onclick="toggleWishlist(event)" aria-label="Lista de deseos">♡<span class="icon-badge" id="wish-count">0</span></a></div>
-        <a href="#" class="cart-btn">🛒 <span id="cart-count">0</span></a>
+        <button onclick="toggleSearch()" aria-label="Buscar">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <a href="#" onclick="openAdmin(event)" aria-label="Admin">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </a>
+        <div class="icon-badge-wrap"><a href="#" onclick="toggleWishlist(event)" aria-label="Lista de deseos">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7.5-4.6-10-9.3C.5 8 2 4.5 5.5 4c2.2-.3 4 .9 6.5 3.5C14.5 4.9 16.3 3.7 18.5 4c3.5.5 5 4 3.5 7.7C19.5 16.4 12 21 12 21z"/></svg>
+          <span class="icon-badge" id="wish-count">0</span></a></div>
+        <a href="#" class="cart-btn" aria-label="Carrito">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.5 3h2l2.7 12.4a2 2 0 0 0 2 1.6h8.1a2 2 0 0 0 2-1.6L21.5 8H6"/></svg>
+          <span id="cart-count">0</span>
+        </a>
       </div>
     </div>
     <nav class="categories">
@@ -298,7 +309,7 @@
   <div class="search-panel" id="search-panel">
     <div class="container">
       <input type="text" id="search-input" placeholder="Buscar productos...">
-      <button onclick="toggleSearch()">✕</button>
+      <button onclick="toggleSearch()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg></button>
     </div>
   </div>
 
@@ -306,7 +317,7 @@
   <div class="side-menu" id="side-menu">
     <div class="side-menu-head">
       <span>Menú</span>
-      <button onclick="closeSideMenu()">✕</button>
+      <button onclick="closeSideMenu()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg></button>
     </div>
     <div class="side-menu-body" id="side-menu-body"></div>
   </div>
@@ -393,9 +404,9 @@
       <div class="foot-grid">
         <div>
           <h4 id="foot-brand-name">Mi Tienda Online</h4>
-          <div class="foot-info-row"><span class="ic">📍</span><p id="foot-address">Tu dirección aquí</p></div>
-          <div class="foot-info-row"><span class="ic">✉️</span><p id="foot-email">contacto@mitienda.com</p></div>
-          <div class="foot-info-row"><span class="ic">📞</span><p id="foot-phone">+00 000 000 0000</p></div>
+          <div class="foot-info-row"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.3-7-11a7 7 0 0 1 14 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.4"/></svg></span><p id="foot-address">Tu dirección aquí</p></div>
+          <div class="foot-info-row"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M3 6.5l9 6.5 9-6.5"/></svg></span><p id="foot-email">contacto@mitienda.com</p></div>
+          <div class="foot-info-row"><span class="ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 3.5h3.4l1.6 4.4-2 1.6a13.3 13.3 0 0 0 6.6 6.6l1.6-2 4.4 1.6v3.4c0 1.1-1 2-2.1 1.9C9.7 20.5 3.5 14.3 2.6 6.6a2 2 0 0 1 1.9-2.1z"/></svg></span><p id="foot-phone">+00 000 000 0000</p></div>
           <div class="foot-social" id="foot-social"></div>
         </div>
         <div>
@@ -426,7 +437,9 @@
     </div>
   </footer>
 
-  <a href="#" class="whatsapp-float" id="whatsapp-float" target="_blank" rel="noopener" aria-label="WhatsApp">📞</a>
+  <a href="#" class="whatsapp-float" id="whatsapp-float" target="_blank" rel="noopener" aria-label="WhatsApp">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.4 5L2 22l5.1-1.3c1.4.8 3.1 1.2 4.9 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.7.8-.8.9-.1.2-.3.2-.5.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.3-1.6-.1-.2 0-.4.1-.5.1-.1.2-.3.4-.4.1-.1.2-.2.2-.4.1-.1.1-.3 0-.4-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.2-.9.9-.9 2.2s.9 2.6 1.1 2.8c.1.2 1.9 2.9 4.6 4.1.6.3 1.1.4 1.5.6.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg>
+  </a>
 </div>
 
 <!-- ======================= PANEL DE ADMINISTRADOR ======================= -->
@@ -748,9 +761,9 @@
 
 <script>
 /* =====================================================================
-   ⚠️  PEGA AQUÍ LAS CLAVES DE TU PROYECTO DE FIREBASE  ⚠️
-   Las encuentras en: Firebase Console → ⚙ Configuración del proyecto
-   → General → "Tus apps" → SDK de Firebase (config)
+   >>> PEGA AQUÍ LAS CLAVES DE TU PROYECTO DE FIREBASE <<<
+   Las encuentras en: Firebase Console - Configuración del proyecto
+   - General - "Tus apps" - SDK de Firebase (config)
    ===================================================================== */
 const firebaseConfig = {
   apiKey: "TU_API_KEY",
@@ -766,7 +779,8 @@ const isConfigured = firebaseConfig.apiKey && firebaseConfig.apiKey.indexOf('TU_
 if(!isConfigured){
   document.getElementById('config-banner-slot').innerHTML = `
     <div class="config-banner">
-      ⚠️ <strong>Este sitio aún no está conectado a Firebase.</strong> Abre el archivo .html, busca el bloque
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;"><path d="M12 3.5l10 17.3H2z"/><line x1="12" y1="10" x2="12" y2="14.5"/><circle cx="12" cy="17.3" r="0.6" fill="currentColor" stroke="none"/></svg>
+      <strong>Este sitio aún no está conectado a Firebase.</strong> Abre el archivo .html, busca el bloque
       <code>firebaseConfig</code> cerca del final y pega ahí las claves de tu proyecto de Firebase
       (Configuración del proyecto → Tus apps → SDK de Firebase). Mientras tanto, la tienda y el panel de
       administrador no podrán guardar datos ni fotos. Revisa la guía adjunta para los pasos completos.
@@ -793,6 +807,13 @@ function showToast(msg){
 }
 function esc(s){
   return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function starsHtml(rating, size){
+  size = size || 13;
+  const r = Math.max(1, Math.min(5, Number(rating)||5));
+  const filled = `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l2.9 6 6.6.6-5 4.4 1.5 6.5L12 16.8 6 20l1.5-6.5-5-4.4 6.6-.6z"/></svg>`;
+  const empty = `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2.5l2.9 6 6.6.6-5 4.4 1.5 6.5L12 16.8 6 20l1.5-6.5-5-4.4 6.6-.6z"/></svg>`;
+  return '<span style="display:inline-flex;gap:1px;">' + filled.repeat(r) + empty.repeat(5-r) + '</span>';
 }
 
 if(isConfigured){
@@ -890,7 +911,7 @@ function renderSiteConfig(){
     'Productos verificados antes de despachar'
   ];
   document.getElementById('why-grid').innerHTML = points.map(p=>`
-    <div class="why-item"><div class="chk">✓</div><p>${esc(p)}</p></div>
+    <div class="why-item"><div class="chk"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></div><p>${esc(p)}</p></div>
   `).join('');
 
   const socialWrap = document.getElementById('foot-social');
@@ -902,7 +923,12 @@ function renderSiteConfig(){
 
   document.getElementById('foot-about').textContent = c.aboutText || 'Cuéntale a tus clientes sobre tu negocio desde el panel de administrador.';
 
-  const trustIcons = ['🚚','🛡️','✔️','👤'];
+  const trustIcons = [
+    '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="7" width="12" height="9"/><path d="M13.5 10h4l3 3v3h-7z"/><circle cx="6" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg>',
+    '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l8 3.2v6c0 5-3.4 8.4-8 9.8-4.6-1.4-8-4.8-8-9.8v-6z"/><path d="M8.5 12l2.3 2.3 4.7-4.7"/></svg>',
+    '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>',
+    '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>'
+  ];
   const trust = (c.trustBadges && c.trustBadges.length) ? c.trustBadges : ['Envíos a todo el país', 'Compra 100% garantizada'];
   document.getElementById('trust-row').innerHTML = trust.map((t,i)=>`
     <div class="trust-item"><span class="ic">${trustIcons[i % trustIcons.length]}</span><span class="tx">${esc(t)}</span></div>
@@ -975,8 +1001,8 @@ function renderSideMenu(){
   body.innerHTML = `
     <div class="sm-item"><button onclick="closeSideMenu(); document.getElementById('store-view').scrollIntoView();" style="cursor:pointer;">Inicio</button></div>
     ${catsHtml}
-    <a href="#" class="sm-link" onclick="toggleWishlist(event)">♡ Lista de deseos</a>
-    <a href="#" class="sm-link" onclick="closeSideMenu(); toggleSearch();">🔍 Buscar</a>
+    <a href="#" class="sm-link" onclick="toggleWishlist(event)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7.5-4.6-10-9.3C.5 8 2 4.5 5.5 4c2.2-.3 4 .9 6.5 3.5C14.5 4.9 16.3 3.7 18.5 4c3.5.5 5 4 3.5 7.7C19.5 16.4 12 21 12 21z"/></svg> Lista de deseos</a>
+    <a href="#" class="sm-link" onclick="closeSideMenu(); toggleSearch();"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> Buscar</a>
     <div class="sm-contact">
       <strong>Contáctanos</strong>
       ${c.email ? 'Correo: ' + esc(c.email) + '<br>' : ''}
@@ -1115,7 +1141,7 @@ function renderCatalog(){
 
   const chipSlot = document.getElementById('filter-chip-slot');
   if(currentFilter.cat){
-    chipSlot.innerHTML = `<div class="active-filter">${esc(currentFilter.cat)}${currentFilter.sub ? ' · ' + esc(currentFilter.sub) : ''} <button onclick="clearFilter()">✕</button></div>`;
+    chipSlot.innerHTML = `<div class="active-filter">${esc(currentFilter.cat)}${currentFilter.sub ? ' · ' + esc(currentFilter.sub) : ''} <button onclick="clearFilter()"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg></button></div>`;
   } else {
     chipSlot.innerHTML = '';
   }
@@ -1149,7 +1175,7 @@ function renderTestimonials(){
     return;
   }
   grid.innerHTML = testimonials.map(t=>{
-    const stars = '★'.repeat(Math.max(1,Math.min(5, Number(t.rating)||5))) + '☆'.repeat(5-Math.max(1,Math.min(5, Number(t.rating)||5)));
+    const stars = starsHtml(t.rating, 14);
     return `
     <div class="testi-card">
       <div class="stars">${stars}</div>
@@ -1388,7 +1414,7 @@ function renderAdminProducts(){
     <div class="prod-admin-row">
       <img src="${p.img || 'https://placehold.co/60x60/F1EEE8/1C1F26?text=+'}" alt="${esc(p.name)}">
       <div class="info">
-        <div class="n">${esc(p.name)} ${p.featured ? '⭐' : ''}</div>
+        <div class="n">${esc(p.name)} ${p.featured ? '<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="color:var(--star);vertical-align:-2px;"><path d="M12 2.5l2.9 6 6.6.6-5 4.4 1.5 6.5L12 16.8 6 20l1.5-6.5-5-4.4 6.6-.6z"/></svg>' : ''}</div>
         <div class="p">${esc(p.category || 'General')} · ${fmtPrice(p.price)}</div>
       </div>
       <div class="acts">
@@ -1467,7 +1493,7 @@ function renderAdminTestimonials(){
     <div class="testi-admin-row">
       <img src="${t.photo || 'https://placehold.co/60x60/F1EEE8/1C1F26?text=+'}" alt="${esc(t.name)}">
       <div class="info">
-        <div class="n">${esc(t.name)} · ${'★'.repeat(Number(t.rating)||5)}</div>
+        <div class="n">${esc(t.name)} · <span style="color:var(--star);">${starsHtml(t.rating, 11)}</span></div>
         <div class="p">${esc((t.text||'').slice(0,60))}${(t.text||'').length>60?'…':''}</div>
       </div>
       <div class="acts">
