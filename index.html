@@ -40,10 +40,8 @@
   .brand{display:flex;align-items:center;gap:12px;flex:0 0 auto;}
   .brand img{height:44px;width:44px;object-fit:cover;border-radius:8px;background:var(--paper-alt);}
   .brand .name{font-family:'Sora',sans-serif;font-weight:800;font-size:22px;letter-spacing:-.01em;}
-  .search-wrap{flex:1;max-width:460px;position:relative;}
-  .search-wrap input{width:100%;padding:10px 14px;border:1px solid var(--line);border-radius:24px;font-size:14px;background:var(--paper-alt);}
   .header-actions{display:flex;align-items:center;gap:18px;margin-left:auto;font-size:14px;}
-  .header-actions a{display:flex;align-items:center;gap:6px;color:var(--ink-soft);font-weight:600;background:none;border:none;font-size:14px;}
+  .header-actions a, .header-actions button{display:flex;align-items:center;gap:6px;color:var(--ink-soft);font-weight:600;background:none;border:none;font-size:16px;padding:0;}
   .cart-btn{background:var(--ink);color:#fff;padding:9px 16px;border-radius:24px;font-weight:600;font-size:14px;}
 
   /* Mega menu */
@@ -123,7 +121,7 @@
 
   /* Footer */
   footer{background:var(--ink);color:#D9D6D0;padding:48px 0 24px;}
-  .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:32px;margin-bottom:32px;}
+  .foot-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:32px;margin-bottom:8px;}
   .foot-grid h4{color:#fff;font-size:14px;margin:0 0 14px;}
   .foot-grid p, .foot-grid a{font-size:13.5px;color:#B9B5AD;line-height:1.9;}
   .foot-grid a:hover{color:#fff;}
@@ -179,9 +177,82 @@
   .config-banner{background:#FFF4E5;border:1px solid #F4CE8B;color:#7A4E00;padding:16px 20px;border-radius:var(--radius);font-size:13.5px;line-height:1.6;margin:20px auto;max-width:1180px;}
   .config-banner code{background:#00000010;padding:1px 6px;border-radius:4px;}
   .spinner-note{text-align:center;padding:60px 24px;color:var(--ink-soft);font-size:14px;}
+
+  /* WhatsApp flotante */
+  .whatsapp-float{display:none;position:fixed;right:20px;bottom:20px;width:56px;height:56px;border-radius:50%;background:#25D366;color:#fff;align-items:center;justify-content:center;font-size:26px;box-shadow:0 6px 18px rgba(0,0,0,.25);z-index:60;}
+  .whatsapp-float.show{display:flex;}
+  .whatsapp-float:hover{background:#1DA851;}
+
+  /* Topbar carrusel */
+  .topbar{overflow:hidden;position:relative;height:38px;}
+  .topbar .container{position:relative;height:100%;padding:0 50px;}
+  .topbar-msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:8px;opacity:0;transition:opacity .5s;text-align:center;}
+  .topbar-msg.show{opacity:1;}
+
+  /* Hamburguesa + iconos con badge */
+  .hamburger-btn{background:none;border:none;font-size:22px;line-height:1;color:var(--ink);padding:4px;flex:0 0 auto;}
+  .icon-badge-wrap{position:relative;display:inline-flex;}
+  .icon-badge{position:absolute;top:-7px;right:-9px;background:var(--accent);color:#fff;font-size:10px;font-weight:700;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px;}
+
+  /* Menú lateral (acordeón) */
+  .side-menu-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:70;}
+  .side-menu-overlay.show{display:block;}
+  .side-menu{position:fixed;top:0;left:0;bottom:0;width:min(320px,86vw);background:#fff;z-index:71;transform:translateX(-100%);transition:transform .25s;display:flex;flex-direction:column;}
+  .side-menu.show{transform:translateX(0);}
+  .side-menu-head{background:var(--paper-alt);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;font-weight:700;letter-spacing:.04em;font-size:13px;text-transform:uppercase;flex:0 0 auto;}
+  .side-menu-head button{background:var(--ink);color:#fff;border:none;width:28px;height:28px;border-radius:50%;font-size:14px;}
+  .side-menu-body{overflow-y:auto;flex:1;}
+  .sm-item{border-bottom:1px solid var(--line);}
+  .sm-item>button{width:100%;background:none;border:none;display:flex;justify-content:space-between;align-items:center;padding:14px 20px;font-size:14.5px;font-weight:600;text-align:left;color:var(--ink);}
+  .sm-item .sm-sub{display:none;padding:0 20px 12px 30px;}
+  .sm-item.open .sm-sub{display:block;}
+  .sm-item .sm-sub a{display:block;padding:6px 0;font-size:13.5px;color:var(--ink-soft);}
+  .sm-item .sm-sub a:hover{color:var(--accent);}
+  .sm-link{display:flex;align-items:center;gap:10px;padding:14px 20px;font-size:14.5px;font-weight:600;border-bottom:1px solid var(--line);}
+  .sm-contact{padding:18px 20px;font-size:13px;color:var(--ink-soft);line-height:1.9;}
+  .sm-contact strong{display:block;color:var(--ink);font-size:14px;margin-bottom:4px;}
+
+  /* Buscador (panel superpuesto) */
+  .search-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:65;}
+  .search-overlay.show{display:block;}
+  .search-panel{display:none;position:fixed;top:0;left:0;right:0;background:#fff;padding:16px 24px;z-index:66;box-shadow:0 8px 20px rgba(0,0,0,.12);}
+  .search-panel.show{display:block;}
+  .search-panel .container{display:flex;gap:12px;align-items:center;padding:0;}
+  .search-panel input{flex:1;padding:12px 16px;border:1px solid var(--line);border-radius:24px;font-size:15px;background:var(--paper-alt);}
+  .search-panel button{background:none;border:none;font-size:20px;}
+
+  /* Tarjetas flotantes sobre el hero */
+  .hero-cards{position:relative;display:flex;gap:14px;max-width:640px;margin:-56px auto 0;padding:0 24px 40px;flex-wrap:wrap;justify-content:center;}
+  .hero-mini-card{background:rgba(28,31,38,.82);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:12px 14px;display:flex;gap:10px;align-items:center;flex:1 1 220px;max-width:260px;}
+  .hero-mini-card img{width:48px;height:48px;object-fit:cover;border-radius:6px;background:#fff;flex:0 0 auto;}
+  .hero-mini-card .cat{color:var(--accent);font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
+  .hero-mini-card .nm{font-size:12.5px;font-weight:700;color:#fff;line-height:1.25;margin:2px 0;}
+  .hero-mini-card .pr{font-size:13px;font-weight:800;color:#fff;}
+
+  /* Categorías: tarjetas grandes verticales */
+  .cat-grid.cat-grid-lg{display:flex;flex-direction:column;gap:18px;}
+  .cat-grid.cat-grid-lg .cat-tile{aspect-ratio:16/10;}
+  .cat-grid.cat-grid-lg .cat-tile .label{font-size:20px;letter-spacing:.02em;padding:22px;background:linear-gradient(0deg,rgba(0,0,0,.72),transparent 60%);}
+
+  /* Franja de confianza */
+  .trust-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;}
+  .trust-item{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;background:#fff;}
+  .trust-item .ic{font-size:22px;color:var(--accent);flex:0 0 auto;}
+  .trust-item .tx{font-weight:800;font-size:13.5px;letter-spacing:.03em;text-transform:uppercase;}
+
+  /* Footer: info con íconos, acordeón y logos de pago */
+  .foot-info-row{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start;}
+  .foot-info-row .ic{flex:0 0 auto;opacity:.85;}
+  .foot-info-row p{margin:0;}
+  .foot-acc-item{border-bottom:1px solid #33363E;}
+  .foot-acc-item:first-child{border-top:1px solid #33363E;}
+  .foot-acc-item>button{width:100%;background:none;border:none;color:#fff;font-weight:700;font-size:14px;padding:16px 0;display:flex;justify-content:space-between;align-items:center;}
+  .foot-acc-item .foot-acc-body{display:none;padding-bottom:16px;}
+  .foot-acc-item.open .foot-acc-body{display:block;}
+  .pay-row{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 24px;}
+  .pay-row span{background:#2A2E38;color:#B9B5AD;font-size:11px;font-weight:700;padding:6px 10px;border-radius:5px;}
   @media(max-width:760px){
     .header-row{flex-wrap:wrap;}
-    .search-wrap{order:3;max-width:none;width:100%;}
     .foot-grid{grid-template-columns:1fr;}
     .row2{grid-template-columns:1fr;}
     .hero-content{padding:64px 20px 72px;}
@@ -198,23 +269,23 @@
 
   <div class="topbar">
     <div class="container">
-      <span>Envíos a todo el país</span>
-      <span id="tb-promo"><strong>¡Bienvenido!</strong> Configura este mensaje desde el panel de administrador</span>
+      <div class="topbar-msg show" id="topbar-msg-0"><span>Envíos a todo el país</span></div>
+      <div class="topbar-msg" id="topbar-msg-1"><span id="tb-promo"><strong>¡Bienvenido!</strong> Configura este mensaje desde el panel de administrador</span></div>
     </div>
   </div>
 
   <header class="site">
     <div class="container header-row">
+      <button class="hamburger-btn" onclick="openSideMenu()" aria-label="Menú">☰</button>
       <div class="brand">
         <img id="logo-img" src="https://placehold.co/88x88/1C1F26/FFFFFF?text=LOGO" alt="Logo">
         <span class="name" id="brand-name">Mi Tienda Online</span>
       </div>
-      <div class="search-wrap">
-        <input type="text" id="search-input" placeholder="Buscar productos...">
-      </div>
       <div class="header-actions">
-        <a href="#" onclick="openAdmin(event)">👤 Admin</a>
-        <a href="#" class="cart-btn">🛒 Carrito (0)</a>
+        <button onclick="toggleSearch()" aria-label="Buscar">🔍</button>
+        <a href="#" onclick="openAdmin(event)">👤</a>
+        <div class="icon-badge-wrap"><a href="#" onclick="toggleWishlist(event)" aria-label="Lista de deseos">♡<span class="icon-badge" id="wish-count">0</span></a></div>
+        <a href="#" class="cart-btn">🛒 <span id="cart-count">0</span></a>
       </div>
     </div>
     <nav class="categories">
@@ -223,6 +294,23 @@
   </header>
   <div class="mega-overlay" id="mega-overlay" onclick="closeMegaMenu()"></div>
 
+  <div class="search-overlay" id="search-overlay" onclick="toggleSearch()"></div>
+  <div class="search-panel" id="search-panel">
+    <div class="container">
+      <input type="text" id="search-input" placeholder="Buscar productos...">
+      <button onclick="toggleSearch()">✕</button>
+    </div>
+  </div>
+
+  <div class="side-menu-overlay" id="side-menu-overlay" onclick="closeSideMenu()"></div>
+  <div class="side-menu" id="side-menu">
+    <div class="side-menu-head">
+      <span>Menú</span>
+      <button onclick="closeSideMenu()">✕</button>
+    </div>
+    <div class="side-menu-body" id="side-menu-body"></div>
+  </div>
+
   <section class="hero" style="padding:0;">
     <img id="hero-img" src="https://placehold.co/1600x600/1C1F26/2A2E38?text=Imagen+de+portada">
     <div class="hero-content">
@@ -230,6 +318,7 @@
       <p id="hero-sub">Edita este texto, la imagen y el nombre del negocio desde el panel de administrador.</p>
       <a href="#" id="hero-cta" class="cta">Ver catálogo</a>
     </div>
+    <div class="hero-cards" id="hero-cards"></div>
   </section>
 
   <section id="destacados">
@@ -253,7 +342,7 @@
           <div class="sub">Encuentra justo lo que buscas</div>
         </div>
       </div>
-      <div class="cat-grid" id="cat-tiles"></div>
+      <div class="cat-grid cat-grid-lg" id="cat-tiles"></div>
     </div>
   </section>
 
@@ -293,34 +382,51 @@
     </div>
   </section>
 
+  <section id="confianza" style="padding:0 0 56px;">
+    <div class="container">
+      <div class="trust-row" id="trust-row"></div>
+    </div>
+  </section>
+
   <footer>
     <div class="container">
       <div class="foot-grid">
         <div>
           <h4 id="foot-brand-name">Mi Tienda Online</h4>
-          <p id="foot-address">Tu dirección aquí</p>
-          <p id="foot-email">contacto@mitienda.com</p>
-          <p id="foot-phone">+00 000 000 0000</p>
+          <div class="foot-info-row"><span class="ic">📍</span><p id="foot-address">Tu dirección aquí</p></div>
+          <div class="foot-info-row"><span class="ic">✉️</span><p id="foot-email">contacto@mitienda.com</p></div>
+          <div class="foot-info-row"><span class="ic">📞</span><p id="foot-phone">+00 000 000 0000</p></div>
           <div class="foot-social" id="foot-social"></div>
         </div>
         <div>
-          <h4>Categorías</h4>
-          <div id="foot-cats"></div>
-        </div>
-        <div>
-          <h4>Ayuda</h4>
-          <a href="#">Contacto</a><br>
-          <a href="#">Preguntas frecuentes</a><br>
-          <a href="#">Políticas de envío</a><br>
-          <a href="#" onclick="openAdmin(event)">Acceso administrador</a>
+          <div class="foot-acc-item" id="facc-cat">
+            <button onclick="toggleFootAcc('facc-cat')"><span>Categorías</span><span>+</span></button>
+            <div class="foot-acc-body" id="foot-cats"></div>
+          </div>
+          <div class="foot-acc-item" id="facc-about">
+            <button onclick="toggleFootAcc('facc-about')"><span>Sobre Nosotros</span><span>+</span></button>
+            <div class="foot-acc-body"><p id="foot-about" style="margin:0;font-size:13.5px;color:#B9B5AD;line-height:1.7;">Cuéntale a tus clientes sobre tu negocio desde el panel de administrador.</p></div>
+          </div>
+          <div class="foot-acc-item" id="facc-help">
+            <button onclick="toggleFootAcc('facc-help')"><span>Ayuda</span><span>+</span></button>
+            <div class="foot-acc-body">
+              <a href="#">Contacto</a><br>
+              <a href="#">Preguntas frecuentes</a><br>
+              <a href="#">Políticas de envío</a><br>
+              <a href="#" onclick="openAdmin(event)">Acceso administrador</a>
+            </div>
+          </div>
         </div>
       </div>
+      <div class="pay-row" id="pay-row"></div>
       <div class="foot-bottom">
         <span id="foot-copy">© 2026 Mi Tienda Online. Todos los derechos reservados.</span>
         <span class="admin-link">Sitio editable · Firebase</span>
       </div>
     </div>
   </footer>
+
+  <a href="#" class="whatsapp-float" id="whatsapp-float" target="_blank" rel="noopener" aria-label="WhatsApp">📞</a>
 </div>
 
 <!-- ======================= PANEL DE ADMINISTRADOR ======================= -->
@@ -467,6 +573,23 @@
           <input type="text" id="set-wa">
         </div>
         <button class="btn-primary" onclick="saveSocial()">Guardar redes</button>
+      </div>
+
+      <div class="admin-card">
+        <h3>Sobre nosotros, confianza y pagos</h3>
+        <div class="field">
+          <label>Texto de "Sobre nosotros" (footer)</label>
+          <textarea id="set-about" rows="3"></textarea>
+        </div>
+        <div class="field">
+          <label>Franja de confianza — un beneficio por línea (ej: Despacho a domicilio)</label>
+          <textarea id="set-trust" rows="3" placeholder="Despacho a domicilio&#10;Asesoría personalizada"></textarea>
+        </div>
+        <div class="field">
+          <label>Métodos de pago aceptados (separados por coma)</label>
+          <input type="text" id="set-payments" placeholder="Ej: Visa, Mastercard, PSE, Contraentrega">
+        </div>
+        <button class="btn-primary" onclick="saveExtras()">Guardar sección</button>
       </div>
 
       <div class="admin-card">
@@ -682,11 +805,13 @@ if(isConfigured){
   db.collection('config').doc('site').onSnapshot(doc=>{
     siteConfig = doc.exists ? doc.data() : {};
     renderSiteConfig();
+    renderSideMenu();
     fillAdminForms();
   });
   db.collection('categories').orderBy('order','asc').onSnapshot(snap=>{
     categories = snap.docs.map(d=>({id:d.id, ...d.data()}));
     renderMegaNav();
+    renderSideMenu();
     renderCategoryTiles();
     renderFooterCats();
     renderAdminCategories();
@@ -774,6 +899,25 @@ function renderSiteConfig(){
   if(c.socialInstagram) socialHtml += `<a href="${esc(c.socialInstagram)}" target="_blank" rel="noopener">ig</a>`;
   if(c.socialWhatsapp) socialHtml += `<a href="${esc(c.socialWhatsapp)}" target="_blank" rel="noopener">wa</a>`;
   socialWrap.innerHTML = socialHtml;
+
+  document.getElementById('foot-about').textContent = c.aboutText || 'Cuéntale a tus clientes sobre tu negocio desde el panel de administrador.';
+
+  const trustIcons = ['🚚','🛡️','✔️','👤'];
+  const trust = (c.trustBadges && c.trustBadges.length) ? c.trustBadges : ['Envíos a todo el país', 'Compra 100% garantizada'];
+  document.getElementById('trust-row').innerHTML = trust.map((t,i)=>`
+    <div class="trust-item"><span class="ic">${trustIcons[i % trustIcons.length]}</span><span class="tx">${esc(t)}</span></div>
+  `).join('');
+
+  const pays = (c.paymentMethods && c.paymentMethods.length) ? c.paymentMethods : ['Visa','Mastercard','PSE','Contraentrega'];
+  document.getElementById('pay-row').innerHTML = pays.map(p=>`<span>${esc(p)}</span>`).join('');
+
+  const waBtn = document.getElementById('whatsapp-float');
+  if(c.socialWhatsapp){
+    waBtn.href = c.socialWhatsapp;
+    waBtn.classList.add('show');
+  } else {
+    waBtn.classList.remove('show');
+  }
 }
 
 /* ============ RENDER: MENÚ POR CATEGORÍAS ============ */
@@ -811,6 +955,81 @@ function closeMegaMenu(){
   document.getElementById('mega-overlay').classList.remove('show');
 }
 
+/* ============ MENÚ LATERAL (HAMBURGUESA) ============ */
+function renderSideMenu(){
+  const body = document.getElementById('side-menu-body');
+  const c = siteConfig || {};
+  const catsHtml = categories.map((cat,i)=>{
+    const subs = cat.subcats && cat.subcats.length ? cat.subcats : [];
+    if(!subs.length){
+      return `<div class="sm-item"><button onclick="applyFilter('${esc(cat.name).replace(/'/g,"\\'")}', null); closeSideMenu();" style="cursor:pointer;">${esc(cat.name)}</button></div>`;
+    }
+    return `<div class="sm-item" id="sm-item-${i}">
+      <button onclick="toggleSmItem(${i})">${esc(cat.name)} <span>+</span></button>
+      <div class="sm-sub">
+        <a href="#catalogo" onclick="applyFilter('${esc(cat.name).replace(/'/g,"\\'")}', null); closeSideMenu();">Ver todo</a>
+        ${subs.map(s=>`<a href="#catalogo" onclick="applyFilter('${esc(cat.name).replace(/'/g,"\\'")}', '${esc(s).replace(/'/g,"\\'")}'); closeSideMenu();">${esc(s)}</a>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+  body.innerHTML = `
+    <div class="sm-item"><button onclick="closeSideMenu(); document.getElementById('store-view').scrollIntoView();" style="cursor:pointer;">Inicio</button></div>
+    ${catsHtml}
+    <a href="#" class="sm-link" onclick="toggleWishlist(event)">♡ Lista de deseos</a>
+    <a href="#" class="sm-link" onclick="closeSideMenu(); toggleSearch();">🔍 Buscar</a>
+    <div class="sm-contact">
+      <strong>Contáctanos</strong>
+      ${c.email ? 'Correo: ' + esc(c.email) + '<br>' : ''}
+      ${c.phone ? 'Teléfono: ' + esc(c.phone) : ''}
+    </div>
+  `;
+}
+function toggleSmItem(i){
+  document.getElementById('sm-item-'+i).classList.toggle('open');
+}
+function openSideMenu(){
+  document.getElementById('side-menu').classList.add('show');
+  document.getElementById('side-menu-overlay').classList.add('show');
+}
+function closeSideMenu(){
+  document.getElementById('side-menu').classList.remove('show');
+  document.getElementById('side-menu-overlay').classList.remove('show');
+}
+
+/* ============ BUSCADOR MODAL ============ */
+function toggleSearch(){
+  const panel = document.getElementById('search-panel');
+  const overlay = document.getElementById('search-overlay');
+  const show = !panel.classList.contains('show');
+  panel.classList.toggle('show', show);
+  overlay.classList.toggle('show', show);
+  if(show) document.getElementById('search-input').focus();
+}
+
+/* ============ LISTA DE DESEOS (DECORATIVA) ============ */
+let wishCount = 0;
+function toggleWishlist(e){
+  if(e) e.preventDefault();
+  wishCount++;
+  document.getElementById('wish-count').textContent = wishCount;
+  showToast('Guardado en tu lista de deseos');
+}
+
+/* ============ ACORDEÓN DEL FOOTER ============ */
+function toggleFootAcc(id){
+  document.getElementById(id).classList.toggle('open');
+}
+
+/* ============ CARRUSEL DE LA FRANJA SUPERIOR ============ */
+let topbarIdx = 0;
+setInterval(()=>{
+  const slides = document.querySelectorAll('.topbar-msg');
+  if(!slides.length) return;
+  slides[topbarIdx].classList.remove('show');
+  topbarIdx = (topbarIdx + 1) % slides.length;
+  slides[topbarIdx].classList.add('show');
+}, 3500);
+
 /* ============ RENDER: DESTACADOS ============ */
 function renderFeatured(){
   const row = document.getElementById('featured-row');
@@ -818,9 +1037,24 @@ function renderFeatured(){
   if(!feat.length) feat = products.slice(0,8);
   if(!feat.length){
     row.innerHTML = '<div class="empty-note">Marca productos como "Más vendidos" desde el panel de administrador para mostrarlos aquí.</div>';
-    return;
+  } else {
+    row.innerHTML = feat.map(productCardHtml).join('');
   }
-  row.innerHTML = feat.map(productCardHtml).join('');
+  renderHeroCards(feat);
+}
+function renderHeroCards(feat){
+  const wrap = document.getElementById('hero-cards');
+  const picks = (feat && feat.length ? feat : products).slice(0,2);
+  wrap.innerHTML = picks.map(p=>`
+    <div class="hero-mini-card">
+      <img src="${p.img || 'https://placehold.co/100x100/F1EEE8/1C1F26?text=' + encodeURIComponent(p.name)}" alt="${esc(p.name)}">
+      <div>
+        <div class="cat">${esc(p.category || 'Destacado')}</div>
+        <div class="nm">${esc(p.name)}</div>
+        <div class="pr">${fmtPrice(p.price)}</div>
+      </div>
+    </div>
+  `).join('');
 }
 
 /* ============ RENDER: TILES DE CATEGORÍA ============ */
@@ -1015,6 +1249,10 @@ function fillAdminForms(){
   document.getElementById('set-fb').value = c.socialFacebook || '';
   document.getElementById('set-ig').value = c.socialInstagram || '';
   document.getElementById('set-wa').value = c.socialWhatsapp || '';
+
+  document.getElementById('set-about').value = c.aboutText || '';
+  document.getElementById('set-trust').value = (c.trustBadges || []).join('\n');
+  document.getElementById('set-payments').value = (c.paymentMethods || []).join(', ');
 }
 function saveBrand(){
   db.collection('config').doc('site').set({
@@ -1051,6 +1289,15 @@ function saveSocial(){
     socialInstagram: document.getElementById('set-ig').value.trim(),
     socialWhatsapp: document.getElementById('set-wa').value.trim()
   }, {merge:true}).then(()=>showToast('Redes guardadas'));
+}
+function saveExtras(){
+  const trust = document.getElementById('set-trust').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  const pays = document.getElementById('set-payments').value.split(',').map(s=>s.trim()).filter(Boolean);
+  db.collection('config').doc('site').set({
+    aboutText: document.getElementById('set-about').value.trim(),
+    trustBadges: trust,
+    paymentMethods: pays
+  }, {merge:true}).then(()=>showToast('Sección guardada'));
 }
 
 /* ============ ADMIN: CATEGORÍAS ============ */
@@ -1281,11 +1528,16 @@ function saveTestimonial(){
 /* ============ INICIO ============ */
 if(!isConfigured){
   renderMegaNav();
+  renderSideMenu();
   document.getElementById('product-grid').innerHTML = '<div class="empty-note">Conecta Firebase para empezar a cargar tu catálogo.</div>';
   document.getElementById('cat-tiles').innerHTML = '<div class="empty-note">Conecta Firebase para ver tus categorías aquí.</div>';
   document.getElementById('featured-row').innerHTML = '';
+  document.getElementById('hero-cards').innerHTML = '';
   document.getElementById('testi-grid').innerHTML = '';
   document.getElementById('why-grid').innerHTML = '';
+  document.getElementById('trust-row').innerHTML = '';
+  document.getElementById('pay-row').innerHTML = '';
+  document.getElementById('foot-about').textContent = '';
 }
 </script>
 
