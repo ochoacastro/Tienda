@@ -16,6 +16,7 @@
     --accent-dark:#C64708;
     --line:#E4E0D8;
     --ok:#16A34A;
+    --star:#E8A93C;
     --white:#ffffff;
     --radius:10px;
   }
@@ -29,7 +30,7 @@
 
   /* Topbar */
   .topbar{background:var(--ink);color:#fff;font-size:13px;padding:8px 0;}
-  .topbar .container{display:flex;justify-content:center;gap:32px;flex-wrap:wrap;}
+  .topbar .container{display:flex;justify-content:center;gap:32px;flex-wrap:wrap;text-align:center;}
   .topbar span{opacity:.85;}
   .topbar strong{color:#FFD8B8;font-weight:600;}
 
@@ -37,17 +38,26 @@
   header.site{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40;}
   .header-row{display:flex;align-items:center;gap:24px;padding:16px 0;}
   .brand{display:flex;align-items:center;gap:12px;flex:0 0 auto;}
-  .brand img{height:44px;width:44px;object-fit:cover;border-radius:8px;}
+  .brand img{height:44px;width:44px;object-fit:cover;border-radius:8px;background:var(--paper-alt);}
   .brand .name{font-family:'Sora',sans-serif;font-weight:800;font-size:22px;letter-spacing:-.01em;}
-  .search-wrap{flex:1;max-width:460px;}
+  .search-wrap{flex:1;max-width:460px;position:relative;}
   .search-wrap input{width:100%;padding:10px 14px;border:1px solid var(--line);border-radius:24px;font-size:14px;background:var(--paper-alt);}
   .header-actions{display:flex;align-items:center;gap:18px;margin-left:auto;font-size:14px;}
-  .header-actions a{display:flex;align-items:center;gap:6px;color:var(--ink-soft);font-weight:600;}
+  .header-actions a{display:flex;align-items:center;gap:6px;color:var(--ink-soft);font-weight:600;background:none;border:none;font-size:14px;}
   .cart-btn{background:var(--ink);color:#fff;padding:9px 16px;border-radius:24px;font-weight:600;font-size:14px;}
-  nav.categories{border-top:1px solid var(--line);}
-  nav.categories .container{display:flex;gap:26px;overflow-x:auto;padding:12px 24px;}
-  nav.categories a{font-size:13.5px;font-weight:600;color:var(--ink-soft);white-space:nowrap;}
-  nav.categories a:hover{color:var(--accent);}
+
+  /* Mega menu */
+  nav.categories{border-top:1px solid var(--line);position:relative;}
+  nav.categories .container{display:flex;gap:4px;overflow-x:auto;padding:0 24px;}
+  .mega-item{position:relative;}
+  .mega-item>button{background:none;border:none;padding:12px 12px;font-size:13.5px;font-weight:600;color:var(--ink-soft);white-space:nowrap;display:flex;align-items:center;gap:4px;}
+  .mega-item>button:hover, .mega-item.open>button{color:var(--accent);}
+  .mega-panel{display:none;position:absolute;top:100%;left:0;background:#fff;border:1px solid var(--line);border-radius:0 0 10px 10px;box-shadow:0 12px 28px rgba(0,0,0,.10);min-width:220px;padding:10px 0;z-index:50;}
+  .mega-item.open .mega-panel{display:block;}
+  .mega-panel a{display:block;padding:8px 18px;font-size:13.5px;color:var(--ink-soft);font-weight:500;}
+  .mega-panel a:hover{background:var(--paper-alt);color:var(--accent);}
+  .mega-overlay{display:none;position:fixed;inset:0;z-index:45;}
+  .mega-overlay.show{display:block;}
 
   /* Hero */
   .hero{position:relative;background:var(--ink);color:#fff;overflow:hidden;}
@@ -63,34 +73,53 @@
   .section-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:28px;gap:16px;flex-wrap:wrap;}
   .section-head h2{font-size:26px;margin:0;font-weight:700;}
   .section-head .sub{color:var(--ink-soft);font-size:14.5px;margin-top:4px;}
-  .see-all{font-weight:600;font-size:14px;color:var(--accent);white-space:nowrap;}
+  .see-all{font-weight:600;font-size:14px;color:var(--accent);white-space:nowrap;background:none;border:none;}
+  .active-filter{display:inline-flex;align-items:center;gap:8px;background:var(--paper-alt);border:1px solid var(--line);border-radius:20px;padding:6px 8px 6px 14px;font-size:13px;font-weight:600;margin-bottom:18px;}
+  .active-filter button{background:var(--ink);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:12px;line-height:1;}
 
   /* Category tiles */
   .cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px;}
-  .cat-tile{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:1/1;background:var(--paper-alt);}
+  .cat-tile{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:1/1;background:var(--paper-alt);border:none;padding:0;}
   .cat-tile img{width:100%;height:100%;object-fit:cover;}
-  .cat-tile .label{position:absolute;left:0;right:0;bottom:0;padding:14px 12px;background:linear-gradient(0deg,rgba(0,0,0,.65),transparent);color:#fff;font-weight:700;font-size:14.5px;}
+  .cat-tile .label{position:absolute;left:0;right:0;bottom:0;padding:14px 12px;background:linear-gradient(0deg,rgba(0,0,0,.65),transparent);color:#fff;font-weight:700;font-size:14.5px;text-align:left;}
 
   /* Product grid */
   .prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;}
+  .scroll-row{display:flex;gap:20px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x proximity;}
+  .scroll-row .prod-card{flex:0 0 220px;scroll-snap-align:start;}
   .prod-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;}
   .prod-card .img-wrap{aspect-ratio:1/1;background:var(--paper-alt);overflow:hidden;}
   .prod-card .img-wrap img{width:100%;height:100%;object-fit:cover;}
   .prod-card .body{padding:14px 14px 16px;display:flex;flex-direction:column;gap:6px;flex:1;}
   .prod-card .cat-label{font-size:12px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.03em;}
   .prod-card .pname{font-weight:700;font-size:15px;line-height:1.3;min-height:39px;}
-  .prod-card .price{font-weight:800;font-size:17px;color:var(--ink);margin-top:auto;}
+  .prod-card .price-row{margin-top:auto;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
+  .prod-card .price{font-weight:800;font-size:17px;color:var(--ink);}
+  .prod-card .old-price{font-size:13px;color:var(--ink-soft);text-decoration:line-through;}
   .prod-card .stock{font-size:12.5px;color:var(--ok);font-weight:600;}
   .prod-card .add-btn{margin-top:8px;background:var(--ink);color:#fff;border:none;border-radius:7px;padding:10px;font-weight:700;font-size:13.5px;}
   .prod-card .add-btn:hover{background:var(--accent);}
-  .empty-note{color:var(--ink-soft);font-size:14px;padding:24px;text-align:center;border:1px dashed var(--line);border-radius:var(--radius);}
+  .empty-note{color:var(--ink-soft);font-size:14px;padding:24px;text-align:center;border:1px dashed var(--line);border-radius:var(--radius);grid-column:1/-1;}
 
-  /* Features */
-  .features{background:var(--paper-alt);}
-  .feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:28px;}
-  .feat-grid .f h3{font-size:16px;margin:0 0 6px;}
-  .feat-grid .f p{font-size:14px;color:var(--ink-soft);margin:0;line-height:1.5;}
-  .feat-grid .f .icon{font-size:26px;margin-bottom:10px;}
+  /* Why us */
+  .why{background:var(--ink);color:#fff;}
+  .why .section-head h2{color:#fff;}
+  .why .section-head .sub{color:#B9B5AD;}
+  .why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;}
+  .why-item{display:flex;gap:12px;align-items:flex-start;background:#2A2E38;border-radius:var(--radius);padding:18px;}
+  .why-item .chk{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;}
+  .why-item p{margin:0;font-size:14px;line-height:1.5;color:#E4E1DA;}
+
+  /* Testimonials */
+  .testi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;}
+  .testi-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px;display:flex;flex-direction:column;gap:10px;}
+  .testi-card .stars{color:var(--star);font-size:14px;letter-spacing:2px;}
+  .testi-card .txt{font-size:13.5px;color:var(--ink-soft);line-height:1.55;flex:1;}
+  .testi-card .who{display:flex;align-items:center;gap:10px;margin-top:4px;}
+  .testi-card .who img{width:38px;height:38px;border-radius:50%;object-fit:cover;background:var(--paper-alt);}
+  .testi-card .who .n{font-weight:700;font-size:13.5px;}
+  .testi-card .who .loc{font-size:12px;color:var(--ink-soft);}
+  .testi-card .prod-ref{font-size:12.5px;color:var(--accent);font-weight:600;margin-top:2px;}
 
   /* Footer */
   footer{background:var(--ink);color:#D9D6D0;padding:48px 0 24px;}
@@ -98,8 +127,11 @@
   .foot-grid h4{color:#fff;font-size:14px;margin:0 0 14px;}
   .foot-grid p, .foot-grid a{font-size:13.5px;color:#B9B5AD;line-height:1.9;}
   .foot-grid a:hover{color:#fff;}
+  .foot-social{display:flex;gap:10px;margin-top:14px;}
+  .foot-social a{width:32px;height:32px;border-radius:50%;background:#2A2E38;display:flex;align-items:center;justify-content:center;font-size:14px;}
+  .foot-social a:hover{background:var(--accent);}
   .foot-bottom{border-top:1px solid #33363E;padding-top:20px;font-size:12.5px;color:#8A877F;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
-  .admin-link{color:#8A877F;font-size:12px;}
+  .admin-link{color:#8A877F;font-size:12px;background:none;border:none;}
 
   /* Admin */
   #admin-view{display:none;min-height:100vh;background:var(--paper-alt);}
@@ -110,44 +142,56 @@
   .admin-bar .title{font-family:'Sora',sans-serif;font-weight:700;}
   .admin-bar button{background:transparent;border:1px solid #555;color:#fff;padding:8px 14px;border-radius:6px;font-size:13px;}
   .admin-bar button:hover{border-color:var(--accent);color:var(--accent);}
-  .login-box{max-width:360px;margin:90px auto;background:#fff;padding:36px;border-radius:var(--radius);border:1px solid var(--line);}
+  .login-box{max-width:380px;margin:90px auto;background:#fff;padding:36px;border-radius:var(--radius);border:1px solid var(--line);}
   .login-box h2{margin-top:0;font-size:20px;}
   .login-box .hint{font-size:12.5px;color:var(--ink-soft);margin-top:-8px;margin-bottom:18px;}
   .field{margin-bottom:16px;}
   .field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;}
-  .field input, .field textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:7px;font-size:14px;font-family:inherit;}
+  .field input, .field textarea, .field select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:7px;font-size:14px;font-family:inherit;background:#fff;}
   .field textarea{resize:vertical;min-height:70px;}
+  .field .hint2{font-size:12px;color:var(--ink-soft);margin-top:4px;}
   .btn-primary{background:var(--ink);color:#fff;border:none;padding:11px 20px;border-radius:7px;font-weight:700;font-size:14px;width:100%;}
   .btn-primary:hover{background:var(--accent);}
+  .btn-link{background:none;border:none;color:var(--accent);font-weight:600;font-size:13px;padding:0;}
   .error-msg{color:#C0392B;font-size:13px;margin:-8px 0 14px;}
+  .ok-msg{color:var(--ok);font-size:13px;margin:-8px 0 14px;}
   .admin-content{max-width:1000px;margin:0 auto;padding:32px 24px 80px;}
   .admin-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:24px;}
   .admin-card h3{margin-top:0;font-size:16px;}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
   .admin-card .btn-primary{width:auto;padding:10px 22px;}
-  .prod-admin-list{display:flex;flex-direction:column;gap:12px;}
-  .prod-admin-row{display:flex;gap:14px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:10px;}
-  .prod-admin-row img{width:52px;height:52px;object-fit:cover;border-radius:6px;flex:0 0 auto;background:var(--paper-alt);}
-  .prod-admin-row .info{flex:1;min-width:0;}
-  .prod-admin-row .info .n{font-weight:700;font-size:14px;}
-  .prod-admin-row .info .p{font-size:13px;color:var(--ink-soft);}
-  .prod-admin-row .acts{display:flex;gap:8px;}
-  .prod-admin-row .acts button{border:1px solid var(--line);background:#fff;border-radius:6px;padding:7px 12px;font-size:12.5px;font-weight:600;}
-  .prod-admin-row .acts button.danger{color:#C0392B;border-color:#F1C6BF;}
-  .prod-admin-row .acts button:hover{background:var(--paper-alt);}
+  .prod-admin-list, .cat-admin-list, .testi-admin-list{display:flex;flex-direction:column;gap:12px;}
+  .prod-admin-row, .cat-admin-row, .testi-admin-row{display:flex;gap:14px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:10px;}
+  .prod-admin-row img, .testi-admin-row img{width:52px;height:52px;object-fit:cover;border-radius:6px;flex:0 0 auto;background:var(--paper-alt);}
+  .prod-admin-row .info, .cat-admin-row .info, .testi-admin-row .info{flex:1;min-width:0;}
+  .prod-admin-row .info .n, .cat-admin-row .info .n, .testi-admin-row .info .n{font-weight:700;font-size:14px;}
+  .prod-admin-row .info .p, .cat-admin-row .info .p, .testi-admin-row .info .p{font-size:13px;color:var(--ink-soft);}
+  .prod-admin-row .acts, .cat-admin-row .acts, .testi-admin-row .acts{display:flex;gap:8px;flex-shrink:0;}
+  .prod-admin-row .acts button, .cat-admin-row .acts button, .testi-admin-row .acts button{border:1px solid var(--line);background:#fff;border-radius:6px;padding:7px 12px;font-size:12.5px;font-weight:600;}
+  .prod-admin-row .acts button.danger, .cat-admin-row .acts button.danger, .testi-admin-row .acts button.danger{color:#C0392B;border-color:#F1C6BF;}
+  .prod-admin-row .acts button:hover, .cat-admin-row .acts button:hover, .testi-admin-row .acts button:hover{background:var(--paper-alt);}
   .small-note{font-size:12.5px;color:var(--ink-soft);margin-top:6px;}
-  .save-toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:#fff;padding:12px 20px;border-radius:8px;font-size:13.5px;font-weight:600;opacity:0;transform:translateY(10px);transition:.25s;pointer-events:none;z-index:100;}
+  .save-toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:#fff;padding:12px 20px;border-radius:8px;font-size:13.5px;font-weight:600;opacity:0;transform:translateY(10px);transition:.25s;pointer-events:none;z-index:100;max-width:80vw;}
   .save-toast.show{opacity:1;transform:translateY(0);}
+  .img-field{display:flex;gap:12px;align-items:center;}
+  .img-field .preview{width:52px;height:52px;border-radius:7px;object-fit:cover;background:var(--paper-alt);flex:0 0 auto;border:1px solid var(--line);}
+  .img-field input[type=file]{flex:1;font-size:12.5px;}
+  .config-banner{background:#FFF4E5;border:1px solid #F4CE8B;color:#7A4E00;padding:16px 20px;border-radius:var(--radius);font-size:13.5px;line-height:1.6;margin:20px auto;max-width:1180px;}
+  .config-banner code{background:#00000010;padding:1px 6px;border-radius:4px;}
+  .spinner-note{text-align:center;padding:60px 24px;color:var(--ink-soft);font-size:14px;}
   @media(max-width:760px){
     .header-row{flex-wrap:wrap;}
     .search-wrap{order:3;max-width:none;width:100%;}
     .foot-grid{grid-template-columns:1fr;}
     .row2{grid-template-columns:1fr;}
     .hero-content{padding:64px 20px 72px;}
+    .mega-panel{position:static;box-shadow:none;border:none;border-top:1px solid var(--line);border-radius:0;}
   }
 </style>
 </head>
 <body>
+
+<div id="config-banner-slot"></div>
 
 <!-- ======================= TIENDA (PÚBLICO) ======================= -->
 <div id="store-view">
@@ -155,7 +199,7 @@
   <div class="topbar">
     <div class="container">
       <span>Envíos a todo el país</span>
-      <span id="tb-promo"><strong>¡Envío gratis!</strong> por compras superiores a $150.000</span>
+      <span id="tb-promo"><strong>¡Bienvenido!</strong> Configura este mensaje desde el panel de administrador</span>
     </div>
   </div>
 
@@ -166,7 +210,7 @@
         <span class="name" id="brand-name">Mi Tienda Online</span>
       </div>
       <div class="search-wrap">
-        <input type="text" placeholder="Buscar productos...">
+        <input type="text" id="search-input" placeholder="Buscar productos...">
       </div>
       <div class="header-actions">
         <a href="#" onclick="openAdmin(event)">👤 Admin</a>
@@ -174,32 +218,46 @@
       </div>
     </div>
     <nav class="categories">
-      <div class="container" id="cat-nav"></div>
+      <div class="container" id="mega-nav"></div>
     </nav>
   </header>
+  <div class="mega-overlay" id="mega-overlay" onclick="closeMegaMenu()"></div>
 
   <section class="hero" style="padding:0;">
     <img id="hero-img" src="https://placehold.co/1600x600/1C1F26/2A2E38?text=Imagen+de+portada">
     <div class="hero-content">
       <h1 id="hero-title">Todo lo que necesitas, en un solo lugar</h1>
-      <p id="hero-sub">Cambia este texto, la imagen y el nombre del negocio desde el panel de administrador para adaptar la tienda a lo que vendas.</p>
-      <a href="#catalogo" class="cta">Ver catálogo</a>
+      <p id="hero-sub">Edita este texto, la imagen y el nombre del negocio desde el panel de administrador.</p>
+      <a href="#" id="hero-cta" class="cta">Ver catálogo</a>
     </div>
   </section>
 
-  <section id="categorias">
+  <section id="destacados">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Más vendidos</h2>
+          <div class="sub">Nuestros productos destacados</div>
+        </div>
+        <button class="see-all" onclick="scrollToCatalog()">Ver todo →</button>
+      </div>
+      <div class="scroll-row" id="featured-row"></div>
+    </div>
+  </section>
+
+  <section id="categorias" style="background:var(--paper-alt);">
     <div class="container">
       <div class="section-head">
         <div>
           <h2>Explorar por categoría</h2>
-          <div class="sub">Las categorías se generan a partir de tus productos</div>
+          <div class="sub">Encuentra justo lo que buscas</div>
         </div>
       </div>
       <div class="cat-grid" id="cat-tiles"></div>
     </div>
   </section>
 
-  <section id="catalogo" style="background:var(--paper-alt);">
+  <section id="catalogo">
     <div class="container">
       <div class="section-head">
         <div>
@@ -207,16 +265,31 @@
           <div class="sub" id="prod-count-sub"></div>
         </div>
       </div>
+      <div id="filter-chip-slot"></div>
       <div class="prod-grid" id="product-grid"></div>
     </div>
   </section>
 
-  <section class="features">
-    <div class="container feat-grid">
-      <div class="f"><div class="icon">🚚</div><h3>Envíos rápidos</h3><p>Despacho ágil y seguimiento de tu pedido de principio a fin.</p></div>
-      <div class="f"><div class="icon">✅</div><h3>Calidad verificada</h3><p>Cada producto se revisa antes de salir de bodega.</p></div>
-      <div class="f"><div class="icon">💳</div><h3>Varias formas de pago</h3><p>Tarjetas, transferencia, contraentrega y más.</p></div>
-      <div class="f"><div class="icon">💬</div><h3>Atención directa</h3><p>Resolvemos tus dudas antes y después de la compra.</p></div>
+  <section class="why">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2 id="why-title">Por qué comprar con nosotros</h2>
+          <div class="sub" id="why-sub">Compra con confianza</div>
+        </div>
+      </div>
+      <div class="why-grid" id="why-grid"></div>
+    </div>
+  </section>
+
+  <section id="opiniones" style="background:var(--paper-alt);">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Lo que dicen nuestros clientes</h2>
+        </div>
+      </div>
+      <div class="testi-grid" id="testi-grid"></div>
     </div>
   </section>
 
@@ -225,9 +298,10 @@
       <div class="foot-grid">
         <div>
           <h4 id="foot-brand-name">Mi Tienda Online</h4>
-          <p>Carrera 00 # 00 - 00, Tu Ciudad</p>
+          <p id="foot-address">Tu dirección aquí</p>
           <p id="foot-email">contacto@mitienda.com</p>
           <p id="foot-phone">+00 000 000 0000</p>
+          <div class="foot-social" id="foot-social"></div>
         </div>
         <div>
           <h4>Categorías</h4>
@@ -243,7 +317,7 @@
       </div>
       <div class="foot-bottom">
         <span id="foot-copy">© 2026 Mi Tienda Online. Todos los derechos reservados.</span>
-        <span class="admin-link">Plantilla editable</span>
+        <span class="admin-link">Sitio editable · Firebase</span>
       </div>
     </div>
   </footer>
@@ -255,18 +329,22 @@
   <div id="login-screen">
     <div class="login-box">
       <h2>Acceso administrador</h2>
-      <div class="hint">Usuario y contraseña por defecto: <strong>admin</strong> / <strong>admin123</strong></div>
+      <div class="hint">Inicia sesión con el usuario administrador creado en Firebase Authentication.</div>
       <div id="login-error" class="error-msg" style="display:none;">Usuario o contraseña incorrectos.</div>
+      <div id="login-ok" class="ok-msg" style="display:none;">Te enviamos un correo para restablecer tu contraseña.</div>
       <div class="field">
-        <label>Usuario</label>
-        <input type="text" id="login-user" autocomplete="username">
+        <label>Correo</label>
+        <input type="email" id="login-user" autocomplete="username">
       </div>
       <div class="field">
         <label>Contraseña</label>
         <input type="password" id="login-pass" autocomplete="current-password">
       </div>
       <button class="btn-primary" onclick="doLogin()">Iniciar sesión</button>
-      <p style="text-align:center;margin-top:16px;"><a href="#" onclick="closeAdmin(event)" style="font-size:13px;color:var(--ink-soft);">← Volver a la tienda</a></p>
+      <p style="text-align:center;margin-top:16px;">
+        <button class="btn-link" onclick="doResetPass()">¿Olvidaste tu contraseña?</button>
+      </p>
+      <p style="text-align:center;margin-top:4px;"><a href="#" onclick="closeAdmin(event)" style="font-size:13px;color:var(--ink-soft);">← Volver a la tienda</a></p>
     </div>
   </div>
 
@@ -291,8 +369,12 @@
             <input type="text" id="set-brand-name">
           </div>
           <div class="field">
-            <label>URL del logo (imagen)</label>
-            <input type="text" id="set-logo-url" placeholder="https://...">
+            <label>Logo</label>
+            <div class="img-field">
+              <img class="preview" id="preview-logo" src="https://placehold.co/60x60/F1EEE8/1C1F26?text=+">
+              <input type="file" id="file-logo" accept="image/*" onchange="handleImageUpload(this,'set-logo-url','preview-logo')">
+            </div>
+            <input type="hidden" id="set-logo-url">
           </div>
         </div>
         <div class="row2">
@@ -306,6 +388,10 @@
           </div>
         </div>
         <div class="field">
+          <label>Dirección (footer)</label>
+          <input type="text" id="set-address">
+        </div>
+        <div class="field">
           <label>Mensaje de la franja superior (envíos/promoción)</label>
           <input type="text" id="set-promo">
         </div>
@@ -315,8 +401,12 @@
       <div class="admin-card">
         <h3>Portada (hero)</h3>
         <div class="field">
-          <label>URL de la imagen de portada</label>
-          <input type="text" id="set-hero-img" placeholder="https://...">
+          <label>Imagen de portada</label>
+          <div class="img-field">
+            <img class="preview" id="preview-hero" src="https://placehold.co/60x60/1C1F26/FFFFFF?text=+">
+            <input type="file" id="file-hero" accept="image/*" onchange="handleImageUpload(this,'set-hero-img','preview-hero')">
+          </div>
+          <input type="hidden" id="set-hero-img">
         </div>
         <div class="row2">
           <div class="field">
@@ -328,23 +418,91 @@
             <input type="text" id="set-hero-sub">
           </div>
         </div>
+        <div class="row2">
+          <div class="field">
+            <label>Texto del botón</label>
+            <input type="text" id="set-hero-cta-text">
+          </div>
+          <div class="field">
+            <label>Enlace del botón (ej: #catalogo)</label>
+            <input type="text" id="set-hero-cta-link">
+          </div>
+        </div>
         <button class="btn-primary" onclick="saveHero()">Guardar portada</button>
       </div>
 
       <div class="admin-card">
-        <h3>Cambiar contraseña de administrador</h3>
+        <h3>Sección "Por qué comprar con nosotros"</h3>
         <div class="row2">
           <div class="field">
-            <label>Usuario</label>
-            <input type="text" id="set-admin-user">
+            <label>Título</label>
+            <input type="text" id="set-why-title">
           </div>
           <div class="field">
-            <label>Nueva contraseña</label>
-            <input type="password" id="set-admin-pass" placeholder="Dejar en blanco para no cambiar">
+            <label>Subtítulo</label>
+            <input type="text" id="set-why-sub">
           </div>
         </div>
-        <button class="btn-primary" onclick="saveCredentials()">Guardar credenciales</button>
-        <div class="small-note">Esta protección es solo para uso básico en el navegador; no reemplaza un sistema de login real con servidor.</div>
+        <div class="field">
+          <label>Beneficios (uno por línea)</label>
+          <textarea id="set-why-points" rows="5" placeholder="Envíos rápidos a todo el país&#10;Calidad garantizada&#10;Pago contra entrega"></textarea>
+        </div>
+        <button class="btn-primary" onclick="saveWhy()">Guardar sección</button>
+      </div>
+
+      <div class="admin-card">
+        <h3>Redes sociales</h3>
+        <div class="row2">
+          <div class="field">
+            <label>Facebook (URL)</label>
+            <input type="text" id="set-fb" placeholder="https://facebook.com/...">
+          </div>
+          <div class="field">
+            <label>Instagram (URL)</label>
+            <input type="text" id="set-ig" placeholder="https://instagram.com/...">
+          </div>
+        </div>
+        <div class="field">
+          <label>WhatsApp (URL, ej: https://wa.me/57...)</label>
+          <input type="text" id="set-wa">
+        </div>
+        <button class="btn-primary" onclick="saveSocial()">Guardar redes</button>
+      </div>
+
+      <div class="admin-card">
+        <h3 id="cat-form-title">Agregar categoría</h3>
+        <input type="hidden" id="edit-cat-id">
+        <div class="row2">
+          <div class="field">
+            <label>Nombre de la categoría</label>
+            <input type="text" id="c-name" placeholder="Ej: Ropa">
+          </div>
+          <div class="field">
+            <label>Orden (menor = primero)</label>
+            <input type="number" id="c-order" value="0">
+          </div>
+        </div>
+        <div class="field">
+          <label>Subcategorías (separadas por coma, opcional)</label>
+          <input type="text" id="c-subcats" placeholder="Ej: Camisetas, Pantalones, Zapatos">
+        </div>
+        <div class="field">
+          <label>Imagen de la categoría (opcional, si no hay se usa la de un producto)</label>
+          <div class="img-field">
+            <img class="preview" id="preview-cat" src="https://placehold.co/60x60/F1EEE8/1C1F26?text=+">
+            <input type="file" id="file-cat" accept="image/*" onchange="handleImageUpload(this,'c-img','preview-cat')">
+          </div>
+          <input type="hidden" id="c-img">
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn-primary" onclick="saveCategory()" id="save-cat-btn">Agregar categoría</button>
+          <button class="btn-primary" style="background:#B9B5AD;" onclick="resetCatForm()">Cancelar edición</button>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <h3>Categorías (<span id="admin-cat-count">0</span>)</h3>
+        <div class="cat-admin-list" id="admin-cat-list"></div>
       </div>
 
       <div class="admin-card">
@@ -357,22 +515,44 @@
           </div>
           <div class="field">
             <label>Categoría</label>
-            <input type="text" id="p-cat" placeholder="Ej: Accesorios">
+            <select id="p-cat" onchange="fillSubcatOptions()"></select>
           </div>
         </div>
         <div class="row2">
           <div class="field">
-            <label>Precio (COP)</label>
+            <label>Subcategoría (opcional)</label>
+            <select id="p-subcat"><option value="">Ninguna</option></select>
+          </div>
+          <div class="field">
+            <label>Etiqueta de disponibilidad</label>
+            <input type="text" id="p-badge" placeholder="Ej: En stock">
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>Precio</label>
             <input type="text" id="p-price" placeholder="Ej: 59000">
           </div>
           <div class="field">
-            <label>URL de la imagen</label>
-            <input type="text" id="p-img" placeholder="https://...">
+            <label>Precio anterior (opcional, para mostrar descuento)</label>
+            <input type="text" id="p-old-price" placeholder="Ej: 79000">
           </div>
+        </div>
+        <div class="field">
+          <label>Imagen del producto</label>
+          <div class="img-field">
+            <img class="preview" id="preview-prod" src="https://placehold.co/60x60/F1EEE8/1C1F26?text=+">
+            <input type="file" id="file-prod" accept="image/*" onchange="handleImageUpload(this,'p-img','preview-prod')">
+          </div>
+          <input type="hidden" id="p-img">
         </div>
         <div class="field">
           <label>Descripción corta (opcional)</label>
           <textarea id="p-desc"></textarea>
+        </div>
+        <div class="field" style="display:flex;align-items:center;gap:8px;">
+          <input type="checkbox" id="p-featured" style="width:auto;">
+          <label style="margin:0;" for="p-featured">Mostrar en "Más vendidos"</label>
         </div>
         <div style="display:flex;gap:10px;">
           <button class="btn-primary" onclick="saveProduct()" id="save-prod-btn">Agregar producto</button>
@@ -385,127 +565,371 @@
         <div class="prod-admin-list" id="admin-prod-list"></div>
       </div>
 
+      <div class="admin-card">
+        <h3 id="testi-form-title">Agregar testimonio</h3>
+        <input type="hidden" id="edit-testi-id">
+        <div class="row2">
+          <div class="field">
+            <label>Nombre del cliente</label>
+            <input type="text" id="t-name">
+          </div>
+          <div class="field">
+            <label>Ciudad</label>
+            <input type="text" id="t-loc">
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label>Calificación (1 a 5)</label>
+            <input type="number" id="t-rating" min="1" max="5" value="5">
+          </div>
+          <div class="field">
+            <label>Foto (opcional)</label>
+            <div class="img-field">
+              <img class="preview" id="preview-testi" src="https://placehold.co/60x60/F1EEE8/1C1F26?text=+">
+              <input type="file" id="file-testi" accept="image/*" onchange="handleImageUpload(this,'t-photo','preview-testi')">
+            </div>
+            <input type="hidden" id="t-photo">
+          </div>
+        </div>
+        <div class="field">
+          <label>Comentario</label>
+          <textarea id="t-text"></textarea>
+        </div>
+        <div class="field">
+          <label>Producto relacionado (opcional)</label>
+          <input type="text" id="t-product">
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn-primary" onclick="saveTestimonial()" id="save-testi-btn">Agregar testimonio</button>
+          <button class="btn-primary" style="background:#B9B5AD;" onclick="resetTestiForm()">Cancelar edición</button>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <h3>Testimonios (<span id="admin-testi-count">0</span>)</h3>
+        <div class="testi-admin-list" id="admin-testi-list"></div>
+      </div>
+
     </div>
   </div>
 </div>
 
 <div class="save-toast" id="toast">Guardado</div>
 
+<!-- ============ FIREBASE SDK ============ -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+
 <script>
-/* ============ ESTADO Y ALMACENAMIENTO ============
-   Todo se guarda en localStorage del navegador, así que los cambios
-   quedan en el dispositivo/navegador donde los hagas. Al subir este
-   archivo a un hosting normal, cada visitante ve la tienda pública
-   con los datos que tú guardaste como admin desde ese mismo navegador
-   (para que TODOS los visitantes vean los mismos cambios sin
-   depender de tu navegador, este archivo tendría que conectarse a
-   una base de datos real: lo comento al final de la respuesta). */
-
-const STORAGE_KEY = 'tienda_data_v1';
-const AUTH_KEY = 'tienda_admin_auth';
-
-const defaultData = {
-  brand: {
-    name: 'Mi Tienda Online',
-    logo: 'https://placehold.co/88x88/1C1F26/FFFFFF?text=LOGO',
-    email: 'contacto@mitienda.com',
-    phone: '+00 000 000 0000',
-    promo: '¡Envío gratis! por compras superiores a $150.000',
-    copy: '© 2026 Mi Tienda Online. Todos los derechos reservados.'
-  },
-  hero: {
-    img: 'https://placehold.co/1600x600/1C1F26/2A2E38?text=Imagen+de+portada',
-    title: 'Todo lo que necesitas, en un solo lugar',
-    sub: 'Cambia este texto, la imagen y el nombre del negocio desde el panel de administrador para adaptar la tienda a lo que vendas.'
-  },
-  admin: { user: 'admin', pass: 'admin123' },
-  products: [
-    {id:'1', name:'Producto de ejemplo 1', cat:'General', price:39900, img:'https://placehold.co/400x400/F1EEE8/1C1F26?text=Producto+1', desc:'Descripción breve del producto.'},
-    {id:'2', name:'Producto de ejemplo 2', cat:'General', price:59900, img:'https://placehold.co/400x400/F1EEE8/1C1F26?text=Producto+2', desc:'Descripción breve del producto.'},
-    {id:'3', name:'Producto de ejemplo 3', cat:'Ofertas', price:24900, img:'https://placehold.co/400x400/F1EEE8/1C1F26?text=Producto+3', desc:'Descripción breve del producto.'},
-    {id:'4', name:'Producto de ejemplo 4', cat:'Ofertas', price:89900, img:'https://placehold.co/400x400/F1EEE8/1C1F26?text=Producto+4', desc:'Descripción breve del producto.'}
-  ]
+/* =====================================================================
+   ⚠️  PEGA AQUÍ LAS CLAVES DE TU PROYECTO DE FIREBASE  ⚠️
+   Las encuentras en: Firebase Console → ⚙ Configuración del proyecto
+   → General → "Tus apps" → SDK de Firebase (config)
+   ===================================================================== */
+const firebaseConfig = {
+  apiKey: "TU_API_KEY",
+  authDomain: "TU_PROYECTO.firebaseapp.com",
+  projectId: "TU_PROYECTO",
+  storageBucket: "TU_PROYECTO.appspot.com",
+  messagingSenderId: "TU_SENDER_ID",
+  appId: "TU_APP_ID"
 };
 
-function loadData(){
-  try{
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if(raw) return JSON.parse(raw);
-  }catch(e){}
-  return JSON.parse(JSON.stringify(defaultData));
-}
-function saveData(data){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+const isConfigured = firebaseConfig.apiKey && firebaseConfig.apiKey.indexOf('TU_') !== 0;
+
+if(!isConfigured){
+  document.getElementById('config-banner-slot').innerHTML = `
+    <div class="config-banner">
+      ⚠️ <strong>Este sitio aún no está conectado a Firebase.</strong> Abre el archivo .html, busca el bloque
+      <code>firebaseConfig</code> cerca del final y pega ahí las claves de tu proyecto de Firebase
+      (Configuración del proyecto → Tus apps → SDK de Firebase). Mientras tanto, la tienda y el panel de
+      administrador no podrán guardar datos ni fotos. Revisa la guía adjunta para los pasos completos.
+    </div>`;
 }
 
-let data = loadData();
+let db, auth, storage;
+let categories = [];
+let products = [];
+let testimonials = [];
+let siteConfig = {};
+let currentFilter = { cat: null, sub: null };
+let searchTerm = '';
 
 function fmtPrice(n){
   n = Number(n)||0;
   return '$' + n.toLocaleString('es-CO');
 }
-
 function showToast(msg){
   const t = document.getElementById('toast');
   t.textContent = msg || 'Guardado';
   t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'), 1800);
 }
+function esc(s){
+  return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
 
-/* ============ RENDER TIENDA PÚBLICA ============ */
-function renderStore(){
-  document.getElementById('brand-name').textContent = data.brand.name;
-  document.getElementById('foot-brand-name').textContent = data.brand.name;
-  document.getElementById('logo-img').src = data.brand.logo;
-  document.getElementById('foot-email').textContent = data.brand.email;
-  document.getElementById('foot-phone').textContent = data.brand.phone;
-  document.getElementById('tb-promo').innerHTML = data.brand.promo;
-  document.getElementById('foot-copy').textContent = data.brand.copy;
-  document.title = data.brand.name;
+if(isConfigured){
+  firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
+  auth = firebase.auth();
+  storage = firebase.storage();
 
-  document.getElementById('hero-img').src = data.hero.img;
-  document.getElementById('hero-title').textContent = data.hero.title;
-  document.getElementById('hero-sub').textContent = data.hero.sub;
+  /* ============ LISTENERS EN TIEMPO REAL ============ */
+  db.collection('config').doc('site').onSnapshot(doc=>{
+    siteConfig = doc.exists ? doc.data() : {};
+    renderSiteConfig();
+    fillAdminForms();
+  });
+  db.collection('categories').orderBy('order','asc').onSnapshot(snap=>{
+    categories = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    renderMegaNav();
+    renderCategoryTiles();
+    renderFooterCats();
+    renderAdminCategories();
+    fillCategorySelect();
+  }, err=>{ console.error(err); });
+  db.collection('products').onSnapshot(snap=>{
+    products = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    renderFeatured();
+    renderCategoryTiles();
+    renderCatalog();
+    renderAdminProducts();
+  }, err=>{ console.error(err); });
+  db.collection('testimonials').onSnapshot(snap=>{
+    testimonials = snap.docs.map(d=>({id:d.id, ...d.data()}));
+    renderTestimonials();
+    renderAdminTestimonials();
+  }, err=>{ console.error(err); });
 
-  const cats = [...new Set(data.products.map(p=>p.cat).filter(Boolean))];
+  auth.onAuthStateChanged(user=>{
+    if(document.getElementById('admin-view').classList.contains('active')){
+      if(user){ showAdminPanel(); } else { showLoginScreen(); }
+    }
+  });
+}
 
-  const catNav = document.getElementById('cat-nav');
-  catNav.innerHTML = cats.map(c=>`<a href="#catalogo">${c}</a>`).join('') || '<a href="#catalogo">Catálogo</a>';
+/* ============ SUBIDA DE IMÁGENES A FIREBASE STORAGE ============ */
+async function handleImageUpload(inputEl, targetFieldId, previewId){
+  const file = inputEl.files[0];
+  if(!file) return;
+  if(!isConfigured){ alert('Conecta primero tu proyecto de Firebase (ver banner arriba).'); return; }
+  const preview = document.getElementById(previewId);
+  const reader = new FileReader();
+  reader.onload = e => { preview.src = e.target.result; };
+  reader.readAsDataURL(file);
+  try{
+    showToast('Subiendo imagen...');
+    const path = 'uploads/' + Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9_.-]/g,'_');
+    const ref = storage.ref().child(path);
+    await ref.put(file);
+    const url = await ref.getDownloadURL();
+    document.getElementById(targetFieldId).value = url;
+    showToast('Imagen lista');
+  }catch(err){
+    console.error(err);
+    alert('No se pudo subir la imagen. Revisa las reglas de Storage y tu conexión.');
+  }
+}
 
-  const footCats = document.getElementById('foot-cats');
-  footCats.innerHTML = cats.map(c=>`<a href="#catalogo">${c}</a><br>`).join('') || '<a href="#catalogo">Catálogo</a>';
+/* ============ RENDER: CONFIGURACIÓN GENERAL ============ */
+function renderSiteConfig(){
+  const c = siteConfig || {};
+  document.title = c.brandName || 'Mi Tienda Online';
+  document.getElementById('brand-name').textContent = c.brandName || 'Mi Tienda Online';
+  document.getElementById('foot-brand-name').textContent = c.brandName || 'Mi Tienda Online';
+  document.getElementById('logo-img').src = c.logo || 'https://placehold.co/88x88/1C1F26/FFFFFF?text=LOGO';
+  document.getElementById('foot-email').textContent = c.email || '';
+  document.getElementById('foot-phone').textContent = c.phone || '';
+  document.getElementById('foot-address').textContent = c.address || '';
+  document.getElementById('tb-promo').innerHTML = c.promoTop || '<strong>¡Bienvenido!</strong> Configura este mensaje desde el panel de administrador';
+  document.getElementById('foot-copy').textContent = '© ' + new Date().getFullYear() + ' ' + (c.brandName || 'Mi Tienda Online') + '. Todos los derechos reservados.';
 
-  const catTiles = document.getElementById('cat-tiles');
-  if(cats.length){
-    catTiles.innerHTML = cats.map(c=>{
-      const rep = data.products.find(p=>p.cat===c);
-      return `<a class="cat-tile" href="#catalogo">
-        <img src="${rep ? rep.img : 'https://placehold.co/300x300/F1EEE8/1C1F26?text=' + encodeURIComponent(c)}" alt="${c}">
-        <div class="label">${c}</div>
-      </a>`;
-    }).join('');
-  } else {
-    catTiles.innerHTML = '<div class="empty-note">Agrega productos con categoría desde el panel de administrador para verlas aquí.</div>';
+  const hero = c.hero || {};
+  document.getElementById('hero-img').src = hero.img || 'https://placehold.co/1600x600/1C1F26/2A2E38?text=Imagen+de+portada';
+  document.getElementById('hero-title').textContent = hero.title || 'Todo lo que necesitas, en un solo lugar';
+  document.getElementById('hero-sub').textContent = hero.sub || 'Edita este texto desde el panel de administrador.';
+  const ctaEl = document.getElementById('hero-cta');
+  ctaEl.textContent = hero.ctaText || 'Ver catálogo';
+  ctaEl.setAttribute('href', hero.ctaLink || '#catalogo');
+
+  document.getElementById('why-title').textContent = c.whyTitle || 'Por qué comprar con nosotros';
+  document.getElementById('why-sub').textContent = c.whySub || 'Compra con confianza';
+  const points = (c.whyPoints && c.whyPoints.length) ? c.whyPoints : [
+    'Envíos a todo el país',
+    'Atención directa y ágil',
+    'Varias formas de pago',
+    'Productos verificados antes de despachar'
+  ];
+  document.getElementById('why-grid').innerHTML = points.map(p=>`
+    <div class="why-item"><div class="chk">✓</div><p>${esc(p)}</p></div>
+  `).join('');
+
+  const socialWrap = document.getElementById('foot-social');
+  let socialHtml = '';
+  if(c.socialFacebook) socialHtml += `<a href="${esc(c.socialFacebook)}" target="_blank" rel="noopener">f</a>`;
+  if(c.socialInstagram) socialHtml += `<a href="${esc(c.socialInstagram)}" target="_blank" rel="noopener">ig</a>`;
+  if(c.socialWhatsapp) socialHtml += `<a href="${esc(c.socialWhatsapp)}" target="_blank" rel="noopener">wa</a>`;
+  socialWrap.innerHTML = socialHtml;
+}
+
+/* ============ RENDER: MENÚ POR CATEGORÍAS ============ */
+function renderMegaNav(){
+  const nav = document.getElementById('mega-nav');
+  if(!categories.length){
+    nav.innerHTML = '<a href="#catalogo" style="padding:12px 4px;display:inline-block;font-size:13.5px;font-weight:600;color:var(--ink-soft);">Catálogo</a>';
+    return;
+  }
+  nav.innerHTML = categories.map((c,i)=>{
+    const subs = c.subcats && c.subcats.length ? c.subcats : [];
+    const panel = subs.length ? `
+      <div class="mega-panel">
+        <a href="#catalogo" onclick="applyFilter('${esc(c.name).replace(/'/g,"\\'")}', null)">Ver todo en ${esc(c.name)}</a>
+        ${subs.map(s=>`<a href="#catalogo" onclick="applyFilter('${esc(c.name).replace(/'/g,"\\'")}', '${esc(s).replace(/'/g,"\\'")}')">${esc(s)}</a>`).join('')}
+      </div>` : '';
+    return `<div class="mega-item" id="mega-item-${i}">
+      <button onclick="${subs.length ? `toggleMegaItem(${i})` : `applyFilter('${esc(c.name).replace(/'/g,"\\'")}', null)`}">${esc(c.name)} ${subs.length?'▾':''}</button>
+      ${panel}
+    </div>`;
+  }).join('');
+}
+function toggleMegaItem(i){
+  const el = document.getElementById('mega-item-'+i);
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.mega-item.open').forEach(x=>x.classList.remove('open'));
+  document.getElementById('mega-overlay').classList.remove('show');
+  if(!isOpen){
+    el.classList.add('open');
+    document.getElementById('mega-overlay').classList.add('show');
+  }
+}
+function closeMegaMenu(){
+  document.querySelectorAll('.mega-item.open').forEach(x=>x.classList.remove('open'));
+  document.getElementById('mega-overlay').classList.remove('show');
+}
+
+/* ============ RENDER: DESTACADOS ============ */
+function renderFeatured(){
+  const row = document.getElementById('featured-row');
+  let feat = products.filter(p=>p.featured);
+  if(!feat.length) feat = products.slice(0,8);
+  if(!feat.length){
+    row.innerHTML = '<div class="empty-note">Marca productos como "Más vendidos" desde el panel de administrador para mostrarlos aquí.</div>';
+    return;
+  }
+  row.innerHTML = feat.map(productCardHtml).join('');
+}
+
+/* ============ RENDER: TILES DE CATEGORÍA ============ */
+function renderCategoryTiles(){
+  const wrap = document.getElementById('cat-tiles');
+  if(!categories.length){
+    wrap.innerHTML = '<div class="empty-note">Agrega categorías desde el panel de administrador para verlas aquí.</div>';
+    return;
+  }
+  wrap.innerHTML = categories.map(c=>{
+    const rep = products.find(p=>p.category===c.name);
+    const img = c.img || (rep ? rep.img : 'https://placehold.co/300x300/F1EEE8/1C1F26?text=' + encodeURIComponent(c.name));
+    return `<button class="cat-tile" onclick="applyFilter('${esc(c.name).replace(/'/g,"\\'")}', null)">
+      <img src="${img}" alt="${esc(c.name)}">
+      <div class="label">${esc(c.name)}</div>
+    </button>`;
+  }).join('');
+}
+
+/* ============ RENDER: CATÁLOGO ============ */
+function productCardHtml(p){
+  return `
+    <div class="prod-card">
+      <div class="img-wrap"><img src="${p.img || 'https://placehold.co/400x400/F1EEE8/1C1F26?text=' + encodeURIComponent(p.name)}" alt="${esc(p.name)}"></div>
+      <div class="body">
+        <div class="cat-label">${esc(p.category || 'General')}${p.subcategory ? ' · ' + esc(p.subcategory) : ''}</div>
+        <div class="pname">${esc(p.name)}</div>
+        <div class="stock">${esc(p.badge || 'En stock')}</div>
+        <div class="price-row">
+          <span class="price">${fmtPrice(p.price)}</span>
+          ${p.oldPrice ? `<span class="old-price">${fmtPrice(p.oldPrice)}</span>` : ''}
+        </div>
+        <button class="add-btn">Añadir al carrito</button>
+      </div>
+    </div>`;
+}
+function applyFilter(cat, sub){
+  currentFilter = {cat, sub};
+  closeMegaMenu();
+  renderCatalog();
+  document.getElementById('catalogo').scrollIntoView({behavior:'smooth', block:'start'});
+}
+function clearFilter(){
+  currentFilter = {cat:null, sub:null};
+  renderCatalog();
+}
+function scrollToCatalog(){
+  document.getElementById('catalogo').scrollIntoView({behavior:'smooth', block:'start'});
+}
+function renderCatalog(){
+  let list = products.slice();
+  if(currentFilter.cat) list = list.filter(p=>p.category===currentFilter.cat);
+  if(currentFilter.sub) list = list.filter(p=>p.subcategory===currentFilter.sub);
+  if(searchTerm){
+    const q = searchTerm.toLowerCase();
+    list = list.filter(p=>(p.name||'').toLowerCase().includes(q) || (p.category||'').toLowerCase().includes(q));
   }
 
+  const chipSlot = document.getElementById('filter-chip-slot');
+  if(currentFilter.cat){
+    chipSlot.innerHTML = `<div class="active-filter">${esc(currentFilter.cat)}${currentFilter.sub ? ' · ' + esc(currentFilter.sub) : ''} <button onclick="clearFilter()">✕</button></div>`;
+  } else {
+    chipSlot.innerHTML = '';
+  }
+
+  document.getElementById('prod-count-sub').textContent = list.length + ' producto(s) disponibles';
   const grid = document.getElementById('product-grid');
-  document.getElementById('prod-count-sub').textContent = data.products.length + ' producto(s) disponibles';
-  if(data.products.length){
-    grid.innerHTML = data.products.map(p=>`
-      <div class="prod-card">
-        <div class="img-wrap"><img src="${p.img}" alt="${p.name}"></div>
-        <div class="body">
-          <div class="cat-label">${p.cat || 'General'}</div>
-          <div class="pname">${p.name}</div>
-          <div class="stock">En stock</div>
-          <div class="price">${fmtPrice(p.price)}</div>
-          <button class="add-btn">Añadir al carrito</button>
-        </div>
-      </div>
-    `).join('');
+  if(list.length){
+    grid.innerHTML = list.map(productCardHtml).join('');
+  } else if(products.length){
+    grid.innerHTML = '<div class="empty-note">No hay productos que coincidan con este filtro o búsqueda.</div>';
   } else {
     grid.innerHTML = '<div class="empty-note">Todavía no hay productos. Entra al panel de administrador para agregar el primero.</div>';
   }
+}
+document.getElementById('search-input').addEventListener('input', e=>{
+  searchTerm = e.target.value.trim();
+  renderCatalog();
+});
+
+/* ============ RENDER: FOOTER CATEGORÍAS ============ */
+function renderFooterCats(){
+  const el = document.getElementById('foot-cats');
+  el.innerHTML = categories.map(c=>`<a href="#catalogo" onclick="applyFilter('${esc(c.name).replace(/'/g,"\\'")}', null)">${esc(c.name)}</a><br>`).join('') || '<a href="#catalogo">Catálogo</a>';
+}
+
+/* ============ RENDER: TESTIMONIOS ============ */
+function renderTestimonials(){
+  const grid = document.getElementById('testi-grid');
+  if(!testimonials.length){
+    grid.innerHTML = '<div class="empty-note">Agrega testimonios de clientes desde el panel de administrador.</div>';
+    return;
+  }
+  grid.innerHTML = testimonials.map(t=>{
+    const stars = '★'.repeat(Math.max(1,Math.min(5, Number(t.rating)||5))) + '☆'.repeat(5-Math.max(1,Math.min(5, Number(t.rating)||5)));
+    return `
+    <div class="testi-card">
+      <div class="stars">${stars}</div>
+      <div class="txt">${esc(t.text)}</div>
+      <div class="who">
+        <img src="${t.photo || 'https://placehold.co/60x60/F1EEE8/1C1F26?text=' + encodeURIComponent((t.name||'?')[0])}" alt="${esc(t.name)}">
+        <div>
+          <div class="n">${esc(t.name)}</div>
+          <div class="loc">${esc(t.location||'')}</div>
+        </div>
+      </div>
+      ${t.productName ? `<div class="prod-ref">${esc(t.productName)}</div>` : ''}
+    </div>`;
+  }).join('');
 }
 
 /* ============ NAVEGACIÓN TIENDA / ADMIN ============ */
@@ -513,17 +937,17 @@ function openAdmin(e){
   if(e) e.preventDefault();
   document.getElementById('store-view').classList.add('hidden');
   document.getElementById('admin-view').classList.add('active');
-  if(sessionStorage.getItem(AUTH_KEY) === '1'){
-    showAdminPanel();
-  } else {
-    showLoginScreen();
+  if(!isConfigured){
+    document.getElementById('login-screen').style.display='block';
+    document.getElementById('admin-panel').style.display='none';
+    return;
   }
+  if(auth.currentUser){ showAdminPanel(); } else { showLoginScreen(); }
 }
 function closeAdmin(e){
   if(e) e.preventDefault();
   document.getElementById('admin-view').classList.remove('active');
   document.getElementById('store-view').classList.remove('hidden');
-  renderStore();
 }
 
 /* ============ LOGIN ============ */
@@ -531,24 +955,29 @@ function showLoginScreen(){
   document.getElementById('login-screen').style.display = 'block';
   document.getElementById('admin-panel').style.display = 'none';
   document.getElementById('login-error').style.display = 'none';
-  document.getElementById('login-user').value = '';
-  document.getElementById('login-pass').value = '';
+  document.getElementById('login-ok').style.display = 'none';
 }
 function doLogin(){
+  if(!isConfigured){ alert('Conecta primero tu proyecto de Firebase.'); return; }
   const u = document.getElementById('login-user').value.trim();
   const p = document.getElementById('login-pass').value;
-  if(u === data.admin.user && p === data.admin.pass){
-    sessionStorage.setItem(AUTH_KEY, '1');
+  document.getElementById('login-error').style.display = 'none';
+  auth.signInWithEmailAndPassword(u,p).then(()=>{
     showAdminPanel();
-  } else {
+  }).catch(()=>{
     document.getElementById('login-error').style.display = 'block';
-  }
+  });
+}
+function doResetPass(){
+  if(!isConfigured){ alert('Conecta primero tu proyecto de Firebase.'); return; }
+  const u = document.getElementById('login-user').value.trim();
+  if(!u){ alert('Escribe tu correo primero.'); return; }
+  auth.sendPasswordResetEmail(u).then(()=>{
+    document.getElementById('login-ok').style.display = 'block';
+  }).catch(err=>alert(err.message));
 }
 function doLogout(){
-  sessionStorage.removeItem(AUTH_KEY);
-  showLoginScreen();
-  document.getElementById('login-screen').style.display = 'block';
-  document.getElementById('admin-panel').style.display = 'none';
+  auth.signOut().then(showLoginScreen);
 }
 
 /* ============ PANEL ADMIN ============ */
@@ -556,61 +985,164 @@ function showAdminPanel(){
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('admin-panel').style.display = 'block';
   fillAdminForms();
+  renderAdminCategories();
   renderAdminProducts();
+  renderAdminTestimonials();
+  fillCategorySelect();
 }
 function fillAdminForms(){
-  document.getElementById('set-brand-name').value = data.brand.name;
-  document.getElementById('set-logo-url').value = data.brand.logo;
-  document.getElementById('set-email').value = data.brand.email;
-  document.getElementById('set-phone').value = data.brand.phone;
-  document.getElementById('set-promo').value = data.brand.promo;
+  const c = siteConfig || {};
+  document.getElementById('set-brand-name').value = c.brandName || '';
+  document.getElementById('set-logo-url').value = c.logo || '';
+  document.getElementById('preview-logo').src = c.logo || 'https://placehold.co/60x60/F1EEE8/1C1F26?text=+';
+  document.getElementById('set-email').value = c.email || '';
+  document.getElementById('set-phone').value = c.phone || '';
+  document.getElementById('set-address').value = c.address || '';
+  document.getElementById('set-promo').value = c.promoTop || '';
 
-  document.getElementById('set-hero-img').value = data.hero.img;
-  document.getElementById('set-hero-title').value = data.hero.title;
-  document.getElementById('set-hero-sub').value = data.hero.sub;
+  const hero = c.hero || {};
+  document.getElementById('set-hero-img').value = hero.img || '';
+  document.getElementById('preview-hero').src = hero.img || 'https://placehold.co/60x60/1C1F26/FFFFFF?text=+';
+  document.getElementById('set-hero-title').value = hero.title || '';
+  document.getElementById('set-hero-sub').value = hero.sub || '';
+  document.getElementById('set-hero-cta-text').value = hero.ctaText || '';
+  document.getElementById('set-hero-cta-link').value = hero.ctaLink || '';
 
-  document.getElementById('set-admin-user').value = data.admin.user;
-  document.getElementById('set-admin-pass').value = '';
+  document.getElementById('set-why-title').value = c.whyTitle || '';
+  document.getElementById('set-why-sub').value = c.whySub || '';
+  document.getElementById('set-why-points').value = (c.whyPoints || []).join('\n');
+
+  document.getElementById('set-fb').value = c.socialFacebook || '';
+  document.getElementById('set-ig').value = c.socialInstagram || '';
+  document.getElementById('set-wa').value = c.socialWhatsapp || '';
 }
 function saveBrand(){
-  data.brand.name = document.getElementById('set-brand-name').value.trim() || 'Mi Tienda Online';
-  data.brand.logo = document.getElementById('set-logo-url').value.trim() || defaultData.brand.logo;
-  data.brand.email = document.getElementById('set-email').value.trim();
-  data.brand.phone = document.getElementById('set-phone').value.trim();
-  data.brand.promo = document.getElementById('set-promo').value.trim();
-  data.brand.copy = '© ' + new Date().getFullYear() + ' ' + data.brand.name + '. Todos los derechos reservados.';
-  saveData(data);
-  showToast('Datos del negocio guardados');
+  db.collection('config').doc('site').set({
+    brandName: document.getElementById('set-brand-name').value.trim() || 'Mi Tienda Online',
+    logo: document.getElementById('set-logo-url').value.trim(),
+    email: document.getElementById('set-email').value.trim(),
+    phone: document.getElementById('set-phone').value.trim(),
+    address: document.getElementById('set-address').value.trim(),
+    promoTop: document.getElementById('set-promo').value.trim()
+  }, {merge:true}).then(()=>showToast('Datos del negocio guardados'));
 }
 function saveHero(){
-  data.hero.img = document.getElementById('set-hero-img').value.trim() || defaultData.hero.img;
-  data.hero.title = document.getElementById('set-hero-title').value.trim();
-  data.hero.sub = document.getElementById('set-hero-sub').value.trim();
-  saveData(data);
-  showToast('Portada guardada');
+  db.collection('config').doc('site').set({
+    hero: {
+      img: document.getElementById('set-hero-img').value.trim(),
+      title: document.getElementById('set-hero-title').value.trim(),
+      sub: document.getElementById('set-hero-sub').value.trim(),
+      ctaText: document.getElementById('set-hero-cta-text').value.trim() || 'Ver catálogo',
+      ctaLink: document.getElementById('set-hero-cta-link').value.trim() || '#catalogo'
+    }
+  }, {merge:true}).then(()=>showToast('Portada guardada'));
 }
-function saveCredentials(){
-  const u = document.getElementById('set-admin-user').value.trim();
-  const p = document.getElementById('set-admin-pass').value;
-  if(u) data.admin.user = u;
-  if(p) data.admin.pass = p;
-  saveData(data);
-  showToast('Credenciales actualizadas');
+function saveWhy(){
+  const points = document.getElementById('set-why-points').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  db.collection('config').doc('site').set({
+    whyTitle: document.getElementById('set-why-title').value.trim(),
+    whySub: document.getElementById('set-why-sub').value.trim(),
+    whyPoints: points
+  }, {merge:true}).then(()=>showToast('Sección guardada'));
+}
+function saveSocial(){
+  db.collection('config').doc('site').set({
+    socialFacebook: document.getElementById('set-fb').value.trim(),
+    socialInstagram: document.getElementById('set-ig').value.trim(),
+    socialWhatsapp: document.getElementById('set-wa').value.trim()
+  }, {merge:true}).then(()=>showToast('Redes guardadas'));
 }
 
+/* ============ ADMIN: CATEGORÍAS ============ */
+function fillCategorySelect(){
+  const sel = document.getElementById('p-cat');
+  const current = sel.value;
+  sel.innerHTML = categories.map(c=>`<option value="${esc(c.name)}">${esc(c.name)}</option>`).join('') || '<option value="">Agrega una categoría primero</option>';
+  if(current) sel.value = current;
+  fillSubcatOptions();
+}
+function fillSubcatOptions(){
+  const catName = document.getElementById('p-cat').value;
+  const cat = categories.find(c=>c.name===catName);
+  const subSel = document.getElementById('p-subcat');
+  const subs = (cat && cat.subcats) ? cat.subcats : [];
+  subSel.innerHTML = '<option value="">Ninguna</option>' + subs.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join('');
+}
+function renderAdminCategories(){
+  const list = document.getElementById('admin-cat-list');
+  document.getElementById('admin-cat-count').textContent = categories.length;
+  if(!categories.length){
+    list.innerHTML = '<div class="empty-note">No hay categorías todavía.</div>';
+    return;
+  }
+  list.innerHTML = categories.map(c=>`
+    <div class="cat-admin-row">
+      <div class="info">
+        <div class="n">${esc(c.name)}</div>
+        <div class="p">${(c.subcats||[]).join(', ') || 'Sin subcategorías'}</div>
+      </div>
+      <div class="acts">
+        <button onclick="editCategory('${c.id}')">Editar</button>
+        <button class="danger" onclick="deleteCategory('${c.id}')">Eliminar</button>
+      </div>
+    </div>
+  `).join('');
+}
+function resetCatForm(){
+  document.getElementById('edit-cat-id').value = '';
+  document.getElementById('c-name').value = '';
+  document.getElementById('c-order').value = '0';
+  document.getElementById('c-subcats').value = '';
+  document.getElementById('c-img').value = '';
+  document.getElementById('preview-cat').src = 'https://placehold.co/60x60/F1EEE8/1C1F26?text=+';
+  document.getElementById('cat-form-title').textContent = 'Agregar categoría';
+  document.getElementById('save-cat-btn').textContent = 'Agregar categoría';
+}
+function editCategory(id){
+  const c = categories.find(x=>x.id===id);
+  if(!c) return;
+  document.getElementById('edit-cat-id').value = c.id;
+  document.getElementById('c-name').value = c.name;
+  document.getElementById('c-order').value = c.order||0;
+  document.getElementById('c-subcats').value = (c.subcats||[]).join(', ');
+  document.getElementById('c-img').value = c.img||'';
+  document.getElementById('preview-cat').src = c.img || 'https://placehold.co/60x60/F1EEE8/1C1F26?text=+';
+  document.getElementById('cat-form-title').textContent = 'Editar categoría';
+  document.getElementById('save-cat-btn').textContent = 'Guardar cambios';
+  document.getElementById('cat-form-title').scrollIntoView({behavior:'smooth', block:'center'});
+}
+function deleteCategory(id){
+  if(!confirm('¿Eliminar esta categoría? Los productos que la usan quedarán sin categoría asignada.')) return;
+  db.collection('categories').doc(id).delete().then(()=>showToast('Categoría eliminada'));
+}
+function saveCategory(){
+  const name = document.getElementById('c-name').value.trim();
+  if(!name){ alert('Escribe el nombre de la categoría.'); return; }
+  const payload = {
+    name,
+    order: Number(document.getElementById('c-order').value)||0,
+    subcats: document.getElementById('c-subcats').value.split(',').map(s=>s.trim()).filter(Boolean),
+    img: document.getElementById('c-img').value.trim()
+  };
+  const editId = document.getElementById('edit-cat-id').value;
+  const p = editId ? db.collection('categories').doc(editId).set(payload,{merge:true}) : db.collection('categories').add(payload);
+  p.then(()=>{ resetCatForm(); showToast('Categoría guardada'); });
+}
+
+/* ============ ADMIN: PRODUCTOS ============ */
 function renderAdminProducts(){
   const list = document.getElementById('admin-prod-list');
-  document.getElementById('admin-prod-count').textContent = data.products.length;
-  if(!data.products.length){
+  document.getElementById('admin-prod-count').textContent = products.length;
+  if(!products.length){
     list.innerHTML = '<div class="empty-note">No hay productos todavía.</div>';
     return;
   }
-  list.innerHTML = data.products.map(p=>`
+  list.innerHTML = products.map(p=>`
     <div class="prod-admin-row">
-      <img src="${p.img}" alt="${p.name}">
+      <img src="${p.img || 'https://placehold.co/60x60/F1EEE8/1C1F26?text=+'}" alt="${esc(p.name)}">
       <div class="info">
-        <div class="n">${p.name}</div>
-        <div class="p">${p.cat || 'General'} · ${fmtPrice(p.price)}</div>
+        <div class="n">${esc(p.name)} ${p.featured ? '⭐' : ''}</div>
+        <div class="p">${esc(p.category || 'General')} · ${fmtPrice(p.price)}</div>
       </div>
       <div class="acts">
         <button onclick="editProduct('${p.id}')">Editar</button>
@@ -619,65 +1151,142 @@ function renderAdminProducts(){
     </div>
   `).join('');
 }
-
 function resetProdForm(){
   document.getElementById('edit-id').value = '';
   document.getElementById('p-name').value = '';
-  document.getElementById('p-cat').value = '';
+  fillCategorySelect();
+  document.getElementById('p-badge').value = '';
   document.getElementById('p-price').value = '';
+  document.getElementById('p-old-price').value = '';
   document.getElementById('p-img').value = '';
+  document.getElementById('preview-prod').src = 'https://placehold.co/60x60/F1EEE8/1C1F26?text=+';
   document.getElementById('p-desc').value = '';
+  document.getElementById('p-featured').checked = false;
   document.getElementById('form-title').textContent = 'Agregar producto';
   document.getElementById('save-prod-btn').textContent = 'Agregar producto';
 }
-
 function editProduct(id){
-  const p = data.products.find(x=>x.id===id);
+  const p = products.find(x=>x.id===id);
   if(!p) return;
   document.getElementById('edit-id').value = p.id;
   document.getElementById('p-name').value = p.name;
-  document.getElementById('p-cat').value = p.cat || '';
+  document.getElementById('p-cat').value = p.category || '';
+  fillSubcatOptions();
+  document.getElementById('p-subcat').value = p.subcategory || '';
+  document.getElementById('p-badge').value = p.badge || '';
   document.getElementById('p-price').value = p.price;
-  document.getElementById('p-img').value = p.img;
+  document.getElementById('p-old-price').value = p.oldPrice || '';
+  document.getElementById('p-img').value = p.img || '';
+  document.getElementById('preview-prod').src = p.img || 'https://placehold.co/60x60/F1EEE8/1C1F26?text=+';
   document.getElementById('p-desc').value = p.desc || '';
+  document.getElementById('p-featured').checked = !!p.featured;
   document.getElementById('form-title').textContent = 'Editar producto';
   document.getElementById('save-prod-btn').textContent = 'Guardar cambios';
   document.getElementById('form-title').scrollIntoView({behavior:'smooth', block:'center'});
 }
-
 function deleteProduct(id){
   if(!confirm('¿Eliminar este producto?')) return;
-  data.products = data.products.filter(x=>x.id!==id);
-  saveData(data);
-  renderAdminProducts();
-  showToast('Producto eliminado');
+  db.collection('products').doc(id).delete().then(()=>showToast('Producto eliminado'));
 }
-
 function saveProduct(){
   const name = document.getElementById('p-name').value.trim();
-  const cat = document.getElementById('p-cat').value.trim();
   const price = document.getElementById('p-price').value.trim();
-  const img = document.getElementById('p-img').value.trim() || 'https://placehold.co/400x400/F1EEE8/1C1F26?text=' + encodeURIComponent(name || 'Producto');
-  const desc = document.getElementById('p-desc').value.trim();
-  if(!name || !price){
-    alert('Por favor completa al menos el nombre y el precio.');
+  if(!name || !price){ alert('Por favor completa al menos el nombre y el precio.'); return; }
+  const payload = {
+    name,
+    category: document.getElementById('p-cat').value,
+    subcategory: document.getElementById('p-subcat').value,
+    badge: document.getElementById('p-badge').value.trim() || 'En stock',
+    price: Number(price)||0,
+    oldPrice: Number(document.getElementById('p-old-price').value)||0,
+    img: document.getElementById('p-img').value.trim(),
+    desc: document.getElementById('p-desc').value.trim(),
+    featured: document.getElementById('p-featured').checked
+  };
+  const editId = document.getElementById('edit-id').value;
+  const p = editId ? db.collection('products').doc(editId).set(payload,{merge:true}) : db.collection('products').add(payload);
+  p.then(()=>{ resetProdForm(); showToast('Producto guardado'); });
+}
+
+/* ============ ADMIN: TESTIMONIOS ============ */
+function renderAdminTestimonials(){
+  const list = document.getElementById('admin-testi-list');
+  document.getElementById('admin-testi-count').textContent = testimonials.length;
+  if(!testimonials.length){
+    list.innerHTML = '<div class="empty-note">No hay testimonios todavía.</div>';
     return;
   }
-  const editId = document.getElementById('edit-id').value;
-  if(editId){
-    const p = data.products.find(x=>x.id===editId);
-    Object.assign(p, {name, cat, price:Number(price)||0, img, desc});
-  } else {
-    data.products.push({id:String(Date.now()), name, cat, price:Number(price)||0, img, desc});
-  }
-  saveData(data);
-  renderAdminProducts();
-  resetProdForm();
-  showToast('Producto guardado');
+  list.innerHTML = testimonials.map(t=>`
+    <div class="testi-admin-row">
+      <img src="${t.photo || 'https://placehold.co/60x60/F1EEE8/1C1F26?text=+'}" alt="${esc(t.name)}">
+      <div class="info">
+        <div class="n">${esc(t.name)} · ${'★'.repeat(Number(t.rating)||5)}</div>
+        <div class="p">${esc((t.text||'').slice(0,60))}${(t.text||'').length>60?'…':''}</div>
+      </div>
+      <div class="acts">
+        <button onclick="editTestimonial('${t.id}')">Editar</button>
+        <button class="danger" onclick="deleteTestimonial('${t.id}')">Eliminar</button>
+      </div>
+    </div>
+  `).join('');
+}
+function resetTestiForm(){
+  document.getElementById('edit-testi-id').value = '';
+  document.getElementById('t-name').value = '';
+  document.getElementById('t-loc').value = '';
+  document.getElementById('t-rating').value = '5';
+  document.getElementById('t-photo').value = '';
+  document.getElementById('preview-testi').src = 'https://placehold.co/60x60/F1EEE8/1C1F26?text=+';
+  document.getElementById('t-text').value = '';
+  document.getElementById('t-product').value = '';
+  document.getElementById('testi-form-title').textContent = 'Agregar testimonio';
+  document.getElementById('save-testi-btn').textContent = 'Agregar testimonio';
+}
+function editTestimonial(id){
+  const t = testimonials.find(x=>x.id===id);
+  if(!t) return;
+  document.getElementById('edit-testi-id').value = t.id;
+  document.getElementById('t-name').value = t.name;
+  document.getElementById('t-loc').value = t.location||'';
+  document.getElementById('t-rating').value = t.rating||5;
+  document.getElementById('t-photo').value = t.photo||'';
+  document.getElementById('preview-testi').src = t.photo || 'https://placehold.co/60x60/F1EEE8/1C1F26?text=+';
+  document.getElementById('t-text').value = t.text||'';
+  document.getElementById('t-product').value = t.productName||'';
+  document.getElementById('testi-form-title').textContent = 'Editar testimonio';
+  document.getElementById('save-testi-btn').textContent = 'Guardar cambios';
+  document.getElementById('testi-form-title').scrollIntoView({behavior:'smooth', block:'center'});
+}
+function deleteTestimonial(id){
+  if(!confirm('¿Eliminar este testimonio?')) return;
+  db.collection('testimonials').doc(id).delete().then(()=>showToast('Testimonio eliminado'));
+}
+function saveTestimonial(){
+  const name = document.getElementById('t-name').value.trim();
+  const text = document.getElementById('t-text').value.trim();
+  if(!name || !text){ alert('Completa al menos el nombre y el comentario.'); return; }
+  const payload = {
+    name,
+    location: document.getElementById('t-loc').value.trim(),
+    rating: Math.max(1, Math.min(5, Number(document.getElementById('t-rating').value)||5)),
+    photo: document.getElementById('t-photo').value.trim(),
+    text,
+    productName: document.getElementById('t-product').value.trim()
+  };
+  const editId = document.getElementById('edit-testi-id').value;
+  const p = editId ? db.collection('testimonials').doc(editId).set(payload,{merge:true}) : db.collection('testimonials').add(payload);
+  p.then(()=>{ resetTestiForm(); showToast('Testimonio guardado'); });
 }
 
 /* ============ INICIO ============ */
-renderStore();
+if(!isConfigured){
+  renderMegaNav();
+  document.getElementById('product-grid').innerHTML = '<div class="empty-note">Conecta Firebase para empezar a cargar tu catálogo.</div>';
+  document.getElementById('cat-tiles').innerHTML = '<div class="empty-note">Conecta Firebase para ver tus categorías aquí.</div>';
+  document.getElementById('featured-row').innerHTML = '';
+  document.getElementById('testi-grid').innerHTML = '';
+  document.getElementById('why-grid').innerHTML = '';
+}
 </script>
 
 </body>
