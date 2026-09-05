@@ -1451,7 +1451,8 @@ if(parametroPerfil === "vendedor" || parametroPerfil === "comprador"){
 /* ---- Acceso oculto al administrador: 20 toques en el logo + patrón táctil ---- */
 let toquesLogo = 0;
 let temporizadorToquesLogo = null;
-const PATRON_SECRETO = [0, 3, 6, 7, 8]; // patrón por defecto: cambiar estos índices (0-8) para usar otro dibujo
+const CLAVE_PATRON_ADMIN = "mercadito:patron-admin";
+const PATRON_LARGO_MINIMO = 4;
 
 document.getElementById("logo-nombre").addEventListener("click", ()=>{
   toquesLogo++;
@@ -1469,6 +1470,9 @@ const puntosPatron = Array.from(gridPatron.querySelectorAll(".patron-punto"));
 const svgLineas = document.getElementById("patron-lineas");
 let patronActual = [];
 let dibujandoPatron = false;
+let patronGuardado = null;
+let patronTemporal = null;
+let modoPatron = "ingresar"; // "ingresar" | "crear-paso1" | "crear-paso2"
 
 function centroPuntoPatron(indice){
   const punto = puntosPatron[indice];
@@ -1520,18 +1524,75 @@ document.addEventListener("pointerup", ()=>{
   validarPatron();
 });
 
+async function cargarPatronGuardado(){
+  try{
+    const resultado = await window.storage.get(CLAVE_PATRON_ADMIN, true);
+    patronGuardado = resultado ? JSON.parse(resultado.value) : null;
+  }catch(err){
+    patronGuardado = null;
+  }
+}
+
+async function guardarPatronAdmin(patron){
+  try{
+    await window.storage.set(CLAVE_PATRON_ADMIN, JSON.stringify(patron), true);
+  }catch(err){
+    console.error("No se pudo guardar el patrón de administrador:", err);
+  }
+}
+
+async function desbloquearAdministrador(mensaje){
+  cerrarPatron();
+  aplicarPerfil("administrador");
+  try{
+    await window.storage.set(CLAVE_PERFIL, "administrador", false);
+  }catch(err){
+    console.error("No se pudo guardar el perfil activo:", err);
+  }
+  mostrarToast(mensaje);
+}
+
 async function validarPatron(){
-  const coincide = patronActual.length === PATRON_SECRETO.length &&
-    patronActual.every((valor, indice) => valor === PATRON_SECRETO[indice]);
-  if(coincide){
-    cerrarPatron();
-    aplicarPerfil("administrador");
-    try{
-      await window.storage.set(CLAVE_PERFIL, "administrador", false);
-    }catch(err){
-      console.error("No se pudo guardar el perfil activo:", err);
+  if(modoPatron !== "ingresar" && patronActual.length < PATRON_LARGO_MINIMO){
+    document.getElementById("patron-instruccion").textContent = `Usá al menos ${PATRON_LARGO_MINIMO} puntos. Probá de nuevo.`;
+    gridPatron.classList.add("error");
+    setTimeout(reiniciarPatron, 600);
+    return;
+  }
+
+  if(modoPatron === "crear-paso1"){
+    patronTemporal = [...patronActual];
+    modoPatron = "crear-paso2";
+    reiniciarPatron();
+    document.getElementById("patron-instruccion").textContent = "Repetí el mismo patrón para confirmarlo.";
+    return;
+  }
+
+  if(modoPatron === "crear-paso2"){
+    const coincideConfirmacion = patronActual.length === patronTemporal.length &&
+      patronActual.every((valor, indice) => valor === patronTemporal[indice]);
+    if(coincideConfirmacion){
+      await guardarPatronAdmin(patronTemporal);
+      patronGuardado = patronTemporal;
+      patronTemporal = null;
+      await desbloquearAdministrador("Patrón creado. Acceso de administrador desbloqueado.");
+    }else{
+      gridPatron.classList.add("error");
+      modoPatron = "crear-paso1";
+      patronTemporal = null;
+      setTimeout(()=>{
+        reiniciarPatron();
+        document.getElementById("patron-instruccion").textContent = "Los patrones no coinciden. Dibujá uno nuevo desde cero.";
+      }, 700);
     }
-    mostrarToast("Acceso de administrador desbloqueado.");
+    return;
+  }
+
+  // modoPatron === "ingresar"
+  const coincide = patronGuardado && patronActual.length === patronGuardado.length &&
+    patronActual.every((valor, indice) => valor === patronGuardado[indice]);
+  if(coincide){
+    await desbloquearAdministrador("Acceso de administrador desbloqueado.");
   }else{
     document.getElementById("patron-instruccion").textContent = "Patrón incorrecto. Intentá de nuevo.";
     gridPatron.classList.add("error");
@@ -1546,9 +1607,17 @@ function reiniciarPatron(){
   gridPatron.classList.remove("error");
 }
 
-function abrirPatron(){
+async function abrirPatron(){
   reiniciarPatron();
-  document.getElementById("patron-instruccion").textContent = "Dibujá el patrón para ingresar";
+  await cargarPatronGuardado();
+  if(patronGuardado){
+    modoPatron = "ingresar";
+    document.getElementById("patron-instruccion").textContent = "Dibujá el patrón para ingresar";
+  }else{
+    modoPatron = "crear-paso1";
+    patronTemporal = null;
+    document.getElementById("patron-instruccion").textContent = `Todavía no configuraste un patrón. Dibujalo desde cero (mínimo ${PATRON_LARGO_MINIMO} puntos).`;
+  }
   overlayPatron.classList.add("abierto");
 }
 function cerrarPatron(){
