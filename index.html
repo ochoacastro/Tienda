@@ -94,6 +94,121 @@
   }
   .categorias a:hover{color:var(--azul);}
 
+  /* CARRUSEL DE CATEGORÍAS */
+  .carousel-categorias{
+    max-width:1200px;
+    margin:16px auto 0;
+    padding:0 16px;
+    position:relative;
+  }
+  .carousel-track{
+    position:relative;
+    width:100%;
+    aspect-ratio:4/5;
+    max-height:460px;
+    border-radius:8px;
+    overflow:hidden;
+    background:var(--gris-fondo);
+  }
+  .categoria-slide{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:flex-end;
+    opacity:0;
+    transition:opacity .5s ease;
+    pointer-events:none;
+  }
+  .categoria-slide.activa{
+    opacity:1;
+    pointer-events:auto;
+  }
+  .categoria-slide-icono{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:190px;
+    line-height:1;
+    opacity:.35;
+    filter:drop-shadow(0 6px 10px rgba(0,0,0,.15));
+  }
+  .categoria-slide-overlay{
+    position:relative;
+    width:100%;
+    padding:28px 24px 26px;
+    background:linear-gradient(to top, rgba(0,0,0,.6), rgba(0,0,0,0) 65%);
+  }
+  .categoria-slide-nombre{
+    font-family:Georgia, 'Times New Roman', serif;
+    font-size:30px;
+    font-weight:700;
+    letter-spacing:.5px;
+    text-transform:uppercase;
+    color:var(--blanco);
+    margin-bottom:14px;
+    text-shadow:0 2px 6px rgba(0,0,0,.35);
+  }
+  .categoria-slide-boton{
+    display:inline-block;
+    background:var(--blanco);
+    color:var(--texto);
+    font-weight:700;
+    font-size:12.5px;
+    letter-spacing:.4px;
+    text-transform:uppercase;
+    padding:10px 22px;
+    border-radius:2px;
+    border:none;
+    cursor:pointer;
+  }
+  .categoria-slide-boton:hover{background:var(--amarillo);}
+  .carousel-flecha{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    background:rgba(255,255,255,.9);
+    border:none;
+    color:var(--texto);
+    font-size:14px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 1px 4px rgba(0,0,0,.2);
+  }
+  .carousel-flecha:hover{background:var(--blanco);}
+  .carousel-flecha.izq{left:30px;}
+  .carousel-flecha.der{right:30px;}
+  .carousel-dots{
+    display:flex;
+    justify-content:center;
+    gap:6px;
+    margin-top:12px;
+  }
+  .carousel-dot{
+    width:8px;
+    height:8px;
+    padding:0;
+    border-radius:50%;
+    border:none;
+    background:var(--borde);
+    cursor:pointer;
+  }
+  .carousel-dot.activo{
+    width:22px;
+    border-radius:4px;
+    background:var(--azul);
+  }
+  @media (min-width:700px){
+    .carousel-track{aspect-ratio:16/6.5;}
+    .categoria-slide-icono{font-size:230px;}
+  }
+
   /* HERO / BANNER */
   .banner{
     max-width:1200px;
@@ -750,6 +865,132 @@
   }
   .btn-agregar-medio-pago:hover{background:#132c5c;}
 
+  .categoria-fila{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    margin-bottom:10px;
+  }
+  .categoria-fila .categoria-nombre{
+    flex:1;
+  }
+  .categoria-fila .btn-quitar-categoria{
+    background:#B5654A;
+    color:var(--blanco);
+    border:none;
+    border-radius:4px;
+    padding:9px 16px;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .categoria-fila .btn-quitar-categoria:hover{background:#9c5540;}
+
+  .categoria-destacada-fila{
+    border:1px solid var(--borde);
+    border-radius:6px;
+    padding:14px;
+    margin-bottom:12px;
+    background:var(--gris-fondo);
+  }
+  .categoria-destacada-fila-principal{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    margin-bottom:8px;
+  }
+  .categoria-destacada-fila-principal .categoria-nombre{flex:1;}
+  .categoria-destacada-fila input[type="text"]{
+    width:100%;
+    margin-bottom:8px;
+  }
+  .subcategorias-box{
+    margin-top:6px;
+    padding-top:10px;
+    border-top:1px dashed var(--borde);
+  }
+  .subcategorias-box label{
+    font-size:12px;
+    color:var(--texto-suave);
+    display:block;
+    margin-bottom:6px;
+  }
+  .subcategoria-fila{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    margin-bottom:6px;
+  }
+  .subcategoria-fila input{flex:1;}
+  .btn-quitar-subcategoria{
+    background:none;
+    border:none;
+    color:#B5654A;
+    font-size:12px;
+    cursor:pointer;
+    padding:4px 6px;
+    white-space:nowrap;
+  }
+  .btn-quitar-subcategoria:hover{text-decoration:underline;}
+  .btn-agregar-subcategoria{
+    background:none;
+    border:1px dashed var(--azul);
+    color:var(--azul);
+    border-radius:4px;
+    font-size:12.5px;
+    font-weight:600;
+    padding:6px 12px;
+    cursor:pointer;
+  }
+  .btn-agregar-subcategoria:hover{background:rgba(52,131,250,.08);}
+
+  .fuente-imagen-selector{
+    display:flex;
+    width:fit-content;
+    border:1px solid var(--borde);
+    border-radius:4px;
+    overflow:hidden;
+    margin-bottom:8px;
+  }
+  .fuente-imagen-boton{
+    background:var(--blanco);
+    border:none;
+    padding:7px 14px;
+    font-size:12.5px;
+    color:var(--texto-suave);
+    cursor:pointer;
+  }
+  .fuente-imagen-boton.activa{
+    background:var(--azul);
+    color:var(--blanco);
+    font-weight:600;
+  }
+  .imagen-preview-form{
+    width:80px;
+    height:80px;
+    object-fit:cover;
+    border-radius:4px;
+    margin-top:8px;
+    display:block;
+  }
+  .imagen-adicional-fila{
+    border:1px solid var(--borde);
+    border-radius:6px;
+    padding:12px;
+    margin-bottom:10px;
+    background:var(--gris-fondo);
+  }
+  .imagen-adicional-fila .imagen-preview-form{
+    width:60px;
+    height:60px;
+  }
+  .imagen-adicional-fila-acciones{
+    display:flex;
+    justify-content:flex-end;
+    margin-top:8px;
+  }
+
   .card .comprar{
     margin-top:8px;
     width:100%;
@@ -973,14 +1214,11 @@
   </div>
 </header>
 
-<div class="banner">
-  <div class="banner-inner">
-    <div class="banner-texto">
-      <h1 id="banner-titulo">Hot Sale: hasta 40% off en tecnología</h1>
-      <p id="banner-subtitulo">Envío gratis en miles de productos y hasta 12 cuotas sin interés</p>
-    </div>
-    <div class="banner-badge" id="banner-badge-texto">Termina en 2 días</div>
-  </div>
+<div class="carousel-categorias" id="carousel-categorias">
+  <div class="carousel-track" id="carousel-track"></div>
+  <button type="button" class="carousel-flecha izq" id="carousel-prev" aria-label="Categoría anterior">&#10094;</button>
+  <button type="button" class="carousel-flecha der" id="carousel-next" aria-label="Categoría siguiente">&#10095;</button>
+  <div class="carousel-dots" id="carousel-dots"></div>
 </div>
 
 <section class="seccion solo-comprador-o-vendedor" id="seccion-publicados" style="display:none;">
@@ -1047,6 +1285,16 @@
         <div id="lista-medios-pago"></div>
         <button type="button" class="btn-agregar-medio-pago" id="btn-agregar-medio-pago">+ Agregar medio de pago</button>
       </div>
+      <div class="campo">
+        <label>Categorías de productos</label>
+        <div id="lista-categorias"></div>
+        <button type="button" class="btn-agregar-medio-pago" id="btn-agregar-categoria">+ Agregar categoría</button>
+      </div>
+      <div class="campo">
+        <label>Categorías destacadas (carrusel de inicio)</label>
+        <div id="lista-categorias-destacadas"></div>
+        <button type="button" class="btn-agregar-medio-pago" id="btn-agregar-categoria-destacada">+ Agregar categoría destacada</button>
+      </div>
       <button type="submit" class="btn-publicar" style="width:auto; padding:11px 24px;">Guardar cambios</button>
       <p class="nota-admin">Estos cambios son compartidos: los va a ver cualquier persona que abra esta página.</p>
     </form>
@@ -1097,21 +1345,44 @@
             <span class="select-custom-flecha">▾</span>
           </button>
           <div class="select-custom-panel" id="select-categoria-panel">
-            <div class="select-custom-opcion seleccionada" data-valor="Tecnología">Tecnología</div>
-            <div class="select-custom-opcion" data-valor="Celulares">Celulares</div>
-            <div class="select-custom-opcion" data-valor="Hogar">Hogar</div>
-            <div class="select-custom-opcion" data-valor="Moda">Moda</div>
-            <div class="select-custom-opcion" data-valor="Deportes">Deportes</div>
-            <div class="select-custom-opcion" data-valor="Belleza">Belleza</div>
-            <div class="select-custom-opcion" data-valor="Juguetes">Juguetes</div>
-            <div class="select-custom-opcion" data-valor="Autos y motos">Autos y motos</div>
-            <div class="select-custom-opcion" data-valor="Otros">Otros</div>
           </div>
         </div>
       </div>
       <div class="campo">
-        <label for="campo-imagen">Foto del producto (JPG o PNG)</label>
+        <label>Opciones adicionales</label>
+        <div class="campo-checkbox">
+          <input type="checkbox" id="campo-habilitar-color">
+          <label for="campo-habilitar-color" style="margin:0;">Color</label>
+        </div>
+        <div class="campo-checkbox">
+          <input type="checkbox" id="campo-habilitar-talla">
+          <label for="campo-habilitar-talla" style="margin:0;">Talla</label>
+        </div>
+      </div>
+      <div class="campo" id="bloque-colores" style="display:none;">
+        <label>Colores disponibles</label>
+        <div id="lista-colores"></div>
+        <button type="button" class="btn-agregar-subcategoria" id="btn-agregar-color">+ Agregar color</button>
+      </div>
+      <div class="campo" id="bloque-tallas" style="display:none;">
+        <label>Tallas disponibles</label>
+        <div id="lista-tallas"></div>
+        <button type="button" class="btn-agregar-subcategoria" id="btn-agregar-talla">+ Agregar talla</button>
+      </div>
+      <div class="campo">
+        <label>Imagen principal</label>
+        <div class="fuente-imagen-selector" data-objetivo="principal">
+          <button type="button" class="fuente-imagen-boton activa" data-modo="subir">Subir archivo</button>
+          <button type="button" class="fuente-imagen-boton" data-modo="enlace">Pegar enlace</button>
+        </div>
         <input type="file" id="campo-imagen" accept="image/jpeg,image/png">
+        <input type="text" id="campo-imagen-enlace" placeholder="https://..." style="display:none;">
+        <img id="campo-imagen-preview" class="imagen-preview-form" style="display:none;" alt="Vista previa">
+      </div>
+      <div class="campo">
+        <label>Imágenes adicionales (hasta 5)</label>
+        <div id="lista-imagenes-adicionales"></div>
+        <button type="button" class="btn-agregar-subcategoria" id="btn-agregar-imagen-adicional">+ Agregar imagen</button>
       </div>
       <div class="campo">
         <label for="campo-descripcion">Descripción</label>
@@ -1634,6 +1905,92 @@ function cerrarBusqueda(){
 function filtrarBusqueda(consulta){
   renderSugerenciasBusqueda(consulta);
 }
+
+/* ---- Carrusel de categorías destacadas ---- */
+let indiceCarruselCategorias = 0;
+let temporizadorCarruselCategorias = null;
+
+function categoriasDestacadasActivas(){
+  const config = configSitioActual || configPorDefecto;
+  return (config.categoriasDestacadas && config.categoriasDestacadas.length)
+    ? config.categoriasDestacadas
+    : configPorDefecto.categoriasDestacadas;
+}
+
+function slideCategoriaHTML(cat, indice){
+  const fondo = cat.imagen
+    ? `background-image:url('${cat.imagen.replace(/'/g, "\\'")}'); background-size:cover; background-position:center;`
+    : `background:linear-gradient(135deg, var(--azul-oscuro), var(--azul));`;
+  const disparador = cat.enlace
+    ? `abrirEnlaceCategoriaDestacada('${cat.enlace.replace(/'/g, "\\'")}')`
+    : `verCategoriaDestacada('${(cat.nombre || "").replace(/'/g, "\\'")}')`;
+  return `
+    <div class="categoria-slide" data-indice="${indice}" style="${fondo}">
+      ${cat.imagen ? "" : `<div class="categoria-slide-icono">🖼️</div>`}
+      <div class="categoria-slide-overlay">
+        <div class="categoria-slide-nombre">${cat.nombre || ""}</div>
+        <button type="button" class="categoria-slide-boton" onclick="${disparador}">Ver productos</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderCarruselCategorias(){
+  const pista = document.getElementById("carousel-track");
+  const puntos = document.getElementById("carousel-dots");
+  if(!pista || !puntos) return;
+  const categorias = categoriasDestacadasActivas();
+  indiceCarruselCategorias = 0;
+  pista.innerHTML = categorias.map(slideCategoriaHTML).join("");
+  puntos.innerHTML = categorias.map((_, i) => `<button type="button" class="carousel-dot" data-indice="${i}" aria-label="Ir a categoría ${i+1}"></button>`).join("");
+  actualizarCarruselCategorias();
+  reiniciarAutoplayCarruselCategorias();
+}
+
+function actualizarCarruselCategorias(){
+  document.querySelectorAll("#carousel-track .categoria-slide").forEach(slide=>{
+    slide.classList.toggle("activa", Number(slide.dataset.indice) === indiceCarruselCategorias);
+  });
+  document.querySelectorAll("#carousel-dots .carousel-dot").forEach(punto=>{
+    punto.classList.toggle("activo", Number(punto.dataset.indice) === indiceCarruselCategorias);
+  });
+}
+
+function irACategoriaCarrusel(indice){
+  const total = categoriasDestacadasActivas().length || 1;
+  indiceCarruselCategorias = (indice + total) % total;
+  actualizarCarruselCategorias();
+  reiniciarAutoplayCarruselCategorias();
+}
+
+function reiniciarAutoplayCarruselCategorias(){
+  clearInterval(temporizadorCarruselCategorias);
+  const total = categoriasDestacadasActivas().length;
+  if(total < 2) return;
+  temporizadorCarruselCategorias = setInterval(()=>{
+    indiceCarruselCategorias = (indiceCarruselCategorias + 1) % total;
+    actualizarCarruselCategorias();
+  }, 5000);
+}
+
+function verCategoriaDestacada(nombreCategoria){
+  abrirBusqueda();
+  const input = document.getElementById("search-input");
+  input.value = nombreCategoria;
+  filtrarBusqueda(nombreCategoria);
+}
+
+function abrirEnlaceCategoriaDestacada(enlace){
+  window.open(enlace, "_blank");
+}
+
+document.getElementById("carousel-prev").addEventListener("click", ()=> irACategoriaCarrusel(indiceCarruselCategorias - 1));
+document.getElementById("carousel-next").addEventListener("click", ()=> irACategoriaCarrusel(indiceCarruselCategorias + 1));
+document.getElementById("carousel-dots").addEventListener("click", (evento)=>{
+  const boton = evento.target.closest(".carousel-dot");
+  if(!boton) return;
+  irACategoriaCarrusel(Number(boton.dataset.indice));
+});
 function renderSugerenciasBusqueda(consulta){
   const catalogo = misPublicaciones;
   const texto = (consulta || "").trim().toLowerCase();
@@ -1725,21 +2082,42 @@ const selectCategoria = document.getElementById("select-categoria");
 const botonCategoria = document.getElementById("select-categoria-boton");
 const panelCategoria = document.getElementById("select-categoria-panel");
 const textoCategoria = document.getElementById("select-categoria-texto");
-let categoriaSeleccionada = "Tecnología";
+let categoriaSeleccionada = "";
+
+function renderPanelCategorias(categorias){
+  panelCategoria.innerHTML = categorias.map(c => `<div class="select-custom-opcion" data-valor="${c.nombre}">${c.nombre}</div>`).join("");
+  const opciones = panelCategoria.querySelectorAll(".select-custom-opcion");
+  let hayCoincidencia = false;
+  opciones.forEach(o=>{
+    if(o.dataset.valor === categoriaSeleccionada){
+      o.classList.add("seleccionada");
+      hayCoincidencia = true;
+    }
+  });
+  if(!hayCoincidencia && opciones.length){
+    opciones[0].classList.add("seleccionada");
+    categoriaSeleccionada = opciones[0].dataset.valor;
+    textoCategoria.textContent = categoriaSeleccionada;
+  }
+}
+renderPanelCategorias([
+  {nombre:"Tecnología"}, {nombre:"Celulares"}, {nombre:"Hogar"}, {nombre:"Moda"},
+  {nombre:"Deportes"}, {nombre:"Belleza"}, {nombre:"Juguetes"}, {nombre:"Autos y motos"}, {nombre:"Otros"}
+]);
 
 botonCategoria.addEventListener("click", (evento)=>{
   evento.stopPropagation();
   selectCategoria.classList.toggle("abierto");
 });
 
-panelCategoria.querySelectorAll(".select-custom-opcion").forEach(opcion=>{
-  opcion.addEventListener("click", ()=>{
-    categoriaSeleccionada = opcion.dataset.valor;
-    textoCategoria.textContent = categoriaSeleccionada;
-    panelCategoria.querySelectorAll(".select-custom-opcion").forEach(o=>o.classList.remove("seleccionada"));
-    opcion.classList.add("seleccionada");
-    selectCategoria.classList.remove("abierto");
-  });
+panelCategoria.addEventListener("click", (evento)=>{
+  const opcion = evento.target.closest(".select-custom-opcion");
+  if(!opcion) return;
+  categoriaSeleccionada = opcion.dataset.valor;
+  textoCategoria.textContent = categoriaSeleccionada;
+  panelCategoria.querySelectorAll(".select-custom-opcion").forEach(o=>o.classList.remove("seleccionada"));
+  opcion.classList.add("seleccionada");
+  selectCategoria.classList.remove("abierto");
 });
 
 document.addEventListener("click", ()=>{
@@ -1752,8 +2130,237 @@ const tituloModalPublicar = overlay.querySelector("h3");
 const botonSubmitPublicar = formPublicar.querySelector('button[type="submit"]');
 let productoEditando = null;
 
+/* ---- Color y talla: listas dinámicas reutilizando el estilo de "subcategoria-fila" ---- */
+let coloresEnEdicion = [];
+let tallasEnEdicion = [];
+
+function variantFilaHTML(item){
+  return `
+    <div class="subcategoria-fila" data-id="${item.id}">
+      <input type="text" class="variant-nombre" value="${item.nombre || ""}" placeholder="Ej: Rojo" maxlength="30">
+      <button type="button" class="btn-quitar-subcategoria">Quitar</button>
+    </div>
+  `;
+}
+function renderColores(){
+  document.getElementById("lista-colores").innerHTML = coloresEnEdicion.map(variantFilaHTML).join("");
+}
+function renderTallas(){
+  document.getElementById("lista-tallas").innerHTML = tallasEnEdicion.map(variantFilaHTML).join("");
+}
+function leerVariantesDesdeFormulario(contenedorId, conservarVacias){
+  const filas = document.querySelectorAll("#" + contenedorId + " .subcategoria-fila");
+  const resultado = [];
+  filas.forEach(fila=>{
+    const nombre = fila.querySelector(".variant-nombre").value.trim();
+    if(nombre || conservarVacias) resultado.push({id: fila.dataset.id, nombre});
+  });
+  return resultado;
+}
+document.getElementById("campo-habilitar-color").addEventListener("change", (evento)=>{
+  document.getElementById("bloque-colores").style.display = evento.target.checked ? "" : "none";
+  if(!evento.target.checked){
+    coloresEnEdicion = [];
+    renderColores();
+  }else if(coloresEnEdicion.length === 0){
+    coloresEnEdicion.push({id:"col" + Date.now(), nombre:""});
+    renderColores();
+  }
+});
+document.getElementById("campo-habilitar-talla").addEventListener("change", (evento)=>{
+  document.getElementById("bloque-tallas").style.display = evento.target.checked ? "" : "none";
+  if(!evento.target.checked){
+    tallasEnEdicion = [];
+    renderTallas();
+  }else if(tallasEnEdicion.length === 0){
+    tallasEnEdicion.push({id:"tal" + Date.now(), nombre:""});
+    renderTallas();
+  }
+});
+document.getElementById("btn-agregar-color").addEventListener("click", ()=>{
+  coloresEnEdicion = leerVariantesDesdeFormulario("lista-colores", true);
+  coloresEnEdicion.push({id:"col" + Date.now(), nombre:""});
+  renderColores();
+});
+document.getElementById("btn-agregar-talla").addEventListener("click", ()=>{
+  tallasEnEdicion = leerVariantesDesdeFormulario("lista-tallas", true);
+  tallasEnEdicion.push({id:"tal" + Date.now(), nombre:""});
+  renderTallas();
+});
+document.getElementById("lista-colores").addEventListener("click", (evento)=>{
+  if(!evento.target.classList.contains("btn-quitar-subcategoria")) return;
+  coloresEnEdicion = leerVariantesDesdeFormulario("lista-colores", true);
+  const fila = evento.target.closest(".subcategoria-fila");
+  coloresEnEdicion = coloresEnEdicion.filter(c=>c.id !== fila.dataset.id);
+  renderColores();
+});
+document.getElementById("lista-tallas").addEventListener("click", (evento)=>{
+  if(!evento.target.classList.contains("btn-quitar-subcategoria")) return;
+  tallasEnEdicion = leerVariantesDesdeFormulario("lista-tallas", true);
+  const fila = evento.target.closest(".subcategoria-fila");
+  tallasEnEdicion = tallasEnEdicion.filter(t=>t.id !== fila.dataset.id);
+  renderTallas();
+});
+
+/* ---- Imagen principal: subir archivo o pegar enlace ---- */
+document.querySelectorAll('.fuente-imagen-selector[data-objetivo="principal"] .fuente-imagen-boton').forEach(boton=>{
+  boton.addEventListener("click", ()=>{
+    document.querySelectorAll('.fuente-imagen-selector[data-objetivo="principal"] .fuente-imagen-boton').forEach(b=>b.classList.remove("activa"));
+    boton.classList.add("activa");
+    const modoSubir = boton.dataset.modo === "subir";
+    document.getElementById("campo-imagen").style.display = modoSubir ? "" : "none";
+    document.getElementById("campo-imagen-enlace").style.display = modoSubir ? "none" : "";
+  });
+});
+document.getElementById("campo-imagen").addEventListener("change", async (evento)=>{
+  const archivo = evento.target.files[0];
+  const preview = document.getElementById("campo-imagen-preview");
+  if(!archivo){ preview.style.display = "none"; return; }
+  try{
+    preview.src = await leerArchivoComoDataURL(archivo);
+    preview.style.display = "";
+  }catch(err){
+    preview.style.display = "none";
+  }
+});
+document.getElementById("campo-imagen-enlace").addEventListener("input", (evento)=>{
+  const preview = document.getElementById("campo-imagen-preview");
+  const url = evento.target.value.trim();
+  if(url){
+    preview.src = url;
+    preview.style.display = "";
+  }else{
+    preview.style.display = "none";
+  }
+});
+
+/* ---- Imágenes adicionales: hasta 5, cada una subida o por enlace ---- */
+let imagenesAdicionalesEnEdicion = [];
+
+function imagenAdicionalFilaHTML(item){
+  const modoSubir = item.modo !== "enlace";
+  return `
+    <div class="imagen-adicional-fila" data-id="${item.id}">
+      <div class="fuente-imagen-selector" data-objetivo="adicional">
+        <button type="button" class="fuente-imagen-boton ${modoSubir ? "activa" : ""}" data-modo="subir">Subir archivo</button>
+        <button type="button" class="fuente-imagen-boton ${modoSubir ? "" : "activa"}" data-modo="enlace">Pegar enlace</button>
+      </div>
+      <input type="file" class="imagen-adicional-archivo" accept="image/jpeg,image/png" style="${modoSubir ? "" : "display:none;"}">
+      <input type="text" class="imagen-adicional-enlace" placeholder="https://..." value="${item.enlace || ""}" style="${modoSubir ? "display:none;" : ""}">
+      <img class="imagen-preview-form imagen-adicional-preview" alt="Vista previa" style="display:${item.preview ? "" : "none"};" src="${item.preview || ""}">
+      <div class="imagen-adicional-fila-acciones">
+        <button type="button" class="btn-quitar-subcategoria btn-quitar-imagen-adicional">Quitar</button>
+      </div>
+    </div>
+  `;
+}
+function renderImagenesAdicionales(){
+  document.getElementById("lista-imagenes-adicionales").innerHTML = imagenesAdicionalesEnEdicion.map(imagenAdicionalFilaHTML).join("");
+  document.getElementById("btn-agregar-imagen-adicional").style.display = imagenesAdicionalesEnEdicion.length >= 5 ? "none" : "";
+}
+function sincronizarImagenesAdicionalesDesdeFormulario(){
+  document.querySelectorAll("#lista-imagenes-adicionales .imagen-adicional-fila").forEach(fila=>{
+    const item = imagenesAdicionalesEnEdicion.find(i => i.id === fila.dataset.id);
+    if(!item) return;
+    const botonActivo = fila.querySelector(".fuente-imagen-boton.activa");
+    item.modo = botonActivo ? botonActivo.dataset.modo : item.modo;
+    item.enlace = fila.querySelector(".imagen-adicional-enlace").value.trim();
+  });
+}
+document.getElementById("btn-agregar-imagen-adicional").addEventListener("click", ()=>{
+  if(imagenesAdicionalesEnEdicion.length >= 5) return;
+  sincronizarImagenesAdicionalesDesdeFormulario();
+  imagenesAdicionalesEnEdicion.push({id:"img" + Date.now(), modo:"subir", enlace:"", preview:null});
+  renderImagenesAdicionales();
+});
+document.getElementById("lista-imagenes-adicionales").addEventListener("click", (evento)=>{
+  const botonModo = evento.target.closest(".fuente-imagen-boton");
+  const botonQuitar = evento.target.closest(".btn-quitar-imagen-adicional");
+  if(botonModo){
+    const fila = botonModo.closest(".imagen-adicional-fila");
+    fila.querySelectorAll(".fuente-imagen-boton").forEach(b=>b.classList.remove("activa"));
+    botonModo.classList.add("activa");
+    const modoSubir = botonModo.dataset.modo === "subir";
+    fila.querySelector(".imagen-adicional-archivo").style.display = modoSubir ? "" : "none";
+    fila.querySelector(".imagen-adicional-enlace").style.display = modoSubir ? "none" : "";
+    return;
+  }
+  if(botonQuitar){
+    sincronizarImagenesAdicionalesDesdeFormulario();
+    const fila = botonQuitar.closest(".imagen-adicional-fila");
+    imagenesAdicionalesEnEdicion = imagenesAdicionalesEnEdicion.filter(i => i.id !== fila.dataset.id);
+    renderImagenesAdicionales();
+  }
+});
+document.getElementById("lista-imagenes-adicionales").addEventListener("input", (evento)=>{
+  if(!evento.target.classList.contains("imagen-adicional-enlace")) return;
+  const fila = evento.target.closest(".imagen-adicional-fila");
+  const preview = fila.querySelector(".imagen-adicional-preview");
+  const url = evento.target.value.trim();
+  if(url){ preview.src = url; preview.style.display = ""; }
+  else{ preview.style.display = "none"; }
+});
+document.getElementById("lista-imagenes-adicionales").addEventListener("change", async (evento)=>{
+  if(!evento.target.classList.contains("imagen-adicional-archivo")) return;
+  const archivo = evento.target.files[0];
+  const fila = evento.target.closest(".imagen-adicional-fila");
+  const preview = fila.querySelector(".imagen-adicional-preview");
+  if(!archivo){ preview.style.display = "none"; return; }
+  try{
+    const dataUrl = await leerArchivoComoDataURL(archivo);
+    preview.src = dataUrl;
+    preview.style.display = "";
+    const item = imagenesAdicionalesEnEdicion.find(i => i.id === fila.dataset.id);
+    if(item) item.preview = dataUrl;
+  }catch(err){
+    preview.style.display = "none";
+  }
+});
+async function leerImagenesAdicionalesDesdeFormulario(){
+  const filas = document.querySelectorAll("#lista-imagenes-adicionales .imagen-adicional-fila");
+  const imagenes = [];
+  for(const fila of filas){
+    const botonActivo = fila.querySelector(".fuente-imagen-boton.activa");
+    const modo = botonActivo ? botonActivo.dataset.modo : "subir";
+    if(modo === "enlace"){
+      const url = fila.querySelector(".imagen-adicional-enlace").value.trim();
+      if(url) imagenes.push(url);
+    }else{
+      const archivo = fila.querySelector(".imagen-adicional-archivo").files[0];
+      if(archivo){
+        imagenes.push(await leerArchivoComoDataURL(archivo));
+      }else{
+        const item = imagenesAdicionalesEnEdicion.find(i => i.id === fila.dataset.id);
+        if(item && item.preview) imagenes.push(item.preview);
+      }
+    }
+  }
+  return imagenes.slice(0, 5);
+}
+
+function reiniciarCamposOpcionalesModal(){
+  document.getElementById("campo-habilitar-color").checked = false;
+  document.getElementById("campo-habilitar-talla").checked = false;
+  document.getElementById("bloque-colores").style.display = "none";
+  document.getElementById("bloque-tallas").style.display = "none";
+  coloresEnEdicion = [];
+  tallasEnEdicion = [];
+  renderColores();
+  renderTallas();
+  imagenesAdicionalesEnEdicion = [];
+  renderImagenesAdicionales();
+  document.querySelectorAll('.fuente-imagen-selector[data-objetivo="principal"] .fuente-imagen-boton').forEach(b=>{
+    b.classList.toggle("activa", b.dataset.modo === "subir");
+  });
+  document.getElementById("campo-imagen").style.display = "";
+  document.getElementById("campo-imagen-enlace").style.display = "none";
+  document.getElementById("campo-imagen-enlace").value = "";
+  document.getElementById("campo-imagen-preview").style.display = "none";
+}
+
 function abrirModal(producto){
   productoEditando = producto || null;
+  reiniciarCamposOpcionalesModal();
   if(productoEditando){
     tituloModalPublicar.textContent = "Editar producto";
     botonSubmitPublicar.textContent = "Guardar cambios";
@@ -1766,6 +2373,36 @@ function abrirModal(producto){
     panelCategoria.querySelectorAll(".select-custom-opcion").forEach(o=>{
       o.classList.toggle("seleccionada", o.dataset.valor === categoriaSeleccionada);
     });
+
+    if(productoEditando.colores && productoEditando.colores.length){
+      document.getElementById("campo-habilitar-color").checked = true;
+      document.getElementById("bloque-colores").style.display = "";
+      coloresEnEdicion = productoEditando.colores.map((nombre, i)=>({id:"col" + Date.now() + "_" + i, nombre}));
+      renderColores();
+    }
+    if(productoEditando.tallas && productoEditando.tallas.length){
+      document.getElementById("campo-habilitar-talla").checked = true;
+      document.getElementById("bloque-tallas").style.display = "";
+      tallasEnEdicion = productoEditando.tallas.map((nombre, i)=>({id:"tal" + Date.now() + "_" + i, nombre}));
+      renderTallas();
+    }
+
+    // La imagen principal actual se precarga como "enlace" (funciona igual con URLs o con fotos subidas antes).
+    document.querySelectorAll('.fuente-imagen-selector[data-objetivo="principal"] .fuente-imagen-boton').forEach(b=>{
+      b.classList.toggle("activa", b.dataset.modo === "enlace");
+    });
+    document.getElementById("campo-imagen").style.display = "none";
+    document.getElementById("campo-imagen-enlace").style.display = "";
+    document.getElementById("campo-imagen-enlace").value = productoEditando.img || "";
+    if(productoEditando.img){
+      document.getElementById("campo-imagen-preview").src = productoEditando.img;
+      document.getElementById("campo-imagen-preview").style.display = "";
+    }
+
+    if(productoEditando.imagenes && productoEditando.imagenes.length){
+      imagenesAdicionalesEnEdicion = productoEditando.imagenes.map((url, i)=>({id:"img" + Date.now() + "_" + i, modo:"enlace", enlace:url, preview:url}));
+      renderImagenesAdicionales();
+    }
   }else{
     tituloModalPublicar.textContent = "Publicar un producto";
     botonSubmitPublicar.textContent = "Publicar";
@@ -1778,10 +2415,12 @@ function cerrarModal(){
   productoEditando = null;
   tituloModalPublicar.textContent = "Publicar un producto";
   botonSubmitPublicar.textContent = "Publicar";
-  categoriaSeleccionada = "Tecnología";
-  textoCategoria.textContent = "Tecnología";
   panelCategoria.querySelectorAll(".select-custom-opcion").forEach(o=>o.classList.remove("seleccionada"));
-  panelCategoria.querySelector('[data-valor="Tecnología"]').classList.add("seleccionada");
+  const primeraOpcion = panelCategoria.querySelector(".select-custom-opcion");
+  categoriaSeleccionada = primeraOpcion ? primeraOpcion.dataset.valor : "";
+  textoCategoria.textContent = categoriaSeleccionada;
+  if(primeraOpcion) primeraOpcion.classList.add("seleccionada");
+  reiniciarCamposOpcionalesModal();
 }
 
 document.getElementById("btn-abrir-modal").addEventListener("click", ()=>abrirModal());
@@ -1801,8 +2440,14 @@ formPublicar.addEventListener("submit", async (evento)=>{
 
   if(!titulo || !precio || precio <= 0) return;
 
+  const modoPrincipalBoton = document.querySelector('.fuente-imagen-selector[data-objetivo="principal"] .fuente-imagen-boton.activa');
+  const modoPrincipal = modoPrincipalBoton ? modoPrincipalBoton.dataset.modo : "subir";
+  const enlacePrincipal = document.getElementById("campo-imagen-enlace").value.trim();
+
   let imagen = productoEditando ? productoEditando.img : `https://picsum.photos/seed/${encodeURIComponent(titulo)}/400/400`;
-  if(archivoImagen){
+  if(modoPrincipal === "enlace" && enlacePrincipal){
+    imagen = enlacePrincipal;
+  }else if(modoPrincipal === "subir" && archivoImagen){
     try{
       imagen = await leerArchivoComoDataURL(archivoImagen);
     }catch(err){
@@ -1811,6 +2456,21 @@ formPublicar.addEventListener("submit", async (evento)=>{
     }
   }
 
+  let imagenesAdicionales;
+  try{
+    imagenesAdicionales = await leerImagenesAdicionalesDesdeFormulario();
+  }catch(err){
+    mostrarToast("No se pudo leer una de las imágenes adicionales. Probá de nuevo.");
+    return;
+  }
+
+  const colores = document.getElementById("campo-habilitar-color").checked
+    ? leerVariantesDesdeFormulario("lista-colores", false).map(c=>c.nombre)
+    : [];
+  const tallas = document.getElementById("campo-habilitar-talla").checked
+    ? leerVariantesDesdeFormulario("lista-tallas", false).map(t=>t.nombre)
+    : [];
+
   if(productoEditando){
     const producto = misPublicaciones.find(p => p.id === productoEditando.id);
     if(producto){
@@ -1818,11 +2478,14 @@ formPublicar.addEventListener("submit", async (evento)=>{
       producto.precio = precio;
       producto.categoria = categoria;
       producto.img = imagen;
+      producto.imagenes = imagenesAdicionales;
       producto.descripcion = descripcion;
       producto.envio = envio;
+      producto.colores = colores;
+      producto.tallas = tallas;
     }
   }else{
-    misPublicaciones.unshift({id: "pub" + Date.now(), titulo, precio, categoria, img: imagen, descripcion, envio});
+    misPublicaciones.unshift({id: "pub" + Date.now(), titulo, precio, categoria, img: imagen, imagenes: imagenesAdicionales, descripcion, envio, colores, tallas});
   }
   await guardarPublicaciones();
   renderPublicaciones();
@@ -2121,17 +2784,34 @@ const configPorDefecto = {
   whatsapp: "",
   metodosPago: [
     {id:"mp-efectivo", nombre:"Efectivo contraentrega", numeroCuenta:"", imagen:null}
+  ],
+  categorias: [
+    {id:"cat1", nombre:"Tecnología"},
+    {id:"cat2", nombre:"Celulares"},
+    {id:"cat3", nombre:"Hogar"},
+    {id:"cat4", nombre:"Moda"},
+    {id:"cat5", nombre:"Deportes"},
+    {id:"cat6", nombre:"Belleza"},
+    {id:"cat7", nombre:"Juguetes"},
+    {id:"cat8", nombre:"Autos y motos"},
+    {id:"cat9", nombre:"Otros"}
+  ],
+  categoriasDestacadas: [
+    {id:"catd1", nombre:"Hombres", imagen:"", enlace:"", subcategorias:[]},
+    {id:"catd2", nombre:"Mujeres", imagen:"", enlace:"", subcategorias:[]}
   ]
 };
 let metodosPagoEnEdicion = [];
+let categoriasEnEdicion = [];
+let categoriasDestacadasEnEdicion = [];
 let configSitioActual = configPorDefecto;
 
 function aplicarConfigSitio(config){
   configSitioActual = config;
   document.getElementById("logo-nombre").textContent = config.nombre;
-  document.getElementById("banner-titulo").textContent = config.bannerTitulo;
-  document.getElementById("banner-subtitulo").textContent = config.bannerTexto;
-  document.getElementById("banner-badge-texto").textContent = config.badge;
+  document.getElementById("banner-titulo")?.textContent && (document.getElementById("banner-titulo").textContent = config.bannerTitulo);
+  document.getElementById("banner-subtitulo")?.textContent && (document.getElementById("banner-subtitulo").textContent = config.bannerTexto);
+  document.getElementById("banner-badge-texto")?.textContent && (document.getElementById("banner-badge-texto").textContent = config.badge);
   document.getElementById("config-nombre").value = config.nombre;
   document.getElementById("config-banner-titulo").value = config.bannerTitulo;
   document.getElementById("config-banner-texto").value = config.bannerTexto;
@@ -2140,6 +2820,13 @@ function aplicarConfigSitio(config){
   document.getElementById("config-whatsapp").value = config.whatsapp || "";
   metodosPagoEnEdicion = (config.metodosPago && config.metodosPago.length ? config.metodosPago : configPorDefecto.metodosPago).map(m=>({...m}));
   renderMetodosPago(metodosPagoEnEdicion);
+  categoriasEnEdicion = (config.categorias && config.categorias.length ? config.categorias : configPorDefecto.categorias).map(c=>({...c}));
+  renderCategorias(categoriasEnEdicion);
+  renderPanelCategorias(categoriasEnEdicion);
+  categoriasDestacadasEnEdicion = (config.categoriasDestacadas && config.categoriasDestacadas.length ? config.categoriasDestacadas : configPorDefecto.categoriasDestacadas)
+    .map(c=>({...c, subcategorias:(c.subcategorias||[]).map(s=>({...s}))}));
+  renderCategoriasDestacadas(categoriasDestacadasEnEdicion);
+  renderCarruselCategorias();
 
   const linkWhatsapp = document.getElementById("link-whatsapp");
   if(config.whatsapp){
@@ -2206,6 +2893,111 @@ async function leerMetodosPagoDesdeFormulario(){
   return metodos;
 }
 
+function categoriaFilaHTML(c){
+  return `
+    <div class="categoria-fila" data-id="${c.id}">
+      <input type="text" class="categoria-nombre" value="${c.nombre || ""}" placeholder="Ej: Tecnología" maxlength="30">
+      <button type="button" class="btn-quitar-categoria">Quitar</button>
+    </div>
+  `;
+}
+function renderCategorias(categorias){
+  document.getElementById("lista-categorias").innerHTML = categorias.map(categoriaFilaHTML).join("");
+}
+document.getElementById("btn-agregar-categoria").addEventListener("click", ()=>{
+  categoriasEnEdicion.push({id:"cat"+Date.now(), nombre:""});
+  renderCategorias(categoriasEnEdicion);
+});
+document.getElementById("lista-categorias").addEventListener("click", (evento)=>{
+  if(!evento.target.classList.contains("btn-quitar-categoria")) return;
+  const fila = evento.target.closest(".categoria-fila");
+  categoriasEnEdicion = categoriasEnEdicion.filter(c=>c.id !== fila.dataset.id);
+  renderCategorias(categoriasEnEdicion);
+});
+function leerCategoriasDesdeFormulario(){
+  const filas = document.querySelectorAll("#lista-categorias .categoria-fila");
+  const categorias = [];
+  filas.forEach(fila=>{
+    const nombre = fila.querySelector(".categoria-nombre").value.trim();
+    if(nombre) categorias.push({id: fila.dataset.id, nombre});
+  });
+  return categorias;
+}
+
+/* ---- Categorías destacadas del carrusel (imagen, enlace y subcategorías) ---- */
+function subcategoriaFilaHTML(s){
+  return `
+    <div class="subcategoria-fila" data-id="${s.id}">
+      <input type="text" class="subcategoria-nombre" value="${s.nombre || ""}" placeholder="Ej: Camisetas" maxlength="30">
+      <button type="button" class="btn-quitar-subcategoria">Quitar</button>
+    </div>
+  `;
+}
+function categoriaDestacadaFilaHTML(c){
+  return `
+    <div class="categoria-destacada-fila" data-id="${c.id}">
+      <div class="categoria-destacada-fila-principal">
+        <input type="text" class="categoria-nombre" value="${c.nombre || ""}" placeholder="Ej: Hombres" maxlength="30">
+        <button type="button" class="btn-quitar-categoria">Quitar</button>
+      </div>
+      <input type="text" class="categoria-imagen" value="${c.imagen || ""}" placeholder="URL de la imagen">
+      <input type="text" class="categoria-enlace" value="${c.enlace || ""}" placeholder="Enlace (opcional, ej: https://...)">
+      <div class="subcategorias-box">
+        <label>Subcategorías</label>
+        <div class="subcategorias-lista">
+          ${(c.subcategorias || []).map(subcategoriaFilaHTML).join("")}
+        </div>
+        <button type="button" class="btn-agregar-subcategoria">+ Agregar subcategoría</button>
+      </div>
+    </div>
+  `;
+}
+function renderCategoriasDestacadas(categorias){
+  document.getElementById("lista-categorias-destacadas").innerHTML = categorias.map(categoriaDestacadaFilaHTML).join("");
+}
+function leerCategoriasDestacadasDesdeFormulario(conservarVacias){
+  const filas = document.querySelectorAll("#lista-categorias-destacadas .categoria-destacada-fila");
+  const categorias = [];
+  filas.forEach(fila=>{
+    const nombre = fila.querySelector(".categoria-nombre").value.trim();
+    const imagen = fila.querySelector(".categoria-imagen").value.trim();
+    const enlace = fila.querySelector(".categoria-enlace").value.trim();
+    const subcategorias = [];
+    fila.querySelectorAll(".subcategoria-fila").forEach(subFila=>{
+      const subNombre = subFila.querySelector(".subcategoria-nombre").value.trim();
+      if(subNombre || conservarVacias) subcategorias.push({id: subFila.dataset.id, nombre: subNombre});
+    });
+    if(nombre || conservarVacias) categorias.push({id: fila.dataset.id, nombre, imagen, enlace, subcategorias});
+  });
+  return categorias;
+}
+document.getElementById("btn-agregar-categoria-destacada").addEventListener("click", ()=>{
+  categoriasDestacadasEnEdicion = leerCategoriasDestacadasDesdeFormulario(true);
+  categoriasDestacadasEnEdicion.push({id:"catd"+Date.now(), nombre:"", imagen:"", enlace:"", subcategorias:[]});
+  renderCategoriasDestacadas(categoriasDestacadasEnEdicion);
+});
+document.getElementById("lista-categorias-destacadas").addEventListener("click", (evento)=>{
+  const btnQuitarCategoria = evento.target.closest(".btn-quitar-categoria");
+  const btnAgregarSub = evento.target.closest(".btn-agregar-subcategoria");
+  const btnQuitarSub = evento.target.closest(".btn-quitar-subcategoria");
+  if(!btnQuitarCategoria && !btnAgregarSub && !btnQuitarSub) return;
+  categoriasDestacadasEnEdicion = leerCategoriasDestacadasDesdeFormulario(true);
+  if(btnQuitarCategoria){
+    const fila = btnQuitarCategoria.closest(".categoria-destacada-fila");
+    categoriasDestacadasEnEdicion = categoriasDestacadasEnEdicion.filter(c=>c.id !== fila.dataset.id);
+  }else if(btnAgregarSub){
+    const fila = btnAgregarSub.closest(".categoria-destacada-fila");
+    const categoria = categoriasDestacadasEnEdicion.find(c=>c.id === fila.dataset.id);
+    if(categoria) categoria.subcategorias.push({id:"sub"+Date.now(), nombre:""});
+  }else if(btnQuitarSub){
+    const filaCategoria = btnQuitarSub.closest(".categoria-destacada-fila");
+    const filaSub = btnQuitarSub.closest(".subcategoria-fila");
+    const categoria = categoriasDestacadasEnEdicion.find(c=>c.id === filaCategoria.dataset.id);
+    if(categoria) categoria.subcategorias = categoria.subcategorias.filter(s=>s.id !== filaSub.dataset.id);
+  }
+  renderCategoriasDestacadas(categoriasDestacadasEnEdicion);
+});
+
 document.getElementById("form-config-sitio").addEventListener("submit", async (evento)=>{
   evento.preventDefault();
   let metodosPago;
@@ -2215,6 +3007,8 @@ document.getElementById("form-config-sitio").addEventListener("submit", async (e
     mostrarToast("No se pudo leer el logo de un método de pago. Probá de nuevo.");
     return;
   }
+  const categorias = leerCategoriasDesdeFormulario();
+  const categoriasDestacadas = leerCategoriasDestacadasDesdeFormulario(false);
   const config = {
     nombre: document.getElementById("config-nombre").value.trim() || configPorDefecto.nombre,
     bannerTitulo: document.getElementById("config-banner-titulo").value.trim() || configPorDefecto.bannerTitulo,
@@ -2222,7 +3016,9 @@ document.getElementById("form-config-sitio").addEventListener("submit", async (e
     badge: document.getElementById("config-badge").value.trim() || configPorDefecto.badge,
     direccionTienda: document.getElementById("config-direccion-tienda").value.trim(),
     whatsapp: document.getElementById("config-whatsapp").value.trim(),
-    metodosPago
+    metodosPago,
+    categorias,
+    categoriasDestacadas
   };
   aplicarConfigSitio(config);
   try{
