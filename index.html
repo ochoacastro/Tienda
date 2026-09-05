@@ -323,6 +323,49 @@
   }
   .carrito-item-quitar:hover{color:#E63946;}
 
+  .modal-patron{max-width:300px; text-align:center;}
+  .patron-instruccion{
+    font-size:13px;
+    color:var(--texto-suave);
+    margin-bottom:18px;
+  }
+  .patron-grid{
+    position:relative;
+    width:220px;
+    height:220px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    grid-template-rows:repeat(3, 1fr);
+    place-items:center;
+    touch-action:none;
+    user-select:none;
+  }
+  .patron-lineas{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+  }
+  .patron-punto{
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    border:2px solid var(--borde);
+    background:var(--blanco);
+    position:relative;
+    z-index:1;
+  }
+  .patron-punto.activo{
+    border-color:var(--azul);
+    background:var(--azul);
+  }
+  .patron-grid.error .patron-punto.activo{
+    border-color:#E63946;
+    background:#E63946;
+  }
+
   .btn-vender{
     background:var(--azul-oscuro);
     color:var(--blanco);
@@ -965,6 +1008,28 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="modal-overlay-patron">
+  <div class="modal modal-patron">
+    <h3>Acceso administrador</h3>
+    <p class="patron-instruccion" id="patron-instruccion">Dibujá el patrón para ingresar</p>
+    <div class="patron-grid" id="patron-grid">
+      <svg class="patron-lineas" id="patron-lineas"></svg>
+      <div class="patron-punto" data-indice="0"></div>
+      <div class="patron-punto" data-indice="1"></div>
+      <div class="patron-punto" data-indice="2"></div>
+      <div class="patron-punto" data-indice="3"></div>
+      <div class="patron-punto" data-indice="4"></div>
+      <div class="patron-punto" data-indice="5"></div>
+      <div class="patron-punto" data-indice="6"></div>
+      <div class="patron-punto" data-indice="7"></div>
+      <div class="patron-punto" data-indice="8"></div>
+    </div>
+    <div class="modal-acciones">
+      <button type="button" class="btn-cancelar" id="btn-cancelar-patron">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -1382,6 +1447,118 @@ if(parametroPerfil === "vendedor" || parametroPerfil === "comprador"){
 }else{
   cargarPerfil();
 }
+
+/* ---- Acceso oculto al administrador: 20 toques en el logo + patrón táctil ---- */
+let toquesLogo = 0;
+let temporizadorToquesLogo = null;
+const PATRON_SECRETO = [0, 3, 6, 7, 8]; // patrón por defecto: cambiar estos índices (0-8) para usar otro dibujo
+
+document.getElementById("logo-nombre").addEventListener("click", ()=>{
+  toquesLogo++;
+  clearTimeout(temporizadorToquesLogo);
+  temporizadorToquesLogo = setTimeout(()=>{ toquesLogo = 0; }, 3000);
+  if(toquesLogo >= 20){
+    toquesLogo = 0;
+    abrirPatron();
+  }
+});
+
+const overlayPatron = document.getElementById("modal-overlay-patron");
+const gridPatron = document.getElementById("patron-grid");
+const puntosPatron = Array.from(gridPatron.querySelectorAll(".patron-punto"));
+const svgLineas = document.getElementById("patron-lineas");
+let patronActual = [];
+let dibujandoPatron = false;
+
+function centroPuntoPatron(indice){
+  const punto = puntosPatron[indice];
+  const rectPunto = punto.getBoundingClientRect();
+  const rectGrid = gridPatron.getBoundingClientRect();
+  return {
+    x: rectPunto.left - rectGrid.left + rectPunto.width / 2,
+    y: rectPunto.top - rectGrid.top + rectPunto.height / 2
+  };
+}
+
+function redibujarLineasPatron(){
+  if(patronActual.length < 2){
+    svgLineas.innerHTML = "";
+    return;
+  }
+  const puntosTexto = patronActual.map(centroPuntoPatron).map(p => `${p.x},${p.y}`).join(" ");
+  svgLineas.innerHTML = `<polyline points="${puntosTexto}" fill="none" stroke="var(--azul)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>`;
+}
+
+function agregarPuntoPatron(indice){
+  if(patronActual.includes(indice)) return;
+  patronActual.push(indice);
+  puntosPatron[indice].classList.add("activo");
+  redibujarLineasPatron();
+}
+
+function indicePuntoDesdeCoordenadas(x, y){
+  const elemento = document.elementFromPoint(x, y);
+  if(!elemento) return -1;
+  const punto = elemento.closest(".patron-punto");
+  return punto ? puntosPatron.indexOf(punto) : -1;
+}
+
+gridPatron.addEventListener("pointerdown", (evento)=>{
+  dibujandoPatron = true;
+  gridPatron.classList.remove("error");
+  const indice = indicePuntoDesdeCoordenadas(evento.clientX, evento.clientY);
+  if(indice >= 0) agregarPuntoPatron(indice);
+});
+gridPatron.addEventListener("pointermove", (evento)=>{
+  if(!dibujandoPatron) return;
+  const indice = indicePuntoDesdeCoordenadas(evento.clientX, evento.clientY);
+  if(indice >= 0) agregarPuntoPatron(indice);
+});
+document.addEventListener("pointerup", ()=>{
+  if(!dibujandoPatron) return;
+  dibujandoPatron = false;
+  validarPatron();
+});
+
+async function validarPatron(){
+  const coincide = patronActual.length === PATRON_SECRETO.length &&
+    patronActual.every((valor, indice) => valor === PATRON_SECRETO[indice]);
+  if(coincide){
+    cerrarPatron();
+    aplicarPerfil("administrador");
+    try{
+      await window.storage.set(CLAVE_PERFIL, "administrador", false);
+    }catch(err){
+      console.error("No se pudo guardar el perfil activo:", err);
+    }
+    mostrarToast("Acceso de administrador desbloqueado.");
+  }else{
+    document.getElementById("patron-instruccion").textContent = "Patrón incorrecto. Intentá de nuevo.";
+    gridPatron.classList.add("error");
+    setTimeout(reiniciarPatron, 500);
+  }
+}
+
+function reiniciarPatron(){
+  patronActual = [];
+  puntosPatron.forEach(p => p.classList.remove("activo"));
+  svgLineas.innerHTML = "";
+  gridPatron.classList.remove("error");
+}
+
+function abrirPatron(){
+  reiniciarPatron();
+  document.getElementById("patron-instruccion").textContent = "Dibujá el patrón para ingresar";
+  overlayPatron.classList.add("abierto");
+}
+function cerrarPatron(){
+  overlayPatron.classList.remove("abierto");
+  reiniciarPatron();
+}
+document.getElementById("btn-cancelar-patron").addEventListener("click", cerrarPatron);
+overlayPatron.addEventListener("click", (evento)=>{
+  if(evento.target === overlayPatron) cerrarPatron();
+});
 
 /* ---- Configuración del sitio (solo perfil administrador, dato compartido) ---- */
 const CLAVE_CONFIG_SITIO = "mercadito:config-sitio";
