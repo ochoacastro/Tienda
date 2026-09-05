@@ -238,6 +238,17 @@
     padding:0;
   }
   .card .eliminar:hover{text-decoration:underline;}
+  .card .editar{
+    margin-top:8px;
+    align-self:flex-start;
+    background:none;
+    border:none;
+    color:var(--azul);
+    font-size:12px;
+    cursor:pointer;
+    padding:0;
+  }
+  .card .editar:hover{text-decoration:underline;}
 
   .link-carrito{
     position:relative;
@@ -622,6 +633,7 @@
   body[data-perfil="vendedor"] .solo-admin{display:none;}
   body[data-perfil="administrador"] .solo-vendedor{display:none;}
   body[data-perfil="comprador"] .solo-vendedor-o-admin{display:none;}
+  body[data-perfil="administrador"] .solo-comprador-o-vendedor{display:none;}
 
   .panel-admin{
     background:var(--blanco);
@@ -695,6 +707,19 @@
     cursor:pointer;
   }
   .card .comprar:hover{background:#2b6fd4;}
+  .card .comprar-ahora{
+    margin-top:8px;
+    width:100%;
+    background:var(--verde);
+    color:var(--blanco);
+    border:none;
+    padding:9px;
+    border-radius:4px;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .card .comprar-ahora:hover{background:#00913f;}
 
   .filter-row{
     display:flex;
@@ -880,17 +905,7 @@
   </div>
 </div>
 
-<section class="seccion">
-  <h2>Ofertas destacadas</h2>
-  <div class="grilla" id="grilla-ofertas"></div>
-</section>
-
-<section class="seccion">
-  <h2>Más vendidos en tecnología</h2>
-  <div class="grilla" id="grilla-tech"></div>
-</section>
-
-<section class="seccion" id="seccion-publicados" style="display:none;">
+<section class="seccion solo-comprador-o-vendedor" id="seccion-publicados" style="display:none;">
   <h2>Publicados por la tienda</h2>
   <div class="grilla" id="grilla-publicados"></div>
 </section>
@@ -1249,24 +1264,6 @@
 </script>
 
 <script>
-const productos = [
-  {id:"auriculares", img:"https://picsum.photos/seed/auriculares/400/400", titulo:"Auriculares inalámbricos Bluetooth con cancelación de ruido", precioAnterior:45999, precio:29999, descuento:35, cuotas:"12 cuotas sin interés de $2.500", envio:true, descripcion:"Auriculares Bluetooth con cancelación activa de ruido, hasta 30 horas de batería y estuche de carga incluido."},
-  {id:"notebook", img:"https://picsum.photos/seed/notebook/400/400", titulo:"Notebook 15.6\" Core i5 8GB RAM 256GB SSD", precioAnterior:699999, precio:549999, descuento:21, cuotas:"12 cuotas sin interés de $45.833", envio:true, descripcion:"Notebook con procesador Core i5, 8GB de RAM y 256GB de almacenamiento SSD, ideal para trabajo y estudio."},
-  {id:"zapatillas", img:"https://picsum.photos/seed/zapatillas/400/400", titulo:"Zapatillas urbanas unisex, varios talles", precioAnterior:39999, precio:24999, descuento:37, cuotas:"6 cuotas sin interés", envio:true, descripcion:"Zapatillas urbanas livianas y transpirables, disponibles en varios talles para uso diario."},
-  {id:"smartwatch", img:"https://picsum.photos/seed/smartwatch/400/400", titulo:"Smartwatch deportivo con monitor cardíaco", precioAnterior:59999, precio:38999, descuento:35, cuotas:"12 cuotas sin interés", envio:true, descripcion:"Reloj inteligente con monitor de frecuencia cardíaca, notificaciones y resistencia al agua."},
-  {id:"cafetera", img:"https://picsum.photos/seed/cafetera/400/400", titulo:"Cafetera espresso automática 15 bares", precioAnterior:129999, precio:94999, descuento:27, cuotas:"9 cuotas sin interés", envio:false, descripcion:"Cafetera espresso automática de 15 bares de presión, con espumador de leche incorporado."},
-  {id:"mochila", img:"https://picsum.photos/seed/mochila/400/400", titulo:"Mochila antirrobo con puerto USB", precioAnterior:24999, precio:16999, descuento:32, cuotas:"3 cuotas sin interés", envio:true, descripcion:"Mochila antirrobo con compartimento acolchado para notebook y puerto de carga USB externo."},
-];
-
-const tech = [
-  {id:"celular1", img:"https://picsum.photos/seed/celular1/400/400", titulo:"Smartphone 128GB 8GB RAM cámara triple", precioAnterior:399999, precio:319999, descuento:20, cuotas:"12 cuotas sin interés", envio:true, descripcion:"Smartphone con 128GB de almacenamiento, 8GB de RAM y sistema de cámara triple."},
-  {id:"monitor", img:"https://picsum.photos/seed/monitor/400/400", titulo:"Monitor curvo 27\" 144Hz Full HD", precioAnterior:249999, precio:189999, descuento:24, cuotas:"12 cuotas sin interés", envio:true, descripcion:"Monitor curvo de 27 pulgadas con 144Hz de refresco, ideal para gaming y multitarea."},
-  {id:"teclado", img:"https://picsum.photos/seed/teclado/400/400", titulo:"Teclado mecánico RGB switches rojos", precioAnterior:59999, precio:39999, descuento:33, cuotas:"6 cuotas sin interés", envio:true, descripcion:"Teclado mecánico retroiluminado RGB con switches rojos, respuesta rápida y sonido silencioso."},
-  {id:"parlante", img:"https://picsum.photos/seed/parlante/400/400", titulo:"Parlante Bluetooth portátil resistente al agua", precioAnterior:34999, precio:22999, descuento:34, cuotas:"6 cuotas sin interés", envio:true, descripcion:"Parlante Bluetooth portátil resistente al agua, con hasta 12 horas de batería."},
-  {id:"tablet", img:"https://picsum.photos/seed/tablet/400/400", titulo:"Tablet 10\" 64GB con teclado incluido", precioAnterior:189999, precio:149999, descuento:21, cuotas:"12 cuotas sin interés", envio:true, descripcion:"Tablet de 10 pulgadas con 64GB de almacenamiento, incluye teclado desmontable."},
-  {id:"camara", img:"https://picsum.photos/seed/camara/400/400", titulo:"Cámara de seguridad WiFi 360° para interior", precioAnterior:44999, precio:29999, descuento:33, cuotas:"6 cuotas sin interés", envio:false, descripcion:"Cámara de seguridad WiFi con visión de 360°, ideal para monitoreo de interiores."},
-];
-
 function formatearPrecio(n){
   return "$" + n.toLocaleString("es-AR");
 }
@@ -1282,6 +1279,7 @@ function renderGrilla(contenedorId, lista){
       <div class="precio">${formatearPrecio(p.precio)}</div>
       ${p.cuotas ? `<div class="cuotas">${p.cuotas}</div>` : ''}
       ${p.envio ? '<div class="envio">Envío gratis</div>' : ''}
+      <button class="comprar-ahora" data-id="${p.id}">Comprar ahora</button>
       <button class="comprar" data-id="${p.id}">Agregar al carrito</button>
     </div>
   `).join("");
@@ -1295,10 +1293,12 @@ function renderGrilla(contenedorId, lista){
       agregarAlCarrito(btn.dataset.id, 1);
     });
   });
+  contenedor.querySelectorAll(".comprar-ahora").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      comprarAhora(btn.dataset.id);
+    });
+  });
 }
-
-renderGrilla("grilla-ofertas", productos);
-renderGrilla("grilla-tech", tech);
 
 document.querySelectorAll(".fav").forEach(btn=>{
   btn.addEventListener("click", ()=>{
@@ -1311,7 +1311,13 @@ document.querySelectorAll(".fav").forEach(btn=>{
 
 /* ---- Detalle de producto: cantidad, descripción y cálculo de total ---- */
 function buscarProducto(id){
-  return productos.concat(tech).concat(misPublicaciones).find(p => p.id === id);
+  return misPublicaciones.find(p => p.id === id);
+}
+
+function comprarAhora(id){
+  const producto = buscarProducto(id);
+  if(!producto) return;
+  abrirCheckout(producto.titulo, producto.precio);
 }
 
 let detalleProductoActual = null;
@@ -1506,7 +1512,7 @@ function filtrarBusqueda(consulta){
   renderSugerenciasBusqueda(consulta);
 }
 function renderSugerenciasBusqueda(consulta){
-  const catalogo = productos.concat(tech).concat(misPublicaciones);
+  const catalogo = misPublicaciones;
   const texto = (consulta || "").trim().toLowerCase();
   const filtrados = texto
     ? catalogo.filter(p => p.titulo.toLowerCase().includes(texto))
@@ -1566,6 +1572,7 @@ function renderPublicaciones(){
         <div class="titulo">${p.titulo}</div>
         <div class="precio">${formatearPrecio(p.precio)}</div>
         ${p.envio ? '<div class="envio">Envío gratis</div>' : ''}
+        <button class="editar" data-id="${p.id}">Editar publicación</button>
         <button class="eliminar" data-id="${p.id}">Eliminar publicación</button>
       </div>
     `).join("") + '</div>';
@@ -1575,6 +1582,12 @@ function renderPublicaciones(){
         misPublicaciones = misPublicaciones.filter(p => p.id !== btn.dataset.id);
         await guardarPublicaciones();
         renderPublicaciones();
+      });
+    });
+    contenedor.querySelectorAll(".editar").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const producto = misPublicaciones.find(p => p.id === btn.dataset.id);
+        if(producto) abrirModal(producto);
       });
     });
   }
@@ -1612,20 +1625,43 @@ document.addEventListener("click", ()=>{
 
 const overlay = document.getElementById("modal-overlay");
 const formPublicar = document.getElementById("form-publicar");
+const tituloModalPublicar = overlay.querySelector("h3");
+const botonSubmitPublicar = formPublicar.querySelector('button[type="submit"]');
+let productoEditando = null;
 
-function abrirModal(){
+function abrirModal(producto){
+  productoEditando = producto || null;
+  if(productoEditando){
+    tituloModalPublicar.textContent = "Editar producto";
+    botonSubmitPublicar.textContent = "Guardar cambios";
+    document.getElementById("campo-titulo").value = productoEditando.titulo;
+    document.getElementById("campo-precio").value = productoEditando.precio;
+    document.getElementById("campo-descripcion").value = productoEditando.descripcion || "";
+    document.getElementById("campo-envio").checked = !!productoEditando.envio;
+    categoriaSeleccionada = productoEditando.categoria || "Tecnología";
+    textoCategoria.textContent = categoriaSeleccionada;
+    panelCategoria.querySelectorAll(".select-custom-opcion").forEach(o=>{
+      o.classList.toggle("seleccionada", o.dataset.valor === categoriaSeleccionada);
+    });
+  }else{
+    tituloModalPublicar.textContent = "Publicar un producto";
+    botonSubmitPublicar.textContent = "Publicar";
+  }
   overlay.classList.add("abierto");
 }
 function cerrarModal(){
   overlay.classList.remove("abierto");
   formPublicar.reset();
+  productoEditando = null;
+  tituloModalPublicar.textContent = "Publicar un producto";
+  botonSubmitPublicar.textContent = "Publicar";
   categoriaSeleccionada = "Tecnología";
   textoCategoria.textContent = "Tecnología";
   panelCategoria.querySelectorAll(".select-custom-opcion").forEach(o=>o.classList.remove("seleccionada"));
   panelCategoria.querySelector('[data-valor="Tecnología"]').classList.add("seleccionada");
 }
 
-document.getElementById("btn-abrir-modal").addEventListener("click", abrirModal);
+document.getElementById("btn-abrir-modal").addEventListener("click", ()=>abrirModal());
 document.getElementById("btn-cancelar-modal").addEventListener("click", cerrarModal);
 overlay.addEventListener("click", (evento)=>{
   if(evento.target === overlay) cerrarModal();
@@ -1642,7 +1678,7 @@ formPublicar.addEventListener("submit", async (evento)=>{
 
   if(!titulo || !precio || precio <= 0) return;
 
-  let imagen = `https://picsum.photos/seed/${encodeURIComponent(titulo)}/400/400`;
+  let imagen = productoEditando ? productoEditando.img : `https://picsum.photos/seed/${encodeURIComponent(titulo)}/400/400`;
   if(archivoImagen){
     try{
       imagen = await leerArchivoComoDataURL(archivoImagen);
@@ -1652,7 +1688,19 @@ formPublicar.addEventListener("submit", async (evento)=>{
     }
   }
 
-  misPublicaciones.unshift({id: "pub" + Date.now(), titulo, precio, categoria, img: imagen, descripcion, envio});
+  if(productoEditando){
+    const producto = misPublicaciones.find(p => p.id === productoEditando.id);
+    if(producto){
+      producto.titulo = titulo;
+      producto.precio = precio;
+      producto.categoria = categoria;
+      producto.img = imagen;
+      producto.descripcion = descripcion;
+      producto.envio = envio;
+    }
+  }else{
+    misPublicaciones.unshift({id: "pub" + Date.now(), titulo, precio, categoria, img: imagen, descripcion, envio});
+  }
   await guardarPublicaciones();
   renderPublicaciones();
   cerrarModal();
