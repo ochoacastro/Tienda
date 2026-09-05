@@ -239,6 +239,90 @@
   }
   .card .eliminar:hover{text-decoration:underline;}
 
+  .link-carrito{
+    position:relative;
+    background:none;
+    border:none;
+    font-size:13px;
+    color:var(--texto);
+    font-family:inherit;
+    cursor:pointer;
+    padding:0;
+  }
+  .link-carrito:hover{text-decoration:underline;}
+  .carrito-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:16px;
+    height:16px;
+    padding:0 4px;
+    margin-left:4px;
+    border-radius:9px;
+    background:#E63946;
+    color:var(--blanco);
+    font-size:11px;
+    font-weight:700;
+  }
+
+  .card-clickable{cursor:pointer;}
+
+  .detalle-img{
+    width:100%;
+    max-width:220px;
+    aspect-ratio:1/1;
+    border-radius:6px;
+    overflow:hidden;
+    background:var(--gris-fondo);
+    margin:0 auto 14px;
+  }
+  .detalle-img img{width:100%; height:100%; object-fit:cover; display:block;}
+  .detalle-precio{font-size:20px; font-weight:700; color:var(--texto); margin-bottom:10px;}
+  .detalle-descripcion{font-size:13.5px; color:var(--texto-suave); line-height:1.5; margin-bottom:16px;}
+
+  .cantidad-selector{
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+  .cantidad-selector button{
+    width:32px;
+    height:32px;
+    border-radius:4px;
+    border:1px solid var(--borde);
+    background:var(--blanco);
+    font-size:16px;
+    cursor:pointer;
+    color:var(--texto);
+  }
+  .cantidad-selector button:hover{border-color:var(--azul); color:var(--azul);}
+  .cantidad-selector span{font-size:15px; font-weight:600; min-width:20px; text-align:center;}
+  .cantidad-selector-chica button{width:24px; height:24px; font-size:13px;}
+  .cantidad-selector-chica span{font-size:13px; min-width:16px;}
+
+  .modal-carrito{max-width:480px;}
+  .carrito-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 0;
+    border-bottom:1px solid var(--borde);
+  }
+  .carrito-item img{width:52px; height:52px; border-radius:4px; object-fit:cover; flex-shrink:0;}
+  .carrito-item-info{flex:1; min-width:0;}
+  .carrito-item-titulo{font-size:13px; color:var(--texto); line-height:1.3; margin-bottom:4px;}
+  .carrito-item-precio{font-size:12px; color:var(--texto-suave); margin-bottom:6px;}
+  .carrito-item-subtotal{font-size:13px; font-weight:600; white-space:nowrap;}
+  .carrito-item-quitar{
+    background:none;
+    border:none;
+    color:var(--texto-suave);
+    font-size:14px;
+    cursor:pointer;
+    padding:4px;
+  }
+  .carrito-item-quitar:hover{color:#E63946;}
+
   .btn-vender{
     background:var(--azul-oscuro);
     color:var(--blanco);
@@ -608,9 +692,9 @@
       <a href="#">Crear cuenta</a>
       <a href="#">Ingresar</a>
       <a href="#">Mis compras</a>
-      <a href="#">🛒 Carrito</a>
+      <button type="button" class="link-carrito" id="btn-abrir-carrito">🛒 Carrito<span class="carrito-badge" id="carrito-contador" style="display:none;">0</span></button>
     </div>
-    <div class="select-custom perfil-selector" id="select-perfil">
+    <div class="select-custom perfil-selector solo-vendedor-o-admin" id="select-perfil">
       <button type="button" class="select-custom-boton" id="select-perfil-boton">
         <span id="select-perfil-texto">Comprador</span>
         <span class="select-custom-flecha">▾</span>
@@ -841,25 +925,65 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="modal-overlay-detalle">
+  <div class="modal modal-detalle">
+    <div class="detalle-img"><img id="detalle-img-tag" src="" alt=""></div>
+    <h3 id="detalle-titulo"></h3>
+    <div class="detalle-precio" id="detalle-precio"></div>
+    <p class="detalle-descripcion" id="detalle-descripcion"></p>
+    <div class="campo">
+      <label>Cantidad</label>
+      <div class="cantidad-selector">
+        <button type="button" id="detalle-restar">−</button>
+        <span id="detalle-cantidad">1</span>
+        <button type="button" id="detalle-sumar">+</button>
+      </div>
+    </div>
+    <div class="resumen-compra">
+      <div class="resumen-titulo">Total a pagar</div>
+      <div class="resumen-precio" id="detalle-total"></div>
+    </div>
+    <div class="modal-acciones">
+      <button type="button" class="btn-cancelar" id="btn-cerrar-detalle">Cerrar</button>
+      <button type="button" class="btn-publicar" id="btn-agregar-carrito-detalle">Agregar al carrito</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-overlay-carrito">
+  <div class="modal modal-carrito">
+    <h3>Tu carrito</h3>
+    <div id="carrito-lista"></div>
+    <div class="resumen-compra" id="carrito-resumen-total" style="display:none;">
+      <div class="resumen-titulo">Total del carrito</div>
+      <div class="resumen-precio" id="carrito-total"></div>
+    </div>
+    <div class="modal-acciones">
+      <button type="button" class="btn-cancelar" id="btn-cerrar-carrito">Seguir comprando</button>
+      <button type="button" class="btn-publicar" id="btn-finalizar-compra">Finalizar compra</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 const productos = [
-  {img:"https://picsum.photos/seed/auriculares/400/400", titulo:"Auriculares inalámbricos Bluetooth con cancelación de ruido", precioAnterior:45999, precio:29999, descuento:35, cuotas:"12 cuotas sin interés de $2.500", envio:true},
-  {img:"https://picsum.photos/seed/notebook/400/400", titulo:"Notebook 15.6\" Core i5 8GB RAM 256GB SSD", precioAnterior:699999, precio:549999, descuento:21, cuotas:"12 cuotas sin interés de $45.833", envio:true},
-  {img:"https://picsum.photos/seed/zapatillas/400/400", titulo:"Zapatillas urbanas unisex, varios talles", precioAnterior:39999, precio:24999, descuento:37, cuotas:"6 cuotas sin interés", envio:true},
-  {img:"https://picsum.photos/seed/smartwatch/400/400", titulo:"Smartwatch deportivo con monitor cardíaco", precioAnterior:59999, precio:38999, descuento:35, cuotas:"12 cuotas sin interés", envio:true},
-  {img:"https://picsum.photos/seed/cafetera/400/400", titulo:"Cafetera espresso automática 15 bares", precioAnterior:129999, precio:94999, descuento:27, cuotas:"9 cuotas sin interés", envio:false},
-  {img:"https://picsum.photos/seed/mochila/400/400", titulo:"Mochila antirrobo con puerto USB", precioAnterior:24999, precio:16999, descuento:32, cuotas:"3 cuotas sin interés", envio:true},
+  {id:"auriculares", img:"https://picsum.photos/seed/auriculares/400/400", titulo:"Auriculares inalámbricos Bluetooth con cancelación de ruido", precioAnterior:45999, precio:29999, descuento:35, cuotas:"12 cuotas sin interés de $2.500", envio:true, descripcion:"Auriculares Bluetooth con cancelación activa de ruido, hasta 30 horas de batería y estuche de carga incluido."},
+  {id:"notebook", img:"https://picsum.photos/seed/notebook/400/400", titulo:"Notebook 15.6\" Core i5 8GB RAM 256GB SSD", precioAnterior:699999, precio:549999, descuento:21, cuotas:"12 cuotas sin interés de $45.833", envio:true, descripcion:"Notebook con procesador Core i5, 8GB de RAM y 256GB de almacenamiento SSD, ideal para trabajo y estudio."},
+  {id:"zapatillas", img:"https://picsum.photos/seed/zapatillas/400/400", titulo:"Zapatillas urbanas unisex, varios talles", precioAnterior:39999, precio:24999, descuento:37, cuotas:"6 cuotas sin interés", envio:true, descripcion:"Zapatillas urbanas livianas y transpirables, disponibles en varios talles para uso diario."},
+  {id:"smartwatch", img:"https://picsum.photos/seed/smartwatch/400/400", titulo:"Smartwatch deportivo con monitor cardíaco", precioAnterior:59999, precio:38999, descuento:35, cuotas:"12 cuotas sin interés", envio:true, descripcion:"Reloj inteligente con monitor de frecuencia cardíaca, notificaciones y resistencia al agua."},
+  {id:"cafetera", img:"https://picsum.photos/seed/cafetera/400/400", titulo:"Cafetera espresso automática 15 bares", precioAnterior:129999, precio:94999, descuento:27, cuotas:"9 cuotas sin interés", envio:false, descripcion:"Cafetera espresso automática de 15 bares de presión, con espumador de leche incorporado."},
+  {id:"mochila", img:"https://picsum.photos/seed/mochila/400/400", titulo:"Mochila antirrobo con puerto USB", precioAnterior:24999, precio:16999, descuento:32, cuotas:"3 cuotas sin interés", envio:true, descripcion:"Mochila antirrobo con compartimento acolchado para notebook y puerto de carga USB externo."},
 ];
 
 const tech = [
-  {img:"https://picsum.photos/seed/celular1/400/400", titulo:"Smartphone 128GB 8GB RAM cámara triple", precioAnterior:399999, precio:319999, descuento:20, cuotas:"12 cuotas sin interés", envio:true},
-  {img:"https://picsum.photos/seed/monitor/400/400", titulo:"Monitor curvo 27\" 144Hz Full HD", precioAnterior:249999, precio:189999, descuento:24, cuotas:"12 cuotas sin interés", envio:true},
-  {img:"https://picsum.photos/seed/teclado/400/400", titulo:"Teclado mecánico RGB switches rojos", precioAnterior:59999, precio:39999, descuento:33, cuotas:"6 cuotas sin interés", envio:true},
-  {img:"https://picsum.photos/seed/parlante/400/400", titulo:"Parlante Bluetooth portátil resistente al agua", precioAnterior:34999, precio:22999, descuento:34, cuotas:"6 cuotas sin interés", envio:true},
-  {img:"https://picsum.photos/seed/tablet/400/400", titulo:"Tablet 10\" 64GB con teclado incluido", precioAnterior:189999, precio:149999, descuento:21, cuotas:"12 cuotas sin interés", envio:true},
-  {img:"https://picsum.photos/seed/camara/400/400", titulo:"Cámara de seguridad WiFi 360° para interior", precioAnterior:44999, precio:29999, descuento:33, cuotas:"6 cuotas sin interés", envio:false},
+  {id:"celular1", img:"https://picsum.photos/seed/celular1/400/400", titulo:"Smartphone 128GB 8GB RAM cámara triple", precioAnterior:399999, precio:319999, descuento:20, cuotas:"12 cuotas sin interés", envio:true, descripcion:"Smartphone con 128GB de almacenamiento, 8GB de RAM y sistema de cámara triple."},
+  {id:"monitor", img:"https://picsum.photos/seed/monitor/400/400", titulo:"Monitor curvo 27\" 144Hz Full HD", precioAnterior:249999, precio:189999, descuento:24, cuotas:"12 cuotas sin interés", envio:true, descripcion:"Monitor curvo de 27 pulgadas con 144Hz de refresco, ideal para gaming y multitarea."},
+  {id:"teclado", img:"https://picsum.photos/seed/teclado/400/400", titulo:"Teclado mecánico RGB switches rojos", precioAnterior:59999, precio:39999, descuento:33, cuotas:"6 cuotas sin interés", envio:true, descripcion:"Teclado mecánico retroiluminado RGB con switches rojos, respuesta rápida y sonido silencioso."},
+  {id:"parlante", img:"https://picsum.photos/seed/parlante/400/400", titulo:"Parlante Bluetooth portátil resistente al agua", precioAnterior:34999, precio:22999, descuento:34, cuotas:"6 cuotas sin interés", envio:true, descripcion:"Parlante Bluetooth portátil resistente al agua, con hasta 12 horas de batería."},
+  {id:"tablet", img:"https://picsum.photos/seed/tablet/400/400", titulo:"Tablet 10\" 64GB con teclado incluido", precioAnterior:189999, precio:149999, descuento:21, cuotas:"12 cuotas sin interés", envio:true, descripcion:"Tablet de 10 pulgadas con 64GB de almacenamiento, incluye teclado desmontable."},
+  {id:"camara", img:"https://picsum.photos/seed/camara/400/400", titulo:"Cámara de seguridad WiFi 360° para interior", precioAnterior:44999, precio:29999, descuento:33, cuotas:"6 cuotas sin interés", envio:false, descripcion:"Cámara de seguridad WiFi con visión de 360°, ideal para monitoreo de interiores."},
 ];
 
 function formatearPrecio(n){
@@ -871,8 +995,8 @@ function renderGrilla(contenedorId, lista){
   contenedor.innerHTML = lista.map(p => `
     <div class="card">
       <div class="fav" title="Agregar a favoritos">♡</div>
-      <div class="card-img"><img src="${p.img}" alt="${p.titulo}" loading="lazy"></div>
-      <div class="titulo">${p.titulo}</div>
+      <div class="card-img card-clickable" data-id="${p.id}"><img src="${p.img}" alt="${p.titulo}" loading="lazy"></div>
+      <div class="titulo card-clickable" data-id="${p.id}">${p.titulo}</div>
       <div>
         <span class="precio-anterior">${formatearPrecio(p.precioAnterior)}</span>
         <span class="descuento">${p.descuento}% OFF</span>
@@ -880,12 +1004,17 @@ function renderGrilla(contenedorId, lista){
       <div class="precio">${formatearPrecio(p.precio)}</div>
       <div class="cuotas">${p.cuotas}</div>
       ${p.envio ? '<div class="envio">Envío gratis</div>' : ''}
-      <button class="comprar" data-titulo="${p.titulo.replace(/"/g,'&quot;')}" data-precio="${p.precio}">Comprar</button>
+      <button class="comprar" data-id="${p.id}">Agregar al carrito</button>
     </div>
   `).join("");
+  contenedor.querySelectorAll(".card-clickable").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      abrirDetalle(el.dataset.id);
+    });
+  });
   contenedor.querySelectorAll(".comprar").forEach(btn=>{
     btn.addEventListener("click", ()=>{
-      abrirCheckout(btn.dataset.titulo, Number(btn.dataset.precio));
+      agregarAlCarrito(btn.dataset.id, 1);
     });
   });
 }
@@ -899,6 +1028,186 @@ document.querySelectorAll(".fav").forEach(btn=>{
     btn.style.color = btn.textContent === "♥" ? "#E63946" : "";
   });
 });
+
+/* ---- Detalle de producto: cantidad, descripción y cálculo de total ---- */
+function buscarProducto(id){
+  return productos.concat(tech).find(p => p.id === id);
+}
+
+let detalleProductoActual = null;
+let detalleCantidad = 1;
+const overlayDetalle = document.getElementById("modal-overlay-detalle");
+
+function actualizarTotalDetalle(){
+  document.getElementById("detalle-cantidad").textContent = detalleCantidad;
+  const total = detalleProductoActual.precio * detalleCantidad;
+  document.getElementById("detalle-total").textContent = formatearPrecio(total);
+}
+
+function abrirDetalle(id){
+  const producto = buscarProducto(id);
+  if(!producto) return;
+  detalleProductoActual = producto;
+  detalleCantidad = 1;
+  document.getElementById("detalle-img-tag").src = producto.img;
+  document.getElementById("detalle-img-tag").alt = producto.titulo;
+  document.getElementById("detalle-titulo").textContent = producto.titulo;
+  document.getElementById("detalle-precio").textContent = formatearPrecio(producto.precio);
+  document.getElementById("detalle-descripcion").textContent = producto.descripcion || "Sin descripción disponible.";
+  actualizarTotalDetalle();
+  overlayDetalle.classList.add("abierto");
+}
+function cerrarDetalle(){
+  overlayDetalle.classList.remove("abierto");
+  detalleProductoActual = null;
+}
+document.getElementById("btn-cerrar-detalle").addEventListener("click", cerrarDetalle);
+overlayDetalle.addEventListener("click", (evento)=>{
+  if(evento.target === overlayDetalle) cerrarDetalle();
+});
+document.getElementById("detalle-restar").addEventListener("click", ()=>{
+  if(detalleCantidad > 1){ detalleCantidad--; actualizarTotalDetalle(); }
+});
+document.getElementById("detalle-sumar").addEventListener("click", ()=>{
+  detalleCantidad++;
+  actualizarTotalDetalle();
+});
+document.getElementById("btn-agregar-carrito-detalle").addEventListener("click", ()=>{
+  if(!detalleProductoActual) return;
+  agregarAlCarrito(detalleProductoActual.id, detalleCantidad);
+  cerrarDetalle();
+});
+
+/* ---- Carrito: acumula productos de distintas publicaciones antes de pagar ---- */
+let carrito = [];
+const CLAVE_CARRITO = "mercadito:carrito";
+const overlayCarrito = document.getElementById("modal-overlay-carrito");
+
+async function guardarCarrito(){
+  try{
+    await window.storage.set(CLAVE_CARRITO, JSON.stringify(carrito), false);
+  }catch(err){
+    console.error("No se pudo guardar el carrito:", err);
+  }
+}
+async function cargarCarrito(){
+  try{
+    const resultado = await window.storage.get(CLAVE_CARRITO, false);
+    carrito = resultado ? JSON.parse(resultado.value) : [];
+  }catch(err){
+    carrito = [];
+  }
+  actualizarBadgeCarrito();
+}
+
+function actualizarBadgeCarrito(){
+  const badge = document.getElementById("carrito-contador");
+  const totalItems = carrito.reduce((acumulado, item) => acumulado + item.cantidad, 0);
+  if(totalItems > 0){
+    badge.textContent = totalItems;
+    badge.style.display = "inline-flex";
+  }else{
+    badge.style.display = "none";
+  }
+}
+
+async function agregarAlCarrito(id, cantidad){
+  const producto = buscarProducto(id);
+  if(!producto) return;
+  const existente = carrito.find(item => item.id === id);
+  if(existente){
+    existente.cantidad += cantidad;
+  }else{
+    carrito.push({id: producto.id, titulo: producto.titulo, precio: producto.precio, img: producto.img, cantidad});
+  }
+  await guardarCarrito();
+  actualizarBadgeCarrito();
+  mostrarToast("Producto agregado al carrito.");
+}
+
+function renderCarrito(){
+  const lista = document.getElementById("carrito-lista");
+  const resumenTotal = document.getElementById("carrito-resumen-total");
+  if(carrito.length === 0){
+    lista.innerHTML = '<div class="vacio">Tu carrito está vacío. Agregá productos desde la tienda.</div>';
+    resumenTotal.style.display = "none";
+    return;
+  }
+  lista.innerHTML = carrito.map(item => `
+    <div class="carrito-item">
+      <img src="${item.img}" alt="${item.titulo}">
+      <div class="carrito-item-info">
+        <div class="carrito-item-titulo">${item.titulo}</div>
+        <div class="carrito-item-precio">${formatearPrecio(item.precio)} c/u</div>
+        <div class="cantidad-selector cantidad-selector-chica">
+          <button type="button" class="carrito-restar" data-id="${item.id}">−</button>
+          <span>${item.cantidad}</span>
+          <button type="button" class="carrito-sumar" data-id="${item.id}">+</button>
+        </div>
+      </div>
+      <div class="carrito-item-subtotal">${formatearPrecio(item.precio * item.cantidad)}</div>
+      <button type="button" class="carrito-item-quitar" data-id="${item.id}" title="Quitar">✕</button>
+    </div>
+  `).join("");
+
+  const total = carrito.reduce((acumulado, item) => acumulado + item.precio * item.cantidad, 0);
+  document.getElementById("carrito-total").textContent = formatearPrecio(total);
+  resumenTotal.style.display = "";
+
+  lista.querySelectorAll(".carrito-restar").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      const item = carrito.find(i => i.id === btn.dataset.id);
+      if(!item) return;
+      item.cantidad--;
+      if(item.cantidad <= 0){
+        carrito = carrito.filter(i => i.id !== btn.dataset.id);
+      }
+      await guardarCarrito();
+      actualizarBadgeCarrito();
+      renderCarrito();
+    });
+  });
+  lista.querySelectorAll(".carrito-sumar").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      const item = carrito.find(i => i.id === btn.dataset.id);
+      if(!item) return;
+      item.cantidad++;
+      await guardarCarrito();
+      actualizarBadgeCarrito();
+      renderCarrito();
+    });
+  });
+  lista.querySelectorAll(".carrito-item-quitar").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      carrito = carrito.filter(i => i.id !== btn.dataset.id);
+      await guardarCarrito();
+      actualizarBadgeCarrito();
+      renderCarrito();
+    });
+  });
+}
+
+function abrirCarrito(){
+  renderCarrito();
+  overlayCarrito.classList.add("abierto");
+}
+function cerrarCarrito(){
+  overlayCarrito.classList.remove("abierto");
+}
+document.getElementById("btn-abrir-carrito").addEventListener("click", abrirCarrito);
+document.getElementById("btn-cerrar-carrito").addEventListener("click", cerrarCarrito);
+overlayCarrito.addEventListener("click", (evento)=>{
+  if(evento.target === overlayCarrito) cerrarCarrito();
+});
+document.getElementById("btn-finalizar-compra").addEventListener("click", ()=>{
+  if(carrito.length === 0) return;
+  const total = carrito.reduce((acumulado, item) => acumulado + item.precio * item.cantidad, 0);
+  const resumenTitulo = carrito.map(item => `${item.titulo} (x${item.cantidad})`).join(", ");
+  cerrarCarrito();
+  abrirCheckout(resumenTitulo, total);
+});
+
+cargarCarrito();
 
 /* ---- Publicaciones propias (Vender) ---- */
 let misPublicaciones = [];
@@ -1229,6 +1538,9 @@ formCompra.addEventListener("submit", async (evento)=>{
   await guardarPedidos();
   renderPedidos();
   cerrarCheckout();
+  carrito = [];
+  await guardarCarrito();
+  actualizarBadgeCarrito();
   mostrarToast("Pedido enviado. Te vamos a contactar para coordinar la entrega.");
 });
 
