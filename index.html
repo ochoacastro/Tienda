@@ -694,6 +694,62 @@
     color:var(--blanco);
   }
 
+  .medio-pago-fila{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    flex-wrap:wrap;
+    margin-bottom:12px;
+  }
+  .medio-pago-fila .medio-pago-nombre{
+    flex:1;
+    min-width:120px;
+  }
+  .medio-pago-fila .medio-pago-cuenta{
+    flex:1;
+    min-width:120px;
+  }
+  .medio-pago-fila .medio-pago-imagen{
+    flex:1;
+    min-width:140px;
+    padding:8px 0;
+  }
+  .medio-pago-imagen-preview{
+    display:block;
+    max-width:60px;
+    max-height:60px;
+    border-radius:4px;
+    margin-top:6px;
+  }
+  .btn-quitar-medio{
+    background:#B5654A;
+    color:var(--blanco);
+    border:none;
+    border-radius:4px;
+    padding:9px 18px;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    margin-bottom:14px;
+  }
+  .btn-quitar-medio:hover{background:#9c5540;}
+  .medio-pago-separador{
+    border:none;
+    border-top:1px solid var(--borde);
+    margin:0 0 14px;
+  }
+  .btn-agregar-medio-pago{
+    background:var(--azul-oscuro);
+    color:var(--blanco);
+    border:none;
+    border-radius:4px;
+    padding:11px 20px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .btn-agregar-medio-pago:hover{background:#132c5c;}
+
   .card .comprar{
     margin-top:8px;
     width:100%;
@@ -987,17 +1043,9 @@
         <input type="tel" id="config-whatsapp" maxlength="20" required placeholder="Ej: 573001234567">
       </div>
       <div class="campo">
-        <label for="config-cuenta-numero">Método de pago: número de cuenta o celular</label>
-        <input type="text" id="config-cuenta-numero" maxlength="40" placeholder="Ej: Nequi 300 123 4567">
-      </div>
-      <div class="campo">
-        <label for="config-cuenta-titular">Método de pago: nombre del titular de la cuenta</label>
-        <input type="text" id="config-cuenta-titular" maxlength="60" placeholder="Nombre y apellido">
-      </div>
-      <div class="campo">
-        <label for="config-cuenta-imagen">Método de pago: imagen del banco o billetera digital (opcional)</label>
-        <input type="file" id="config-cuenta-imagen" accept="image/*">
-        <img id="config-cuenta-imagen-preview" src="" alt="" style="max-width:120px; border-radius:4px; margin-top:8px; display:none;">
+        <label>Medios de pago (nombre, número de cuenta y logo)</label>
+        <div id="lista-medios-pago"></div>
+        <button type="button" class="btn-agregar-medio-pago" id="btn-agregar-medio-pago">+ Agregar medio de pago</button>
       </div>
       <button type="submit" class="btn-publicar" style="width:auto; padding:11px 24px;">Guardar cambios</button>
       <p class="nota-admin">Estos cambios son compartidos: los va a ver cualquier persona que abra esta página.</p>
@@ -1159,23 +1207,11 @@
       <div class="paso-compra" id="paso-pago" style="display:none;">
         <div class="campo">
           <label>Método de pago</label>
-          <label class="radio-fila">
-            <input type="radio" name="compra-pago" value="Efectivo" checked>
-            <span>Efectivo contra entrega</span>
-          </label>
-          <label class="radio-fila">
-            <input type="radio" name="compra-pago" value="Transferencia">
-            <span>Transferencia bancaria</span>
-          </label>
-          <label class="radio-fila">
-            <input type="radio" name="compra-pago" value="Tarjeta">
-            <span>Tarjeta de débito o crédito</span>
-          </label>
+          <div id="lista-metodos-pago-checkout"></div>
         </div>
         <div class="campo" id="info-cuenta-pago" style="display:none;">
-          <label>Datos para la transferencia</label>
+          <label>Datos para el pago</label>
           <p class="nota-admin" id="texto-cuenta-numero"></p>
-          <p class="nota-admin" id="texto-cuenta-titular"></p>
           <img id="imagen-cuenta-pago" src="" alt="Banco o billetera del vendedor" style="max-width:160px; border-radius:4px; margin-top:6px; display:none;">
         </div>
         <div class="campo" id="campo-comprobante-compra" style="display:none;">
@@ -2083,10 +2119,11 @@ const configPorDefecto = {
   badge: "Termina en 2 días",
   direccionTienda: "",
   whatsapp: "",
-  cuentaNumero: "",
-  cuentaTitular: "",
-  cuentaImagen: null
+  metodosPago: [
+    {id:"mp-efectivo", nombre:"Efectivo contraentrega", numeroCuenta:"", imagen:null}
+  ]
 };
+let metodosPagoEnEdicion = [];
 let configSitioActual = configPorDefecto;
 
 function aplicarConfigSitio(config){
@@ -2101,15 +2138,8 @@ function aplicarConfigSitio(config){
   document.getElementById("config-badge").value = config.badge;
   document.getElementById("config-direccion-tienda").value = config.direccionTienda || "";
   document.getElementById("config-whatsapp").value = config.whatsapp || "";
-  document.getElementById("config-cuenta-numero").value = config.cuentaNumero || "";
-  document.getElementById("config-cuenta-titular").value = config.cuentaTitular || "";
-  const previewCuentaImagen = document.getElementById("config-cuenta-imagen-preview");
-  if(config.cuentaImagen){
-    previewCuentaImagen.src = config.cuentaImagen;
-    previewCuentaImagen.style.display = "";
-  }else{
-    previewCuentaImagen.style.display = "none";
-  }
+  metodosPagoEnEdicion = (config.metodosPago && config.metodosPago.length ? config.metodosPago : configPorDefecto.metodosPago).map(m=>({...m}));
+  renderMetodosPago(metodosPagoEnEdicion);
 
   const linkWhatsapp = document.getElementById("link-whatsapp");
   if(config.whatsapp){
@@ -2132,17 +2162,58 @@ async function cargarConfigSitio(){
 }
 cargarConfigSitio();
 
+function medioPagoFilaHTML(m){
+  return `
+    <div class="medio-pago-fila" data-id="${m.id}">
+      <input type="text" class="medio-pago-nombre" value="${m.nombre || ""}" placeholder="Ej: Nequi" maxlength="40">
+      <input type="text" class="medio-pago-cuenta" value="${m.numeroCuenta || ""}" placeholder="Número de cuenta" maxlength="40">
+      <input type="file" class="medio-pago-imagen" accept="image/*">
+      ${m.imagen ? `<img src="${m.imagen}" class="medio-pago-imagen-preview" alt="">` : ""}
+    </div>
+    <button type="button" class="btn-quitar-medio">Quitar</button>
+    <hr class="medio-pago-separador">
+  `;
+}
+function renderMetodosPago(metodos){
+  document.getElementById("lista-medios-pago").innerHTML = metodos.map(medioPagoFilaHTML).join("");
+}
+document.getElementById("btn-agregar-medio-pago").addEventListener("click", ()=>{
+  metodosPagoEnEdicion.push({id:"mp"+Date.now(), nombre:"", numeroCuenta:"", imagen:null});
+  renderMetodosPago(metodosPagoEnEdicion);
+});
+document.getElementById("lista-medios-pago").addEventListener("click", (evento)=>{
+  if(!evento.target.classList.contains("btn-quitar-medio")) return;
+  const fila = evento.target.previousElementSibling;
+  const id = fila.dataset.id;
+  metodosPagoEnEdicion = metodosPagoEnEdicion.filter(m=>m.id !== id);
+  renderMetodosPago(metodosPagoEnEdicion);
+});
+async function leerMetodosPagoDesdeFormulario(){
+  const filas = document.querySelectorAll("#lista-medios-pago .medio-pago-fila");
+  const metodos = [];
+  for(const fila of filas){
+    const id = fila.dataset.id;
+    const nombre = fila.querySelector(".medio-pago-nombre").value.trim();
+    const numeroCuenta = fila.querySelector(".medio-pago-cuenta").value.trim();
+    const archivo = fila.querySelector(".medio-pago-imagen").files[0];
+    const anterior = metodosPagoEnEdicion.find(m=>m.id === id);
+    let imagen = anterior ? anterior.imagen : null;
+    if(archivo){
+      imagen = await leerArchivoComoDataURL(archivo);
+    }
+    if(nombre) metodos.push({id, nombre, numeroCuenta, imagen});
+  }
+  return metodos;
+}
+
 document.getElementById("form-config-sitio").addEventListener("submit", async (evento)=>{
   evento.preventDefault();
-  const archivoCuentaImagen = document.getElementById("config-cuenta-imagen").files[0];
-  let cuentaImagen = configSitioActual.cuentaImagen || null;
-  if(archivoCuentaImagen){
-    try{
-      cuentaImagen = await leerArchivoComoDataURL(archivoCuentaImagen);
-    }catch(err){
-      mostrarToast("No se pudo leer la imagen del método de pago. Probá de nuevo.");
-      return;
-    }
+  let metodosPago;
+  try{
+    metodosPago = await leerMetodosPagoDesdeFormulario();
+  }catch(err){
+    mostrarToast("No se pudo leer el logo de un método de pago. Probá de nuevo.");
+    return;
   }
   const config = {
     nombre: document.getElementById("config-nombre").value.trim() || configPorDefecto.nombre,
@@ -2151,9 +2222,7 @@ document.getElementById("form-config-sitio").addEventListener("submit", async (e
     badge: document.getElementById("config-badge").value.trim() || configPorDefecto.badge,
     direccionTienda: document.getElementById("config-direccion-tienda").value.trim(),
     whatsapp: document.getElementById("config-whatsapp").value.trim(),
-    cuentaNumero: document.getElementById("config-cuenta-numero").value.trim(),
-    cuentaTitular: document.getElementById("config-cuenta-titular").value.trim(),
-    cuentaImagen
+    metodosPago
   };
   aplicarConfigSitio(config);
   try{
@@ -2241,6 +2310,7 @@ function abrirCheckout(titulo, precio){
   entregaInfoTienda.textContent = configSitioActual.direccionTienda
     ? "Dirección: " + configSitioActual.direccionTienda
     : "El vendedor te va a confirmar la dirección del punto de retiro.";
+  renderMetodosPagoCheckout();
   mostrarPasoCompra("entrega");
   overlayCompra.classList.add("abierto");
 }
@@ -2288,36 +2358,48 @@ document.getElementById("btn-volver-pago").addEventListener("click", ()=>{
   mostrarPasoCompra("direccion");
 });
 
-function enmascararNombre(nombreCompleto){
-  const partes = (nombreCompleto || "").trim().split(/\s+/).filter(Boolean);
-  if(partes.length === 0) return "(sin indicar)";
-  const enmascarar = (palabra) => palabra.slice(0, 3) + "...";
-  if(partes.length === 1) return enmascarar(partes[0]);
-  return enmascarar(partes[0]) + " " + enmascarar(partes[partes.length - 1]);
-}
-
 const infoCuentaPago = document.getElementById("info-cuenta-pago");
-formCompra.querySelectorAll('input[name="compra-pago"]').forEach(radio=>{
-  radio.addEventListener("change", ()=>{
-    const requiereComprobante = radio.value !== "Efectivo" && radio.checked;
-    if(radio.checked){
-      campoComprobanteCompra.style.display = requiereComprobante ? "" : "none";
-      if(radio.value === "Transferencia"){
-        document.getElementById("texto-cuenta-numero").textContent = "Número: " + (configSitioActual.cuentaNumero || "(sin indicar)");
-        document.getElementById("texto-cuenta-titular").textContent = "Titular: " + enmascararNombre(configSitioActual.cuentaTitular);
-        const imagenCuentaPago = document.getElementById("imagen-cuenta-pago");
-        if(configSitioActual.cuentaImagen){
-          imagenCuentaPago.src = configSitioActual.cuentaImagen;
-          imagenCuentaPago.style.display = "";
-        }else{
-          imagenCuentaPago.style.display = "none";
-        }
-        infoCuentaPago.style.display = "";
-      }else{
-        infoCuentaPago.style.display = "none";
-      }
+const listaMetodosPagoCheckout = document.getElementById("lista-metodos-pago-checkout");
+
+function metodosPagoDisponibles(){
+  return (configSitioActual.metodosPago && configSitioActual.metodosPago.length)
+    ? configSitioActual.metodosPago
+    : configPorDefecto.metodosPago;
+}
+function metodoPagoRadioHTML(m, indice){
+  return `
+    <label class="radio-fila">
+      <input type="radio" name="compra-pago" value="${m.id}" ${indice === 0 ? "checked" : ""}>
+      <span>${m.nombre}</span>
+    </label>
+  `;
+}
+function actualizarInfoMetodoPago(){
+  const radioSeleccionado = formCompra.querySelector('input[name="compra-pago"]:checked');
+  if(!radioSeleccionado) return;
+  const metodo = metodosPagoDisponibles().find(m=>m.id === radioSeleccionado.value);
+  if(!metodo) return;
+  campoComprobanteCompra.style.display = metodo.numeroCuenta ? "" : "none";
+  if(metodo.numeroCuenta || metodo.imagen){
+    document.getElementById("texto-cuenta-numero").textContent = metodo.numeroCuenta ? "Número: " + metodo.numeroCuenta : "";
+    const imagenCuentaPago = document.getElementById("imagen-cuenta-pago");
+    if(metodo.imagen){
+      imagenCuentaPago.src = metodo.imagen;
+      imagenCuentaPago.style.display = "";
+    }else{
+      imagenCuentaPago.style.display = "none";
     }
-  });
+    infoCuentaPago.style.display = "";
+  }else{
+    infoCuentaPago.style.display = "none";
+  }
+}
+function renderMetodosPagoCheckout(){
+  listaMetodosPagoCheckout.innerHTML = metodosPagoDisponibles().map(metodoPagoRadioHTML).join("");
+  actualizarInfoMetodoPago();
+}
+listaMetodosPagoCheckout.addEventListener("change", (evento)=>{
+  if(evento.target.name === "compra-pago") actualizarInfoMetodoPago();
 });
 
 /* ---- Pedidos: almacenamiento compartido entre comprador y vendedor/administrador ---- */
@@ -2355,10 +2437,11 @@ formCompra.addEventListener("submit", async (evento)=>{
   evento.preventDefault();
   if(!productoEnCompra) return;
   const envio = formCompra.querySelector('input[name="compra-envio"]:checked').value;
-  const metodoPago = formCompra.querySelector('input[name="compra-pago"]:checked').value;
+  const metodoPagoId = formCompra.querySelector('input[name="compra-pago"]:checked').value;
+  const metodoPagoSeleccionado = metodosPagoDisponibles().find(m=>m.id === metodoPagoId) || {nombre:"Efectivo contraentrega", numeroCuenta:""};
   const archivoComprobante = document.getElementById("compra-comprobante").files[0];
 
-  if(metodoPago !== "Efectivo" && !archivoComprobante){
+  if(metodoPagoSeleccionado.numeroCuenta && !archivoComprobante){
     mostrarToast("Adjuntá el comprobante de pago para continuar.");
     return;
   }
@@ -2396,7 +2479,7 @@ formCompra.addEventListener("submit", async (evento)=>{
       apartamento
     },
     envio,
-    metodoPago,
+    metodoPago: metodoPagoSeleccionado.nombre,
     comprobante,
     pagado:false,
     enviado:false,
@@ -2416,7 +2499,7 @@ function formatearFecha(marca){
   return new Date(marca).toLocaleDateString("es-AR", {day:"2-digit", month:"2-digit", hour:"2-digit", minute:"2-digit"});
 }
 
-function pedidoCardHTML(p){
+function pedidoCardHTML(p, completado){
   return `
     <div class="pedido-card">
       <div class="pedido-linea-superior">
@@ -2430,7 +2513,7 @@ function pedidoCardHTML(p){
       ${p.comprobante ? `<img src="${p.comprobante}" alt="Comprobante de pago" style="max-width:120px; border-radius:4px; margin:6px 0; display:block; cursor:pointer;" onclick="ampliarComprobante('${p.id}')">` : ""}
       <div class="pedido-linea">${p.producto.titulo}</div>
       <div class="pedido-total">Total: ${formatearPrecio(p.producto.precio)}</div>
-      ${pedidoAccionesHTML(p)}
+      ${completado ? pedidoAccionesCompletadoHTML(p) : pedidoAccionesHTML(p)}
     </div>
   `;
 }
@@ -2489,6 +2572,10 @@ function pedidoAccionesHTML(p){
   return `<button type="button" class="btn-whatsapp-pedido" onclick="enviarConfirmacionPago('${p.id}')">Avisar por WhatsApp</button><label class="pedido-check"><input type="checkbox" ${p.entregado ? "checked" : ""} onchange="marcarEntregado('${p.id}', this.checked)"> Entregado</label>`;
 }
 
+function pedidoAccionesCompletadoHTML(p){
+  return `<label class="pedido-check"><input type="checkbox" onchange="eliminarPedido('${p.id}', this.checked)"> Entregado</label>`;
+}
+
 function renderPedidos(){
   document.getElementById("filtro-pendientes").classList.toggle("activo", filtroPedidos === "pendientes");
   document.getElementById("filtro-completados").classList.toggle("activo", filtroPedidos === "completados");
@@ -2513,10 +2600,10 @@ function renderPedidos(){
     ? porConfirmar.map(pedidoCardHTML).join("")
     : '<div class="pedidos-vacio">No hay pedidos esperando confirmación de pago.</div>';
   document.getElementById("lista-domicilio").innerHTML = domicilio.length
-    ? domicilio.map(pedidoCardHTML).join("")
+    ? domicilio.map(p=>pedidoCardHTML(p, filtroPedidos === "completados")).join("")
     : `<div class="pedidos-vacio">No hay pedidos de domicilio ${filtroPedidos === "pendientes" ? "pendientes de despacho" : "despachados"}.</div>`;
   document.getElementById("lista-tienda").innerHTML = tienda.length
-    ? tienda.map(pedidoCardHTML).join("")
+    ? tienda.map(p=>pedidoCardHTML(p, filtroPedidos === "completados")).join("")
     : `<div class="pedidos-vacio">No hay pedidos de retiro ${filtroPedidos === "pendientes" ? "pendientes de entrega" : "entregados"}.</div>`;
 }
 
@@ -2540,6 +2627,18 @@ async function marcarEntregado(id, valor){
   pedido.entregado = valor;
   await guardarPedidos();
   renderPedidos();
+}
+
+async function eliminarPedido(id, valor){
+  if(!valor) return;
+  if(!confirm("¿Marcar como entregado y eliminar este pedido de la base de datos? Esta acción no se puede deshacer.")){
+    renderPedidos();
+    return;
+  }
+  pedidos = pedidos.filter(p=>p.id !== id);
+  await guardarPedidos();
+  renderPedidos();
+  mostrarToast("Pedido eliminado.");
 }
 
 document.getElementById("filtro-pendientes").addEventListener("click", ()=>{
