@@ -1181,13 +1181,24 @@
 
   // Autenticación anónima: cada visitante tiene su propio uid,
   // así lo "personal" (carrito, perfil) no se mezcla entre usuarios.
-  const authListo = new Promise((resolve)=>{
+  const authListo = new Promise((resolve, reject)=>{
+    const tiempoLimiteAuth = setTimeout(()=>{
+      reject(new Error("Tiempo de espera agotado autenticando con Firebase (revisá que 'Anónimo' esté habilitado en Authentication → Sign-in method)"));
+    }, 8000);
     firebase.auth().onAuthStateChanged((usuario)=>{
-      if(usuario) resolve(usuario.uid);
+      if(usuario){
+        clearTimeout(tiempoLimiteAuth);
+        resolve(usuario.uid);
+      }
+    });
+    firebase.auth().signInAnonymously().catch((err)=>{
+      clearTimeout(tiempoLimiteAuth);
+      console.error("No se pudo autenticar de forma anónima:", err);
+      reject(err);
     });
   });
-  firebase.auth().signInAnonymously().catch((err)=>{
-    console.error("No se pudo autenticar de forma anónima:", err);
+  authListo.catch((err)=>{
+    console.error("window.storage no podrá leer/guardar datos:", err.message || err);
   });
 
   // Reemplaza el storage temporal por Firebase Realtime Database,
