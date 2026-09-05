@@ -749,6 +749,19 @@
     font-size:13px;
     color:var(--texto);
   }
+  .btn-whatsapp-pedido{
+    border:none;
+    background:#25D366;
+    color:#fff;
+    padding:8px 14px;
+    border-radius:4px;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    margin-top:10px;
+    display:inline-block;
+  }
+  .btn-whatsapp-pedido:hover{background:#1ebe5a;}
   .pedidos-vacio{
     color:var(--texto-suave);
     font-size:13px;
@@ -2149,14 +2162,41 @@ overlayComprobante.addEventListener("click", (evento)=>{
   if(evento.target === overlayComprobante) cerrarComprobante();
 });
 
+function telefonoWaCliente(telefono){
+  const digitos = (telefono || "").replace(/[^\d]/g, "");
+  if(digitos.startsWith("57") && digitos.length > 10) return digitos;
+  return "57" + digitos;
+}
+function enviarConfirmacionPago(id){
+  const p = pedidos.find(x=>x.id === id);
+  if(!p) return;
+  const lineas = [
+    `Hola ${p.cliente.nombre || ""}, tu pago fue confirmado ✓`,
+    ""
+  ];
+  if(p.envio === "domicilio"){
+    lineas.push("Vamos a coordinar la entrega en esta dirección:");
+    lineas.push(p.cliente.direccion || "(sin indicar)");
+  }else{
+    lineas.push("Ya podés retirarlo en el local" + (configSitioActual.direccionTienda ? ":" : "."));
+    if(configSitioActual.direccionTienda) lineas.push(configSitioActual.direccionTienda);
+  }
+  lineas.push("");
+  lineas.push(`Pedido: ${p.producto.titulo}`);
+  lineas.push(`Total: ${formatearPrecio(p.producto.precio)}`);
+  lineas.push("¡Gracias por tu compra!");
+  const telefono = telefonoWaCliente(p.cliente.telefono);
+  window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(lineas.join("\n"))}`, "_blank");
+}
+
 function pedidoAccionesHTML(p){
   if(!p.pagado){
     return `<label class="pedido-check"><input type="checkbox" onchange="marcarPagado('${p.id}', this.checked)"> Pago confirmado</label>`;
   }
   if(p.envio === "domicilio"){
-    return `<label class="pedido-check"><input type="checkbox" ${p.enviado ? "checked" : ""} onchange="marcarEnviado('${p.id}', this.checked)"> Despachado</label>`;
+    return `<button type="button" class="btn-whatsapp-pedido" onclick="enviarConfirmacionPago('${p.id}')">Avisar por WhatsApp</button><label class="pedido-check"><input type="checkbox" ${p.enviado ? "checked" : ""} onchange="marcarEnviado('${p.id}', this.checked)"> Despachado</label>`;
   }
-  return `<label class="pedido-check"><input type="checkbox" ${p.entregado ? "checked" : ""} onchange="marcarEntregado('${p.id}', this.checked)"> Entregado</label>`;
+  return `<button type="button" class="btn-whatsapp-pedido" onclick="enviarConfirmacionPago('${p.id}')">Avisar por WhatsApp</button><label class="pedido-check"><input type="checkbox" ${p.entregado ? "checked" : ""} onchange="marcarEntregado('${p.id}', this.checked)"> Entregado</label>`;
 }
 
 function renderPedidos(){
