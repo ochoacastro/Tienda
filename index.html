@@ -1744,14 +1744,24 @@ let patronGuardado = null;
 let patronTemporal = null;
 let modoPatron = "ingresar"; // "ingresar" | "crear-paso1" | "crear-paso2"
 
+let centrosPatron = [];
+let rectGridPatron = null;
+let ultimaPosicionPatron = null;
+const RADIO_TOQUE_PUNTO = 30; // px de tolerancia alrededor de cada punto
+
+function calcularGeometriaPatron(){
+  rectGridPatron = gridPatron.getBoundingClientRect();
+  centrosPatron = puntosPatron.map(punto=>{
+    const rectPunto = punto.getBoundingClientRect();
+    return {
+      x: rectPunto.left - rectGridPatron.left + rectPunto.width / 2,
+      y: rectPunto.top - rectGridPatron.top + rectPunto.height / 2
+    };
+  });
+}
+
 function centroPuntoPatron(indice){
-  const punto = puntosPatron[indice];
-  const rectPunto = punto.getBoundingClientRect();
-  const rectGrid = gridPatron.getBoundingClientRect();
-  return {
-    x: rectPunto.left - rectGrid.left + rectPunto.width / 2,
-    y: rectPunto.top - rectGrid.top + rectPunto.height / 2
-  };
+  return centrosPatron[indice];
 }
 
 function redibujarLineasPatron(){
@@ -1770,27 +1780,56 @@ function agregarPuntoPatron(indice){
   redibujarLineasPatron();
 }
 
-function indicePuntoDesdeCoordenadas(x, y){
-  const elemento = document.elementFromPoint(x, y);
-  if(!elemento) return -1;
-  const punto = elemento.closest(".patron-punto");
-  return punto ? puntosPatron.indexOf(punto) : -1;
+function puntoMasCercano(x, y){
+  let mejorIndice = -1;
+  let mejorDistancia = RADIO_TOQUE_PUNTO;
+  for(let i=0; i<centrosPatron.length; i++){
+    const c = centrosPatron[i];
+    const distancia = Math.hypot(x - c.x, y - c.y);
+    if(distancia < mejorDistancia){
+      mejorDistancia = distancia;
+      mejorIndice = i;
+    }
+  }
+  return mejorIndice;
+}
+
+function procesarToquePatron(x, y){
+  // Si el dedo se movió rápido entre dos eventos, interpolamos puntos
+  // intermedios en la línea recta para no saltear puntos que quedaron "en el medio".
+  if(ultimaPosicionPatron){
+    const distanciaTotal = Math.hypot(x - ultimaPosicionPatron.x, y - ultimaPosicionPatron.y);
+    const pasos = Math.min(15, Math.ceil(distanciaTotal / 10));
+    for(let i=1; i<=pasos; i++){
+      const t = i / pasos;
+      const indice = puntoMasCercano(
+        ultimaPosicionPatron.x + (x - ultimaPosicionPatron.x) * t,
+        ultimaPosicionPatron.y + (y - ultimaPosicionPatron.y) * t
+      );
+      if(indice >= 0) agregarPuntoPatron(indice);
+    }
+  }else{
+    const indice = puntoMasCercano(x, y);
+    if(indice >= 0) agregarPuntoPatron(indice);
+  }
+  ultimaPosicionPatron = {x, y};
 }
 
 gridPatron.addEventListener("pointerdown", (evento)=>{
   dibujandoPatron = true;
   gridPatron.classList.remove("error");
-  const indice = indicePuntoDesdeCoordenadas(evento.clientX, evento.clientY);
-  if(indice >= 0) agregarPuntoPatron(indice);
+  calcularGeometriaPatron();
+  ultimaPosicionPatron = null;
+  procesarToquePatron(evento.clientX - rectGridPatron.left, evento.clientY - rectGridPatron.top);
 });
 gridPatron.addEventListener("pointermove", (evento)=>{
   if(!dibujandoPatron) return;
-  const indice = indicePuntoDesdeCoordenadas(evento.clientX, evento.clientY);
-  if(indice >= 0) agregarPuntoPatron(indice);
+  procesarToquePatron(evento.clientX - rectGridPatron.left, evento.clientY - rectGridPatron.top);
 });
 document.addEventListener("pointerup", ()=>{
   if(!dibujandoPatron) return;
   dibujandoPatron = false;
+  ultimaPosicionPatron = null;
   validarPatron();
 });
 
@@ -1872,6 +1911,7 @@ async function validarPatron(){
 
 function reiniciarPatron(){
   patronActual = [];
+  ultimaPosicionPatron = null;
   puntosPatron.forEach(p => p.classList.remove("activo"));
   svgLineas.innerHTML = "";
   gridPatron.classList.remove("error");
