@@ -323,6 +323,96 @@
   }
   .carrito-item-quitar:hover{color:#E63946;}
 
+  .search-overlay{
+    position:fixed;
+    inset:0;
+    z-index:303;
+    background:var(--blanco);
+    color:var(--texto);
+    display:none;
+    flex-direction:column;
+    overflow-y:auto;
+  }
+  .search-overlay.abierto{display:flex;}
+  .search-overlay-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:16px;
+    border-bottom:1px solid var(--borde);
+  }
+  .search-overlay-header h3{font-size:15px; font-weight:600;}
+  .search-cerrar{
+    background:none;
+    border:none;
+    font-size:18px;
+    color:var(--texto);
+    cursor:pointer;
+  }
+  .search-input-row{
+    display:flex;
+    gap:10px;
+    padding:16px;
+  }
+  .search-input-row input{
+    flex:1;
+    padding:12px 16px;
+    border-radius:30px;
+    border:1px solid var(--borde);
+    font-size:14px;
+    outline:none;
+    font-family:inherit;
+  }
+  .search-input-row input:focus{border-color:var(--azul);}
+  .search-input-btn{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    border:1px solid var(--borde);
+    background:var(--blanco);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    font-size:16px;
+    cursor:pointer;
+  }
+  .search-suggestions-label{
+    padding:4px 16px 12px;
+    font-size:14px;
+    font-weight:600;
+    color:var(--texto);
+  }
+  .search-suggestions{
+    padding:0 16px 20px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+  .search-suggestion-item{
+    display:flex;
+    gap:14px;
+    align-items:center;
+    text-align:left;
+    background:none;
+    border:none;
+    color:var(--texto);
+    padding:0;
+    width:100%;
+    cursor:pointer;
+  }
+  .search-suggestion-item img{
+    width:64px;
+    height:64px;
+    object-fit:cover;
+    border-radius:6px;
+    flex-shrink:0;
+    background:var(--gris-fondo);
+  }
+  .search-suggestion-name{font-size:13.5px; line-height:1.3; margin-bottom:4px;}
+  .search-suggestion-price{font-size:13px; font-weight:600; color:var(--texto);}
+  .search-empty{font-size:13px; color:var(--texto-suave); padding:0 16px;}
+
   .modal-patron{max-width:300px; text-align:center;}
   .patron-instruccion{
     font-size:13px;
@@ -728,15 +818,15 @@
   <div class="top-bar">
     <div class="logo" id="logo-nombre">Mercadito</div>
     <form class="buscador" onsubmit="return false;">
-      <input type="text" placeholder="Buscar productos, marcas y más...">
-      <button type="submit">🔍</button>
+      <input type="text" placeholder="Buscar productos, marcas y más..." id="buscador-header-input" readonly onclick="abrirBusqueda()">
+      <button type="button" onclick="abrirBusqueda()">🔍</button>
     </form>
     <div class="top-links">
       <a href="#">Crear cuenta</a>
       <a href="#">Ingresar</a>
       <a href="#">Mis compras</a>
-      <button type="button" class="link-carrito" id="btn-abrir-carrito">🛒 Carrito<span class="carrito-badge" id="carrito-contador" style="display:none;">0</span></button>
     </div>
+    <button type="button" class="link-carrito" id="btn-abrir-carrito">🛒 Carrito<span class="carrito-badge" id="carrito-contador" style="display:none;">0</span></button>
     <div class="select-custom perfil-selector solo-vendedor-o-admin" id="select-perfil">
       <button type="button" class="select-custom-boton" id="select-perfil-boton">
         <span id="select-perfil-texto">Comprador</span>
@@ -1030,6 +1120,19 @@
   </div>
 </div>
 
+<div class="search-overlay" id="search-overlay">
+  <div class="search-overlay-header">
+    <h3>Buscar en Mercadito</h3>
+    <button type="button" class="search-cerrar" id="btn-cerrar-busqueda">✕</button>
+  </div>
+  <div class="search-input-row">
+    <input type="text" id="search-input" placeholder="¿Qué estás buscando?" oninput="filtrarBusqueda(this.value)">
+    <button type="button" class="search-input-btn" aria-label="Buscar" onclick="filtrarBusqueda(document.getElementById('search-input').value)">🔍</button>
+  </div>
+  <div class="search-suggestions-label" id="search-suggestions-label">¿Necesitás inspiración?</div>
+  <div class="search-suggestions" id="search-suggestions"></div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -1273,6 +1376,50 @@ document.getElementById("btn-finalizar-compra").addEventListener("click", ()=>{
 });
 
 cargarCarrito();
+
+/* ---- Búsqueda: overlay de pantalla completa con sugerencias en vivo ---- */
+const overlayBusqueda = document.getElementById("search-overlay");
+
+function abrirBusqueda(){
+  overlayBusqueda.classList.add("abierto");
+  const input = document.getElementById("search-input");
+  input.value = "";
+  setTimeout(()=>input.focus(), 50);
+  renderSugerenciasBusqueda("");
+}
+function cerrarBusqueda(){
+  overlayBusqueda.classList.remove("abierto");
+}
+function filtrarBusqueda(consulta){
+  renderSugerenciasBusqueda(consulta);
+}
+function renderSugerenciasBusqueda(consulta){
+  const catalogo = productos.concat(tech);
+  const texto = (consulta || "").trim().toLowerCase();
+  const filtrados = texto
+    ? catalogo.filter(p => p.titulo.toLowerCase().includes(texto))
+    : catalogo;
+  document.getElementById("search-suggestions-label").textContent = texto ? "Resultados" : "¿Necesitás inspiración?";
+  const lista = document.getElementById("search-suggestions");
+  lista.innerHTML = filtrados.length
+    ? filtrados.map(p => `
+        <button type="button" class="search-suggestion-item" data-id="${p.id}">
+          <img src="${p.img}" alt="${p.titulo}">
+          <div>
+            <div class="search-suggestion-name">${p.titulo}</div>
+            <div class="search-suggestion-price">${formatearPrecio(p.precio)}</div>
+          </div>
+        </button>
+      `).join("")
+    : '<p class="search-empty">No encontramos productos con ese nombre.</p>';
+  lista.querySelectorAll(".search-suggestion-item").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      cerrarBusqueda();
+      abrirDetalle(btn.dataset.id);
+    });
+  });
+}
+document.getElementById("btn-cerrar-busqueda").addEventListener("click", cerrarBusqueda);
 
 /* ---- Publicaciones propias (Vender) ---- */
 let misPublicaciones = [];
