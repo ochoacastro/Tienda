@@ -986,6 +986,19 @@
         <label for="config-whatsapp">WhatsApp de contacto (solo números, con código de país)</label>
         <input type="tel" id="config-whatsapp" maxlength="20" required placeholder="Ej: 573001234567">
       </div>
+      <div class="campo">
+        <label for="config-cuenta-numero">Método de pago: número de cuenta o celular</label>
+        <input type="text" id="config-cuenta-numero" maxlength="40" placeholder="Ej: Nequi 300 123 4567">
+      </div>
+      <div class="campo">
+        <label for="config-cuenta-titular">Método de pago: nombre del titular de la cuenta</label>
+        <input type="text" id="config-cuenta-titular" maxlength="60" placeholder="Nombre y apellido">
+      </div>
+      <div class="campo">
+        <label for="config-cuenta-imagen">Método de pago: imagen del banco o billetera digital (opcional)</label>
+        <input type="file" id="config-cuenta-imagen" accept="image/*">
+        <img id="config-cuenta-imagen-preview" src="" alt="" style="max-width:120px; border-radius:4px; margin-top:8px; display:none;">
+      </div>
       <button type="submit" class="btn-publicar" style="width:auto; padding:11px 24px;">Guardar cambios</button>
       <p class="nota-admin">Estos cambios son compartidos: los va a ver cualquier persona que abra esta página.</p>
     </form>
@@ -1158,6 +1171,12 @@
             <input type="radio" name="compra-pago" value="Tarjeta">
             <span>Tarjeta de débito o crédito</span>
           </label>
+        </div>
+        <div class="campo" id="info-cuenta-pago" style="display:none;">
+          <label>Datos para la transferencia</label>
+          <p class="nota-admin" id="texto-cuenta-numero"></p>
+          <p class="nota-admin" id="texto-cuenta-titular"></p>
+          <img id="imagen-cuenta-pago" src="" alt="Banco o billetera del vendedor" style="max-width:160px; border-radius:4px; margin-top:6px; display:none;">
         </div>
         <div class="campo" id="campo-comprobante-compra" style="display:none;">
           <label for="compra-comprobante">Comprobante de pago</label>
@@ -2063,7 +2082,10 @@ const configPorDefecto = {
   bannerTexto: "Envío gratis en miles de productos y hasta 12 cuotas sin interés",
   badge: "Termina en 2 días",
   direccionTienda: "",
-  whatsapp: ""
+  whatsapp: "",
+  cuentaNumero: "",
+  cuentaTitular: "",
+  cuentaImagen: null
 };
 let configSitioActual = configPorDefecto;
 
@@ -2079,6 +2101,15 @@ function aplicarConfigSitio(config){
   document.getElementById("config-badge").value = config.badge;
   document.getElementById("config-direccion-tienda").value = config.direccionTienda || "";
   document.getElementById("config-whatsapp").value = config.whatsapp || "";
+  document.getElementById("config-cuenta-numero").value = config.cuentaNumero || "";
+  document.getElementById("config-cuenta-titular").value = config.cuentaTitular || "";
+  const previewCuentaImagen = document.getElementById("config-cuenta-imagen-preview");
+  if(config.cuentaImagen){
+    previewCuentaImagen.src = config.cuentaImagen;
+    previewCuentaImagen.style.display = "";
+  }else{
+    previewCuentaImagen.style.display = "none";
+  }
 
   const linkWhatsapp = document.getElementById("link-whatsapp");
   if(config.whatsapp){
@@ -2103,13 +2134,26 @@ cargarConfigSitio();
 
 document.getElementById("form-config-sitio").addEventListener("submit", async (evento)=>{
   evento.preventDefault();
+  const archivoCuentaImagen = document.getElementById("config-cuenta-imagen").files[0];
+  let cuentaImagen = configSitioActual.cuentaImagen || null;
+  if(archivoCuentaImagen){
+    try{
+      cuentaImagen = await leerArchivoComoDataURL(archivoCuentaImagen);
+    }catch(err){
+      mostrarToast("No se pudo leer la imagen del método de pago. Probá de nuevo.");
+      return;
+    }
+  }
   const config = {
     nombre: document.getElementById("config-nombre").value.trim() || configPorDefecto.nombre,
     bannerTitulo: document.getElementById("config-banner-titulo").value.trim() || configPorDefecto.bannerTitulo,
     bannerTexto: document.getElementById("config-banner-texto").value.trim() || configPorDefecto.bannerTexto,
     badge: document.getElementById("config-badge").value.trim() || configPorDefecto.badge,
     direccionTienda: document.getElementById("config-direccion-tienda").value.trim(),
-    whatsapp: document.getElementById("config-whatsapp").value.trim()
+    whatsapp: document.getElementById("config-whatsapp").value.trim(),
+    cuentaNumero: document.getElementById("config-cuenta-numero").value.trim(),
+    cuentaTitular: document.getElementById("config-cuenta-titular").value.trim(),
+    cuentaImagen
   };
   aplicarConfigSitio(config);
   try{
@@ -2204,6 +2248,7 @@ function cerrarCheckout(){
   overlayCompra.classList.remove("abierto");
   formCompra.reset();
   campoComprobanteCompra.style.display = "none";
+  document.getElementById("info-cuenta-pago").style.display = "none";
   mostrarPasoCompra("entrega");
 }
 document.getElementById("btn-cancelar-compra").addEventListener("click", cerrarCheckout);
@@ -2243,11 +2288,34 @@ document.getElementById("btn-volver-pago").addEventListener("click", ()=>{
   mostrarPasoCompra("direccion");
 });
 
+function enmascararNombre(nombreCompleto){
+  const partes = (nombreCompleto || "").trim().split(/\s+/).filter(Boolean);
+  if(partes.length === 0) return "(sin indicar)";
+  const enmascarar = (palabra) => palabra.slice(0, 3) + "...";
+  if(partes.length === 1) return enmascarar(partes[0]);
+  return enmascarar(partes[0]) + " " + enmascarar(partes[partes.length - 1]);
+}
+
+const infoCuentaPago = document.getElementById("info-cuenta-pago");
 formCompra.querySelectorAll('input[name="compra-pago"]').forEach(radio=>{
   radio.addEventListener("change", ()=>{
     const requiereComprobante = radio.value !== "Efectivo" && radio.checked;
     if(radio.checked){
       campoComprobanteCompra.style.display = requiereComprobante ? "" : "none";
+      if(radio.value === "Transferencia"){
+        document.getElementById("texto-cuenta-numero").textContent = "Número: " + (configSitioActual.cuentaNumero || "(sin indicar)");
+        document.getElementById("texto-cuenta-titular").textContent = "Titular: " + enmascararNombre(configSitioActual.cuentaTitular);
+        const imagenCuentaPago = document.getElementById("imagen-cuenta-pago");
+        if(configSitioActual.cuentaImagen){
+          imagenCuentaPago.src = configSitioActual.cuentaImagen;
+          imagenCuentaPago.style.display = "";
+        }else{
+          imagenCuentaPago.style.display = "none";
+        }
+        infoCuentaPago.style.display = "";
+      }else{
+        infoCuentaPago.style.display = "none";
+      }
     }
   });
 });
