@@ -1078,6 +1078,15 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="modal-overlay-comprobante">
+  <div class="modal" style="max-width:520px; padding:16px; text-align:center;">
+    <img id="comprobante-imagen-grande" src="" alt="Comprobante de pago" style="max-width:100%; max-height:75vh; border-radius:4px; display:block; margin:0 auto 12px;">
+    <div class="modal-acciones">
+      <button type="button" class="btn-cancelar" id="btn-cerrar-comprobante">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="modal-overlay-detalle">
   <div class="modal modal-detalle">
     <div class="detalle-img"><img id="detalle-img-tag" src="" alt=""></div>
@@ -2115,13 +2124,30 @@ function pedidoCardHTML(p){
       <div class="pedido-linea">Tel: ${p.cliente.telefono || "(sin indicar)"}</div>
       ${p.envio === "domicilio" ? `<div class="pedido-linea">Dirección: ${p.cliente.direccion || "(sin indicar)"}</div>` : ""}
       <div class="pedido-linea">Pago: ${p.metodoPago}</div>
-      ${p.comprobante ? `<a href="${p.comprobante}" target="_blank" rel="noopener"><img src="${p.comprobante}" alt="Comprobante de pago" style="max-width:120px; border-radius:4px; margin:6px 0; display:block;"></a>` : ""}
+      ${p.comprobante ? `<img src="${p.comprobante}" alt="Comprobante de pago" style="max-width:120px; border-radius:4px; margin:6px 0; display:block; cursor:pointer;" onclick="ampliarComprobante('${p.id}')">` : ""}
       <div class="pedido-linea">${p.producto.titulo}</div>
       <div class="pedido-total">Total: ${formatearPrecio(p.producto.precio)}</div>
       ${pedidoAccionesHTML(p)}
     </div>
   `;
 }
+
+const overlayComprobante = document.getElementById("modal-overlay-comprobante");
+const imagenComprobanteGrande = document.getElementById("comprobante-imagen-grande");
+function ampliarComprobante(id){
+  const pedido = pedidos.find(p=>p.id === id);
+  if(!pedido || !pedido.comprobante) return;
+  imagenComprobanteGrande.src = pedido.comprobante;
+  overlayComprobante.classList.add("abierto");
+}
+function cerrarComprobante(){
+  overlayComprobante.classList.remove("abierto");
+  imagenComprobanteGrande.src = "";
+}
+document.getElementById("btn-cerrar-comprobante").addEventListener("click", cerrarComprobante);
+overlayComprobante.addEventListener("click", (evento)=>{
+  if(evento.target === overlayComprobante) cerrarComprobante();
+});
 
 function pedidoAccionesHTML(p){
   if(!p.pagado){
