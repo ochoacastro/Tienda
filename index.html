@@ -1155,6 +1155,66 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- Firebase (SDK compat: scripts normales, sin type="module", para que carguen y
+     se ejecuten ANTES que el <script> principal y quede listo window.storage) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-analytics-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-database-compat.js"></script>
+<script>
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyCDmc2n6RYJTlcB3EZRjZll3puqZUdZTzY",
+    authDomain: "tienda-e8c28.firebaseapp.com",
+    databaseURL: "https://tienda-e8c28-default-rtdb.firebaseio.com",
+    projectId: "tienda-e8c28",
+    storageBucket: "tienda-e8c28.firebasestorage.app",
+    messagingSenderId: "1069550835519",
+    appId: "1:1069550835519:web:3845964ac7f1b6ae47658a",
+    measurementId: "G-6CJWE9BVQP"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+  const db = firebase.database();
+
+  // Autenticación anónima: cada visitante tiene su propio uid,
+  // así lo "personal" (carrito, perfil) no se mezcla entre usuarios.
+  const authListo = new Promise((resolve)=>{
+    firebase.auth().onAuthStateChanged((usuario)=>{
+      if(usuario) resolve(usuario.uid);
+    });
+  });
+  firebase.auth().signInAnonymously().catch((err)=>{
+    console.error("No se pudo autenticar de forma anónima:", err);
+  });
+
+  // Reemplaza el storage temporal por Firebase Realtime Database,
+  // manteniendo la misma firma (get/set con key y shared) que ya usa
+  // el resto del código, para no tener que tocar esas llamadas.
+  window.storage = {
+    async get(clave, compartido){
+      const uid = await authListo;
+      const ruta = compartido ? `compartido/${clave}` : `usuarios/${uid}/${clave}`;
+      const snap = await db.ref(ruta).once("value");
+      return snap.exists() ? {key: clave, value: snap.val(), shared: !!compartido} : null;
+    },
+    async set(clave, valor, compartido){
+      const uid = await authListo;
+      const ruta = compartido ? `compartido/${clave}` : `usuarios/${uid}/${clave}`;
+      await db.ref(ruta).set(valor);
+      return {key: clave, value: valor, shared: !!compartido};
+    },
+    async delete(clave, compartido){
+      const uid = await authListo;
+      const ruta = compartido ? `compartido/${clave}` : `usuarios/${uid}/${clave}`;
+      await db.ref(ruta).remove();
+      return {key: clave, deleted: true, shared: !!compartido};
+    }
+  };
+</script>
+
 <script>
 const productos = [
   {id:"auriculares", img:"https://picsum.photos/seed/auriculares/400/400", titulo:"Auriculares inalámbricos Bluetooth con cancelación de ruido", precioAnterior:45999, precio:29999, descuento:35, cuotas:"12 cuotas sin interés de $2.500", envio:true, descripcion:"Auriculares Bluetooth con cancelación activa de ruido, hasta 30 horas de batería y estuche de carga incluido."},
