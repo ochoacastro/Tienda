@@ -804,6 +804,28 @@
   }
   .radio-fila input{width:auto;}
 
+  .modal-checkout{max-width:480px;}
+  .modal h3.subtitulo-checkout{
+    font-size:15px;
+    font-weight:600;
+    color:var(--texto);
+    margin:18px 0 10px;
+  }
+  .entrega-opcion{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    border:1px solid var(--borde);
+    border-radius:6px;
+    padding:14px;
+    margin-bottom:12px;
+    cursor:pointer;
+  }
+  .entrega-opcion:has(input:checked){border-color:var(--azul);}
+  .entrega-opcion input{width:auto; margin-top:3px; flex-shrink:0;}
+  .entrega-opcion-titulo{font-size:14px; font-weight:600; color:var(--texto); margin-bottom:4px;}
+  .entrega-opcion-detalle{font-size:12.5px; color:var(--texto-suave);}
+
   .resumen-compra{
     background:var(--gris-fondo);
     border-radius:6px;
@@ -1047,61 +1069,107 @@
 </div>
 
 <div class="modal-overlay" id="modal-overlay-compra">
-  <div class="modal">
-    <h3>Confirmar pedido</h3>
+  <div class="modal modal-checkout">
+    <h3 id="compra-titulo-paso">Elige la forma de entrega</h3>
     <div class="resumen-compra">
       <div class="resumen-titulo" id="compra-resumen-titulo"></div>
       <div class="resumen-precio" id="compra-resumen-precio"></div>
     </div>
     <form id="form-compra">
-      <div class="campo">
-        <label for="compra-nombre">Nombre y apellido</label>
-        <input type="text" id="compra-nombre" required maxlength="60" placeholder="¿Quién recibe el pedido?">
-      </div>
-      <div class="campo">
-        <label for="compra-telefono">Teléfono de contacto</label>
-        <input type="tel" id="compra-telefono" required maxlength="20" placeholder="Ej: 11 5555 5555">
-      </div>
-      <div class="campo">
-        <label>¿Cómo lo querés recibir?</label>
-        <label class="radio-fila">
+
+      <!-- Paso 1: forma de entrega -->
+      <div class="paso-compra" id="paso-entrega">
+        <label class="entrega-opcion">
           <input type="radio" name="compra-envio" value="domicilio" checked>
-          <span>Envío a domicilio</span>
+          <div class="entrega-opcion-info">
+            <div class="entrega-opcion-titulo">Enviar a domicilio</div>
+            <div class="entrega-opcion-detalle">Cargás la dirección en el siguiente paso.</div>
+          </div>
         </label>
-        <label class="radio-fila">
+        <label class="entrega-opcion">
           <input type="radio" name="compra-envio" value="tienda">
-          <span>Retiro en el punto de venta</span>
+          <div class="entrega-opcion-info">
+            <div class="entrega-opcion-titulo">Retirar en el punto de venta</div>
+            <div class="entrega-opcion-detalle" id="entrega-info-tienda"></div>
+          </div>
         </label>
-        <p class="nota-admin" id="compra-direccion-tienda-info" style="display:none;"></p>
+        <div class="modal-acciones">
+          <button type="button" class="btn-cancelar" id="btn-cancelar-compra">Cancelar</button>
+          <button type="button" class="btn-publicar" id="btn-continuar-entrega">Continuar</button>
+        </div>
       </div>
-      <div class="campo" id="campo-direccion-compra">
-        <label for="compra-direccion">Dirección de envío</label>
-        <input type="text" id="compra-direccion" maxlength="120" placeholder="Calle, número, ciudad">
+
+      <!-- Paso 2: dirección (o punto de retiro) + datos de contacto -->
+      <div class="paso-compra" id="paso-direccion" style="display:none;">
+        <div id="bloque-direccion-envio">
+          <div class="campo">
+            <label for="compra-departamento">Departamento</label>
+            <input type="text" id="compra-departamento" maxlength="60" placeholder="Ej: Valle del Cauca">
+          </div>
+          <div class="campo">
+            <label for="compra-municipio">Municipio / Localidad</label>
+            <input type="text" id="compra-municipio" maxlength="60" placeholder="Ej: Palmira">
+          </div>
+          <div class="campo">
+            <label for="compra-barrio">Barrio</label>
+            <input type="text" id="compra-barrio" maxlength="60" placeholder="Ej: Centro">
+          </div>
+          <div class="campo" id="campo-direccion-compra">
+            <label for="compra-direccion">Dirección (calle y número)</label>
+            <input type="text" id="compra-direccion" maxlength="120" placeholder="Calle, número">
+          </div>
+          <div class="campo">
+            <label for="compra-apartamento">Apartamento / Casa (opcional)</label>
+            <input type="text" id="compra-apartamento" maxlength="80" placeholder="Torre, apto, referencia">
+          </div>
+        </div>
+        <div class="campo" id="bloque-punto-retiro" style="display:none;">
+          <label>Punto de retiro</label>
+          <p class="nota-admin" id="texto-punto-retiro"></p>
+        </div>
+        <h3 class="subtitulo-checkout">Datos de quien recibe</h3>
+        <div class="campo">
+          <label for="compra-nombre">Nombre y apellido</label>
+          <input type="text" id="compra-nombre" required maxlength="60" placeholder="¿Quién recibe el pedido?">
+        </div>
+        <div class="campo">
+          <label for="compra-telefono">Teléfono de contacto</label>
+          <input type="tel" id="compra-telefono" required maxlength="20" placeholder="Ej: 11 5555 5555">
+        </div>
+        <div class="modal-acciones">
+          <button type="button" class="btn-cancelar" id="btn-volver-direccion">Atrás</button>
+          <button type="button" class="btn-publicar" id="btn-continuar-direccion">Continuar</button>
+        </div>
       </div>
-      <div class="campo">
-        <label>Método de pago</label>
-        <label class="radio-fila">
-          <input type="radio" name="compra-pago" value="Efectivo" checked>
-          <span>Efectivo contra entrega</span>
-        </label>
-        <label class="radio-fila">
-          <input type="radio" name="compra-pago" value="Transferencia">
-          <span>Transferencia bancaria</span>
-        </label>
-        <label class="radio-fila">
-          <input type="radio" name="compra-pago" value="Tarjeta">
-          <span>Tarjeta de débito o crédito</span>
-        </label>
+
+      <!-- Paso 3: forma de pago -->
+      <div class="paso-compra" id="paso-pago" style="display:none;">
+        <div class="campo">
+          <label>Método de pago</label>
+          <label class="radio-fila">
+            <input type="radio" name="compra-pago" value="Efectivo" checked>
+            <span>Efectivo contra entrega</span>
+          </label>
+          <label class="radio-fila">
+            <input type="radio" name="compra-pago" value="Transferencia">
+            <span>Transferencia bancaria</span>
+          </label>
+          <label class="radio-fila">
+            <input type="radio" name="compra-pago" value="Tarjeta">
+            <span>Tarjeta de débito o crédito</span>
+          </label>
+        </div>
+        <div class="campo" id="campo-comprobante-compra" style="display:none;">
+          <label for="compra-comprobante">Comprobante de pago</label>
+          <input type="file" id="compra-comprobante" accept="image/*">
+          <p class="nota-admin">Adjuntá una foto o captura del pago para que el vendedor pueda confirmarlo.</p>
+        </div>
+        <div class="modal-acciones">
+          <button type="button" class="btn-cancelar" id="btn-volver-pago">Atrás</button>
+          <button type="submit" class="btn-publicar">Confirmar pedido</button>
+        </div>
       </div>
-      <div class="campo" id="campo-comprobante-compra" style="display:none;">
-        <label for="compra-comprobante">Comprobante de pago</label>
-        <input type="file" id="compra-comprobante" accept="image/*">
-        <p class="nota-admin">Adjuntá una foto o captura del pago para que el vendedor pueda confirmarlo.</p>
-      </div>
-      <div class="modal-acciones">
-        <button type="button" class="btn-cancelar" id="btn-cancelar-compra">Cancelar</button>
-        <button type="submit" class="btn-publicar">Confirmar pedido</button>
-      </div>
+
     </form>
   </div>
 </div>
@@ -2085,43 +2153,96 @@ function mostrarToast(mensaje){
   setTimeout(()=>toast.classList.remove("mostrar"), 2200);
 }
 
-/* ---- Checkout: el comprador arma su pedido ---- */
+/* ---- Checkout: el comprador arma su pedido en 3 pasos (entrega, dirección/contacto, pago) ---- */
 const overlayCompra = document.getElementById("modal-overlay-compra");
 const formCompra = document.getElementById("form-compra");
-const campoDireccionCompra = document.getElementById("campo-direccion-compra");
 let productoEnCompra = null;
 
+const tituloPasoCompra = document.getElementById("compra-titulo-paso");
+const pasoEntrega = document.getElementById("paso-entrega");
+const pasoDireccion = document.getElementById("paso-direccion");
+const pasoPago = document.getElementById("paso-pago");
+const bloqueDireccionEnvio = document.getElementById("bloque-direccion-envio");
+const bloquePuntoRetiro = document.getElementById("bloque-punto-retiro");
+const textoPuntoRetiro = document.getElementById("texto-punto-retiro");
+const entregaInfoTienda = document.getElementById("entrega-info-tienda");
 const campoComprobanteCompra = document.getElementById("campo-comprobante-compra");
-const infoDireccionTiendaCompra = document.getElementById("compra-direccion-tienda-info");
+const inputDireccionCompra = document.getElementById("compra-direccion");
+
+const TITULOS_PASO_COMPRA = {
+  entrega: "Elige la forma de entrega",
+  direccion_domicilio: "Dirección de entrega",
+  direccion_tienda: "Datos de contacto",
+  pago: "Elige cómo pagar"
+};
+
+function mostrarPasoCompra(paso){
+  pasoEntrega.style.display = paso === "entrega" ? "" : "none";
+  pasoDireccion.style.display = paso === "direccion" ? "" : "none";
+  pasoPago.style.display = paso === "pago" ? "" : "none";
+  if(paso === "entrega"){
+    tituloPasoCompra.textContent = TITULOS_PASO_COMPRA.entrega;
+  }else if(paso === "direccion"){
+    const envio = formCompra.querySelector('input[name="compra-envio"]:checked').value;
+    tituloPasoCompra.textContent = envio === "domicilio" ? TITULOS_PASO_COMPRA.direccion_domicilio : TITULOS_PASO_COMPRA.direccion_tienda;
+  }else if(paso === "pago"){
+    tituloPasoCompra.textContent = TITULOS_PASO_COMPRA.pago;
+  }
+}
 
 function abrirCheckout(titulo, precio){
   productoEnCompra = {titulo, precio};
   document.getElementById("compra-resumen-titulo").textContent = titulo;
   document.getElementById("compra-resumen-precio").textContent = formatearPrecio(precio);
+  entregaInfoTienda.textContent = configSitioActual.direccionTienda
+    ? "Dirección: " + configSitioActual.direccionTienda
+    : "El vendedor te va a confirmar la dirección del punto de retiro.";
+  mostrarPasoCompra("entrega");
   overlayCompra.classList.add("abierto");
 }
 function cerrarCheckout(){
   overlayCompra.classList.remove("abierto");
   formCompra.reset();
-  campoDireccionCompra.style.display = "";
   campoComprobanteCompra.style.display = "none";
-  infoDireccionTiendaCompra.style.display = "none";
+  mostrarPasoCompra("entrega");
 }
 document.getElementById("btn-cancelar-compra").addEventListener("click", cerrarCheckout);
 overlayCompra.addEventListener("click", (evento)=>{
   if(evento.target === overlayCompra) cerrarCheckout();
 });
-formCompra.querySelectorAll('input[name="compra-envio"]').forEach(radio=>{
-  radio.addEventListener("change", ()=>{
-    campoDireccionCompra.style.display = radio.value === "domicilio" && radio.checked ? "" : "none";
-    if(radio.value === "tienda" && radio.checked && configSitioActual.direccionTienda){
-      infoDireccionTiendaCompra.textContent = "Dirección: " + configSitioActual.direccionTienda;
-      infoDireccionTiendaCompra.style.display = "";
-    }else if(radio.value === "tienda" && radio.checked){
-      infoDireccionTiendaCompra.style.display = "none";
-    }
-  });
+
+document.getElementById("btn-continuar-entrega").addEventListener("click", ()=>{
+  const envio = formCompra.querySelector('input[name="compra-envio"]:checked').value;
+  bloqueDireccionEnvio.style.display = envio === "domicilio" ? "" : "none";
+  bloquePuntoRetiro.style.display = envio === "tienda" ? "" : "none";
+  if(envio === "tienda"){
+    textoPuntoRetiro.textContent = configSitioActual.direccionTienda
+      ? "Dirección: " + configSitioActual.direccionTienda
+      : "El vendedor te va a confirmar la dirección del punto de retiro.";
+  }
+  mostrarPasoCompra("direccion");
 });
+document.getElementById("btn-volver-direccion").addEventListener("click", ()=>{
+  mostrarPasoCompra("entrega");
+});
+document.getElementById("btn-continuar-direccion").addEventListener("click", ()=>{
+  const envio = formCompra.querySelector('input[name="compra-envio"]:checked').value;
+  const nombre = document.getElementById("compra-nombre").value.trim();
+  const telefono = document.getElementById("compra-telefono").value.trim();
+  if(!nombre || !telefono){
+    mostrarToast("Completá el nombre y el teléfono de contacto.");
+    return;
+  }
+  if(envio === "domicilio" && !inputDireccionCompra.value.trim()){
+    mostrarToast("Completá la dirección de entrega.");
+    return;
+  }
+  mostrarPasoCompra("pago");
+});
+document.getElementById("btn-volver-pago").addEventListener("click", ()=>{
+  mostrarPasoCompra("direccion");
+});
+
 formCompra.querySelectorAll('input[name="compra-pago"]').forEach(radio=>{
   radio.addEventListener("change", ()=>{
     const requiereComprobante = radio.value !== "Efectivo" && radio.checked;
@@ -2184,6 +2305,15 @@ formCompra.addEventListener("submit", async (evento)=>{
     }
   }
 
+  const departamento = document.getElementById("compra-departamento").value.trim();
+  const municipio = document.getElementById("compra-municipio").value.trim();
+  const barrio = document.getElementById("compra-barrio").value.trim();
+  const direccionCalle = document.getElementById("compra-direccion").value.trim();
+  const apartamento = document.getElementById("compra-apartamento").value.trim();
+  const direccionCompleta = envio === "domicilio"
+    ? [direccionCalle, apartamento, barrio, municipio, departamento].filter(Boolean).join(", ")
+    : "";
+
   const pedido = {
     id: "ped" + Date.now(),
     creadoEn: Date.now(),
@@ -2191,7 +2321,11 @@ formCompra.addEventListener("submit", async (evento)=>{
     cliente:{
       nombre: document.getElementById("compra-nombre").value.trim(),
       telefono: document.getElementById("compra-telefono").value.trim(),
-      direccion: document.getElementById("compra-direccion").value.trim()
+      direccion: direccionCompleta,
+      departamento,
+      municipio,
+      barrio,
+      apartamento
     },
     envio,
     metodoPago,
